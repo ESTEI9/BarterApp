@@ -1,54 +1,86 @@
 <ion-header>
-    <ion-toolbar color="primary">
+    <ion-toolbar color="light">
         <ion-title>Trade Hub</ion-title>
         <ion-buttons slot="end">
-            <ion-button color="light" (click)="navCtrl.navigateRoot('')"><ion-icon slot="start" name="log-out"></ion-icon>Logout</ion-button>
+            <ion-button color="dark" (click)="navCtrl.navigateRoot('')"><ion-icon slot="start" name="log-out"></ion-icon>Logout</ion-button>
         </ion-buttons>
     </ion-toolbar>
 </ion-header>
 <ion-content>
-    <ion-segment (ionChange)="switchSegment($event)">
-        <ion-segment-button value="queued">
-            <ion-label>Queued</ion-label>
-        </ion-segment-button>
-        <ion-segment-button value="archive">
-            <ion-label>Archive</ion-label>
-        </ion-segment-button>
-    </ion-segment>
+    <ion-toolbar color="highlight">
+        <ion-segment (ionChange)="switchSegment($event)">
+            <ion-segment-button value="queued" checked>
+                <ion-label>Queued</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="archive">
+                <ion-label>Archive</ion-label>
+            </ion-segment-button>
+        </ion-segment>
+    </ion-toolbar>
     <!--Incoming-->
     <div *ngIf="segment === 'queued'">
-        <ion-card>
+        <ion-card color="light">
             <ion-card-header>
                 <ion-card-title>Inbox</ion-card-title>
             </ion-card-header>
             <ion-card-content>
                 <ion-spinner *ngIf="inboxIsLoading"></ion-spinner>
                 <ion-text text-center *ngIf="inbox.length == 0 && !inboxIsLoading">No trades in inbox</ion-text>
-                <ion-list *ngIf="inbox.length > 0 && !inboxIsLoading">
+                <ion-list *ngIf="inbox.length > 0 && !inboxIsLoading" lines="none" no-padding>
+                    <ion-item color="highlight">
+                        <ion-grid no-padding>
+                            <ion-row>
+                                <ion-col size="6">DBA</ion-col>
+                                <ion-col size="3" text-center>Trade</ion-col>
+                                <ion-col text-right>Proposed</ion-col>
+                            </ion-row>
+                        </ion-grid>
+                    </ion-item>
                     <ion-item *ngFor="let in of inbox" (click)="viewTrade(in.trade_id)">
-                        <ion-label>{{in.title}}<br /><span>{{in.merchant.name}}</span></ion-label>
+                        <ion-grid no-padding>
+                            <ion-row class="ion-align-items-center">
+                                <ion-col size="6">{{in.dba}}</ion-col>
+                                <ion-col size="3" class="ion-justify-content-evenly ion-align-items-center" style="display:flex;">{{in.init_valu}} <ion-icon name="repeat" size="small"></ion-icon> {{in.rec_valu}}</ion-col>
+                                <ion-col text-right>{{in.trade_proposed | date:'shortDate'}}<br/>{{in.trade_proposed | date:'shortTime'}}</ion-col>
+                            </ion-row>
+                        </ion-grid>
                     </ion-item>
                 </ion-list>
             </ion-card-content>
         </ion-card>
         <!--Outgoing-->
-        <ion-card>
+        <ion-card color="light">
             <ion-card-header>
                 <ion-card-title>Outbox</ion-card-title>
             </ion-card-header>
             <ion-card-content>
                 <ion-spinner *ngIf="outboxIsLoading"></ion-spinner>
                 <ion-text text-center *ngIf="outbox.length == 0 && !outboxIsLoading">No trades in outbox</ion-text>
-                <ion-list *ngIf="outbox.length > 0 && !outboxIsLoading">
-                    <ion-item *ngFor="let out of outbox" (click)="viewTrade(out.trade_id)">
-                        <ion-label>{{out.title}}<br /><span>{{out.merchant.name}}</span></ion-label>
+                <ion-list *ngIf="outbox.length > 0 && !outboxIsLoading" lines="none" no-padding>
+                    <ion-item color="highlight">
+                        <ion-grid no-padding>
+                            <ion-row>
+                                <ion-col size="6">DBA</ion-col>
+                                <ion-col size="3" text-center>Trade</ion-col>
+                                <ion-col text-right>Proposed</ion-col>
+                            </ion-row>
+                        </ion-grid>
+                    </ion-item>
+                    <ion-item *ngFor="let out of outbox; let i = index" (click)="viewTrade(out.trade_id)" [color]="i % 2 ? 'light' : 'medium-light'">
+                        <ion-grid no-padding>
+                            <ion-row class="ion-align-items-center">
+                                <ion-col size="6">{{out.dba}}</ion-col>
+                                <ion-col size="3" class="ion-justify-content-evenly ion-align-items-center" style="display:flex;">{{out.rec_valu}} <ion-icon name="repeat" size="small"></ion-icon> {{out.init_valu}}</ion-col>
+                                <ion-col text-right>{{out.trade_proposed | date:'shortDate'}}<br/>{{out.trade_proposed | date:'shortTime'}}</ion-col>
+                            </ion-row>
+                        </ion-grid>
                     </ion-item>
                 </ion-list>
             </ion-card-content>
         </ion-card>
     </div>
     <div *ngIf="segment == 'archive'">
-        <ion-card>
+        <ion-card color="light">
             <ion-card-header>
                 <ion-card-title>Archive</ion-card-title>
             </ion-card-header>
@@ -65,7 +97,7 @@
     </div> 
     <!--Start New Trade-->
         <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-            <ion-button size="large" shape="round" color="secondary" (click)="startNewTrade()">
+            <ion-button size="large" shape="round" color="highlight" (click)="startNewTrade()">
                 <ion-icon name="add" slot="start"></ion-icon>
                 <ion-label>New</ion-label>
             </ion-button>

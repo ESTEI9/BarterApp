@@ -43,10 +43,11 @@ export class TradeHubPage implements OnInit {
             } else {
                 console.log(resp);
             }
+            this.inboxIsLoading = false;
         }, (err: any) => {
             console.log("There was an error");
+            this.inboxIsLoading = false;
         });
-        this.inboxIsLoading = false;
     }
 
     async loadOutbox() {
@@ -61,10 +62,11 @@ export class TradeHubPage implements OnInit {
             } else {
                 console.log(resp);
             }
+            this.outboxIsLoading = false;
         }, (err: any) => {
             console.log("There was an error");
+            this.outboxIsLoading = false;
         });
-        this.outboxIsLoading = false;
     }
 
     async loadArchive() {
@@ -79,10 +81,11 @@ export class TradeHubPage implements OnInit {
             } else {
                 console.log(resp);
             }
+            this.archiveIsLoading = false;
         }, (err: any) => {
             console.log('There was an error');
+            this.archiveIsLoading = false;
         })
-        this.archiveIsLoading = false;
     }
 
     switchSegment(event: any) {
@@ -101,8 +104,9 @@ export class TradeHubPage implements OnInit {
             component: NewTradeComponent
         });
         await modal.present();
-        let newTrade = await modal.onDidDismiss();
-        console.log(newTrade);
+        await modal.onDidDismiss().then(()=>{
+            this.loadOutbox();
+        });
     }
 
     viewTrade(id:any){

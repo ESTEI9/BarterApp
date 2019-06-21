@@ -12,6 +12,7 @@
 
 ion-content {
     --ion-font-family: 'Helvetica Neue', 'Helvetica', 'Roboto', sans-serif;
+    --background: linear-gradient(var(--ion-color-primary), var(--ion-color-secondary));
 }
 /* --------------------
 Utility Classes
@@ -109,18 +110,6 @@ ion-item {
 
 ion-card.dealcard {
     width:100%;
-}
-
-ion-input.sc-ion-input-md-h, ion-input.sc-ion-input-ios-h, ion-select, ion-textarea {
-    border-bottom: 1px solid;
-    //--background: linear-gradient(#fafafa,#fff,#fafafa);
-    font-size: 1.2em;
-    padding: 0 1em;
-
-    .text-input-ios {
-        padding-left:0.5em;
-        margin:0.8em 0;
-    }
 }
 
 ion-input .text-input-ios, ion-select .text-input-ios, ion-textarea .text-input-ios {

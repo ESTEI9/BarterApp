@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { ModalController, IonSlides } from '@ionic/angular';
 import { HttpService } from 'src/app/services/http.service';
 import { VarsService } from 'src/app/services/vars.service';
 import { HttpClient } from '@angular/common/http';
@@ -12,25 +12,32 @@ import { HttpClient } from '@angular/common/http';
 export class NewTradeComponent implements OnInit {
 
     private locations: any = '';
-    private details: any = null;
-    private isDisabled: boolean = true;
+    private urlBody: any = null;
     private merchants: any;
-    private tempLoc: any;
-    private searchLocations: any = [];
+    private enableCreateTrade: boolean = false;
+
+    private initialSlide: boolean = true;
+    private lastSlide: boolean = false;
 
     private locationSearch: string;
+    private searchLocations: any = [];
     private location: any;
-    private merchant: any;
-    private wallets: any;
+    private merchant: any = [];
+    private wallets: any = [];
     private wallet: any;
     private amount: number;
 
     private myLocationSearch: string;
     private mySearchLocations: any = [];
-    private myLocation: any = '';
-    private myWallets: any;
+    private myLocation: any = [];
+    private myWallets: any = [];
     private myWallet: any;
     private myAmount: number;
+    
+    private sliderOptions: any = {}
+
+    @ViewChild('slider') slider: IonSlides;
+    @ViewChild('createTradeButton', {read: ElementRef}) createTradeButton: ElementRef;
 
     constructor(
         private httpClient: HttpClient,
@@ -40,70 +47,94 @@ export class NewTradeComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        this.httpClient.get("../assets/cities.json").subscribe(async (resp: any) => {
-            this.locations = resp;
-            await this.locations.filter((loc:any) => {
-                const city = this.vars.merchantData['city'];
-                const state = this.vars.merchantData['state'];
-                if(loc.city === city && loc.state === state){
-                    this.myLocation = loc;
-                }
+        if(!this.locations){
+            this.httpClient.get("../assets/cities.json").subscribe((resp: any) => {
+                this.locations = resp;
+                this.locations.filter((loc:any) => {
+                    const city = this.vars.merchantData['city'];
+                    const state = this.vars.merchantData['state'];
+                    if(loc.city === city && loc.state === state){
+                        this.location = loc;
+                        this.locationSearch = loc.city+', '+loc.abbr;
+                        this.myLocation = loc;
+                        this.myLocationSearch = loc.city+', '+loc.abbr;
+                        this.loadMerchants();
+                        this.loadMerchants('my');
+                        this.loadWallets();
+                    }
+                });
             });
-            this.loadWallets();
-        });
+        }
     }
 
     filterLocations(my?: any) {
-        const searchString = (my) ? this.myLocationSearch : this.locationSearch;
-        if(my){
-            this.myLocation = null;
-        } else {
-            this.location = null;
+        if(this.locations){
+            const searchString = (my) ? this.myLocationSearch : this.locationSearch;
+            let searchLocations = [];
+            searchLocations = this.locations.filter((loc: any) => {
+                if (searchLocations.length < 10) {
+                    let combos = [
+                        loc['city'],
+                        loc['city'] + "," + loc['abbr'],
+                        loc['city'] + ", " + loc['abbr']
+                    ];
+                    for (let option of combos) {
+                        if (option.toLowerCase().search(searchString.toLowerCase()) > -1) {
+                            return loc;
+                        }
+                    }
+                };
+            });
+            if(searchLocations[0]['city']+', '+searchLocations[0]['abbr'] == searchString || !searchString){ //removes odd bug showing last option after clicking
+                searchLocations = [];
+            }
+            if (my) {
+                this.mySearchLocations = searchLocations.slice(0, 10);
+            } else {
+                this.searchLocations = searchLocations.slice(0, 10);
+            }
         }
-        let searchLocations = [];
-        searchLocations = this.locations.filter((loc: any) => {
-            if (searchLocations.length < 10) {
-                let combos = [
-                    loc['city'],
-                    loc['state'],
-                    loc['abbr'],
-                    loc['city'] + "," + loc['state'],
-                    loc['city'] + ", " + loc['state'],
-                    loc['city'] + "," + loc['abbr'],
-                    loc['city'] + ", " + loc['abbr']
-                ];
-                for (let option of combos) {
-                    if (option.search(searchString) > -1) {
-                        return loc;
+    }
+
+    checkLocation(my?:string){
+        let searchString = my ? this.myLocationSearch : this.locationSearch;
+        this.locations.filter((loc:any) => {
+            let combos = [
+                loc['city'],
+                loc['city'] + "," + loc['abbr'],
+                loc['city'] + ", " + loc['abbr']
+            ];
+            for (let option of combos) {
+                if (option.toLowerCase().search(searchString.toLowerCase()) > -1) {
+                    if(my) {
+                        this.myLocation = loc;
+                    } else {
+                        this.location = loc;
                     }
                 }
-            };
-        });
-        if (my) {
-            this.mySearchLocations = searchLocations.slice(0, 10);
-        } else {
-            this.searchLocations = searchLocations.slice(0, 10);
-        }
+            }
+        })
     }
 
     setLocation(loc: any, my?: string) {
         if (my) {
             this.myLocationSearch = loc.city + ', ' + loc.abbr;
             this.myLocation = loc;
-            this.searchLocations = [];
+            this.mySearchLocations = [];
         } else {
             this.locationSearch = loc.city + ', ' + loc.abbr;
             this.location = loc;
-            this.mySearchLocations = [];
+            this.searchLocations = [];
             this.loadMerchants();
         }
     }
 
-    loadMerchants() {
-        const body = {
+    loadMerchants(my?:string) {
+        let location = my ? this.myLocation : this.location;
+        let body = {
             action: 'getMerchants',
-            location: this.location
-        }
+            location: location
+        };
         this.http.getData('merchant', body).subscribe((resp:any)=> {
             if(resp.status === 1){
                 this.merchants = resp.data;
@@ -116,16 +147,17 @@ export class NewTradeComponent implements OnInit {
     }
 
     loadWallets(event?: any) {
-        const merchantId = (event) ? event.detail.value['merchant_id'] : this.vars.merchantData['merchant_id'];
-        const location = (event) ? this.location : this.myLocation;
-        const body = {
+        if(event) {this.merchant = event.detail.value;}
+        let merchantId = (event) ? this.merchant['merchant_id'] : this.vars.merchantData['merchant_id'];
+        let location = (event) ? this.location : this.myLocation;
+        let body = {
             action: 'getWallets',
             location: location,
             merchantId: merchantId
         };
         this.http.getData('wallet', body).subscribe((resp: any) => {
             if (resp.status === 1) {
-                this.wallets = resp.data;
+                if(event){this.wallets = resp.data;} else {this.myWallets = resp.data;}
             } else {
                 console.log(resp);
             }
@@ -134,26 +166,50 @@ export class NewTradeComponent implements OnInit {
         });
     }
 
-    checkTrade() {
-        if (!this.isDisabled || !this.merchant || !this.wallet || !this.amount || !this.myWallet || !this.myAmount) {
-            return true;
-        } else {
-            return false;
-        }
+    slidePrev(){
+        this.slider.slidePrev();
+        this.lastSlide = false;
+        this.slider.getActiveIndex().then((i:number) => {
+            this.initialSlide = (i == 0);
+        });
+    }
+
+    async slideNext() {
+        this.slider.slideNext();
+        this.slider.getActiveIndex().then((i:number) => {
+            this.lastSlide = (i === 2);
+            if(i === 2){
+                this.urlBody = {
+                    'merchant': this.merchant.merchant_id,
+                    'wallet': this.wallet.wallet_id,
+                    'amount': this.amount,
+                    'myMerchant': this.vars.merchantData['merchant_id'],
+                    'myWallet': this.myWallet.wallet_id,
+                    'myAmount': this.myAmount
+                };
+                console.log(this.urlBody);
+                this.enableCreateTrade = (this.merchant && this.wallet && this.amount && this.myWallet && this.myAmount) ? true : false;
+            }
+            if(i > 0){
+                this.initialSlide = false;
+            }
+        });
     }
 
     createTrade() {
-        this.details = {
-            'merchant': this.merchant,
-            'wallet': this.wallet,
-            'amount': this.amount,
-            'myWallet': this.myWallet,
-            'myAmount': this.myAmount
+        const body = {
+            action: 'createTrade',
+            body: JSON.stringify(this.urlBody)
         }
-        console.log(this.details);
-        // this.modalCtrl.dismiss({
-        //     'tradeData': this.details
-        // })
+        this.http.postData('tradehub', body).subscribe((resp:any) => {
+            if(resp.status === 1){
+                this.modalCtrl.dismiss();
+            } else {
+                console.log(resp);
+            }
+        }, (err) => {
+            console.log("There was an error creating a trade.");
+        });
     }
 
 }

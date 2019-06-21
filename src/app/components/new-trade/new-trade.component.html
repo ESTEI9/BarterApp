@@ -1,71 +1,119 @@
 <ion-header>
-    <ion-toolbar color="primary">
+    <ion-toolbar color="medium-light">
         <ion-title>Add New Trade</ion-title>
         <ion-buttons slot="end">
-            <ion-button>
-                <ion-icon name="close" slot="icon-only" (click)="modalCtrl.dismiss()"></ion-icon>
+            <ion-button (click)="modalCtrl.dismiss()">
+                <ion-icon name="close" slot="icon-only"></ion-icon>
             </ion-button>
         </ion-buttons>
     </ion-toolbar>
 </ion-header>
 <ion-content>
-    <ion-searchbar 
-        [(ngModel)]="locationSearch"
-        (ionChange)="filterLocations()"
-        debounce="300"
-        color="secondary"
-        placeholder="Search Locations">
-    </ion-searchbar>
-    <ion-list *ngIf="searchLocations && searchLocations.length > 0">
-        <ion-item *ngFor="let loc of searchLocations" (click)="setLocation(loc)">
+    <ion-slides #slider [options]="sliderOptions">
+        <ion-slide>
+            <ion-card color="light">
+                <ion-card-header color="secondary">
+                    <ion-card-title>Their Exchange</ion-card-title>
+                </ion-card-header>
+                <ion-card-content no-padding>
+                    <ion-searchbar 
+                        [(ngModel)]="locationSearch"
+                        (ionChange)="filterLocations()"
+                        (ionBlur)="checkLocation()"
+                        debounce="300"
+                        color="medium-light"
+                        placeholder="Search Locations">
+                    </ion-searchbar>
+                    <ion-select (ionChange)="loadWallets($event)" placeholder="Select Merchant" padding interface="action-sheet">
+                        <ion-select-option *ngFor="let merch of merchants" [value]="merch">{{merch.dba}}</ion-select-option>
+                    </ion-select>
+                    <ion-select (ionChange)="wallet = $event.detail.value" interface="action-sheet" padding placholder="Select Wallet">
+                        <ion-select-option *ngFor="let wal of wallets" [value]="wal">{{wal.dba}}</ion-select-option>
+                    </ion-select>
+                    <ion-input
+                        type="tel"
+                        min="0"
+                        [max]="wallet && wallet.feathers ? wallet.feathers : 0"
+                        size="5"
+                        [placeholder]="wallet && wallet.feathers ? 'Max '+wallet.feathers : 'Select Wallet First'"
+                        [(ngModel)]="amount"
+                        padding>
+                    </ion-input>
+                </ion-card-content>
+            </ion-card>
+        </ion-slide>
+        <ion-slide>
+            <ion-card color="light">
+                <ion-card-header color="secondary">
+                    <ion-card-title>Your Exchange</ion-card-title>
+                </ion-card-header>
+                <ion-card-content no-padding>
+                    <ion-searchbar
+                        [(ngModel)]="myLocationSearch"
+                        (ionChange)="filterLocations('my')"
+                        debounce="300"
+                        color="medium-light"
+                        placeholder="Search Locations">
+                    </ion-searchbar>
+                    <ion-select (ionChange)="myWallet = $event.detail.value" padding placeholder="Select My Wallet" interface="action-sheet">
+                        <ion-select-option value="0">Me (Universal)</ion-select-option>
+                        <ion-select-option *ngFor="let wallet of myWallets" [value]="wallet">{{wallet.dba}}</ion-select-option>
+                    </ion-select>
+                    <ion-input
+                        type="tel"
+                        min="0"
+                        size="5"
+                        [max]="myWallet && myWallet.feathers ? myWallet.feathers : 0"
+                        [placeholder]="myWallet && myWallet.feathers ? 'Max: '+myWallet.feathers : 'Select Wallet First'"
+                        [(ngModel)]="myAmount"
+                        padding>
+                    </ion-input>
+                </ion-card-content>
+            </ion-card>
+        </ion-slide>
+        <ion-slide>
+            <ion-card color="light">
+                <ion-card-header>
+                    <ion-card-title color="secondary">
+                        Trade Details
+                    </ion-card-title>
+                </ion-card-header>
+                <ion-card-content>
+                    <ion-list>
+                        <ion-item>Details</ion-item>
+                        <!-- <ion-item *ngFor="let detail of details">
+                            detail!
+                        </ion-item> -->
+                    </ion-list>
+                </ion-card-content>
+            </ion-card>
+        </ion-slide>
+    </ion-slides>
+
+    <!-- Lists -->
+    <ion-list *ngIf="searchLocations && searchLocations.length > 0" class="bottom-sheet">
+        <ion-item *ngFor="let loc of searchLocations; let i = index" (click)="setLocation(loc)" [lines]="i == searchLocations.length-1 ? 'none' : 'full'">
             <ion-label>{{loc.city}}, {{loc.abbr}}</ion-label>
         </ion-item>
     </ion-list>
-    <ion-select (ionChange)="loadWallets($event)" placeholder="Select Merchant">
-        <ion-select-option *ngFor="let merch of merchants" [value]="merch">{{merch.dba}}</ion-select-option>
-    </ion-select>
-    <ion-select [disabled]="!merchant" *ngIf="wallets" (ionChange)="wallet = $event.detail.value" placholder="Select Wallet">
-        <ion-select-option value="0">{{merchant.dba}}</ion-select-option>
-        <ion-select-option *ngFor="let wal of wallets" [value]="wal">{{wal.dba}}</ion-select-option>
-    </ion-select>
-    <ion-input
-        *ngIf="wallet"
-        type="tel"
-        min="1"
-        [max]="wallet.feathers"
-        size="5"
-        [placeholder]="wallet.feathers > 20 ? 'e.g. 20' : 'e.g '+wallet.feathers"
-        [(ngModel)]="amount">
-    </ion-input>
-    <ion-icon name="arrow-forward" margin color="secondary"></ion-icon>
-    <ion-searchbar
-        [(ngModel)]="myLocationSearch"
-        (ionChange)="filterLocations('my')"
-        debounce="300"
-        color="secondary"
-        placeholder="Search Locations">
-    </ion-searchbar>
-    <ion-list *ngIf="mySearchLocations && mySearchLocations.length > 0">
-        <ion-item *ngFor="let loc of mySearchLocations" (click)="setLocation(loc, 'my')">
+    <ion-list *ngIf="mySearchLocations && mySearchLocations.length > 0" class="bottom-sheet">
+        <ion-item *ngFor="let loc of mySearchLocations; let i = index" (click)="setLocation(loc, 'my')" [lines]="i == mySearchLocations.length-1 ? 'none' : 'full'">
             <ion-label>{{loc.city}}, {{loc.abbr}}</ion-label>
         </ion-item>
     </ion-list>
-    <ion-select *ngIf="myWallets" (ionChange)="myWallet = $event.detail.value" placeholder="Select My Wallet">
-        <ion-select-option value="0" selected>My Valu</ion-select-option>
-        <ion-select-option *ngFor="let wallet of myWallets" [value]="wallet">{{wallet.dba}}</ion-select-option>
-    </ion-select>
-    <ion-input
-        *ngIf="myWallet"
-        type="tel"
-        min="1"
-        size="5"
-        [max]="myWallet.feathers ? (myWallet.feathers > 20 ? '20' : myWallet.feathers) : null"
-        [placeholder]="myWallet.feathers ? (myWallet.feathers > 20 ? 'e.g. 20' : 'e.g ' + myWallet.feathers) : 'e.g. 50'"
-        [(ngModel)]="myAmmount">
-    </ion-input>
-    <ion-fab vertical="bottom" horizonal="end" slot="fixed">
-        <ion-button shape="round" color="secondary" size="large" [disabled]="checkTrade()" (click)="createTrade()">
-            <ion-icon slot="start" name="add"></ion-icon><ion-label>Start</ion-label>
+
+    <!-- Navigation Buttons -->
+    <ion-fab *ngIf="!initialSlide" vertical="bottom" horizontal="start" slot="fixed">
+        <ion-button color="highlight" shape="round" (click)="slidePrev()">
+            <ion-icon slot="start" name="arrow-back"></ion-icon>Previous
+        </ion-button>
+    </ion-fab>
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+        <ion-button color="highlight" shape="round" *ngIf="!lastSlide" (click)="slideNext()">
+            <ion-icon slot="start" name="arrow-forward"></ion-icon>Next
+        </ion-button>
+        <ion-button color="success" *ngIf="enableCreateTrade" size="large" shape="round" (click)="createTrade()" #createTradeButton>
+            <ion-icon slot="start" name="add"></ion-icon>Create Trade
         </ion-button>
     </ion-fab>
 </ion-content>

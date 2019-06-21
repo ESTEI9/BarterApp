@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
 
     doLogin() {
         this.isLoading = true;
-        const payload = {...this.account, 'action': 'login'};
+        const payload = {'body': JSON.stringify({...this.account, 'action': 'login'})};
         this.http.postData('login', payload).subscribe(async (resp: any) => {
             if (resp.status === 1) {
                 if (this.rememberMe && this.account.email != this.vars.login) {
