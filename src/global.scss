@@ -9,3 +9,159 @@
 @import '~@ionic/angular/css/text-alignment.css';
 @import '~@ionic/angular/css/text-transformation.css';
 @import '~@ionic/angular/css/flex-utils.css';
+
+ion-content {
+    --ion-font-family: 'Helvetica Neue', 'Helvetica', 'Roboto', sans-serif;
+}
+/* --------------------
+Utility Classes
+-------------------- */
+
+//Margin
+.mt-1   {margin-top: 1em;}
+.mt-0   {margin-top: 0;}
+
+.mb-05  {margin-bottom:0.5em;}
+
+.m-05    {margin:0.5em;}
+.m-1    {margin: 1em;}
+
+//Padding
+.pt-14  {padding-top: 1.4em;}
+.pb-14  {padding-bottom: 1.4em;}
+.pb-1   {padding-bottom:1em;}
+.pt-1   {padding-top:1em;}
+
+//Border Radius
+.br-025 {border-radius: 0.25em;}
+.br-05  {border-radius:0.5em;}
+.br-1   {border-radius:1em;}
+
+//Font sizes
+.fs-09 {font-size:0.9em;}
+.fs-13 {font-size:1.3em;}
+
+//Text Alignment
+.text-left { text-align: left;}
+.text-center {text-align: center;}
+.text-right {text-align: right;}
+
+//Text Transformations
+.bold {font-weight:bold;}
+.italic {font-style:italic;}
+.underline {text-decoration: underline;}
+
+//Other Text Changes
+.white {color: #fff;}
+//.text-shadow-dark {text-shadow: 1px 1px 2px $grey-dark;}
+//.text-shadow-medium {text-shadow: 1px 1px 2px $grey-medium;}
+
+.item-input {
+    font-size:1em;
+    ::placeholder {
+        font-size:1em;
+    }
+}
+
+ion-menu {
+    ion-list.list {
+        background: transparent;
+    }
+}
+
+ion-header {
+    ion-toolbar.ion-color {
+        transition: --ion-color-base 0.3s;
+        //border-bottom: 2px solid var(--ion-color-contrast);
+    }
+
+    &.header-md:after {
+        display:none;
+    }
+}
+
+ion-searchbar {
+    //background: $toolbar-background;
+    //margin-top:56px;
+
+    .searchbar-input-container{
+        input.searchbar-input{
+            box-shadow: none;
+            background: var(--ion-color-light);
+            border-radius: 4px;
+        }
+    }
+}
+
+ion-button, ion-menu-button {
+    --text-shadow:1px 1px 2px rgba(0,0,0,0.2);
+    --transition: all 0.2s;
+}
+
+.dealscontainer {
+    margin: 0 -1em;
+}
+
+ion-item {
+    --ion-item-background-activated: transparent;
+    --highlight-background:transparent;
+}
+
+ion-card.dealcard {
+    width:100%;
+}
+
+ion-input.sc-ion-input-md-h, ion-input.sc-ion-input-ios-h, ion-select, ion-textarea {
+    border-bottom: 1px solid;
+    //--background: linear-gradient(#fafafa,#fff,#fafafa);
+    font-size: 1.2em;
+    padding: 0 1em;
+
+    .text-input-ios {
+        padding-left:0.5em;
+        margin:0.8em 0;
+    }
+}
+
+ion-input .text-input-ios, ion-select .text-input-ios, ion-textarea .text-input-ios {
+    padding-left:0;
+}
+
+ion-modal.modal.show-modal {
+
+    div[role="dialog"]{
+        border-radius:10px;
+        width: calc(100% - 40px);
+        max-width: 1000px;
+        max-height: 700px;
+        height: calc(100% - 40px);
+    }
+
+    &.size-350 {
+        div[role="dialog"]{
+            height:350px;
+        }
+    }
+
+    &.size-300 {
+        div[role="dialog"]{
+            height:300px;
+        }
+    }
+
+    &#daterange {
+        div[role="dialog"]{
+            height:200px;
+        }
+    }
+}
+
+.selectedCard {
+    --background: var(--ion-color-secondary-tint);
+    color: #fff;
+}
+
+.cartCount {
+    border-radius:50%;
+    min-width:20px;
+}

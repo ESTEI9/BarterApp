@@ -1,0 +1,39 @@
+
+ion-list {
+    background:transparent;
+}
+ion-grid {
+    flex-basis:100%;
+
+    #tagline {
+        text-align: right;
+    }
+}
+
+ion-text {
+    font-size:25px;
+    color: #222;
+    font-family: 'Helvetica', sans-serif;
+}
+
+app-login {
+    width:100%;
+}
+
+ion-item {
+    --ion-background-color: transparent;
+    --ion-item-background-activated: transparent;
+    --highlight-background:transparent;
+
+    &.header {
+        margin-bottom:1em;
+    }
+
+    img {
+        max-width:250px;
+        margin:0 auto;
+    }
+}
+ion-input {
+    text-align: center;
+}

@@ -1,0 +1,73 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-title>Trade Hub</ion-title>
+        <ion-buttons slot="end">
+            <ion-button color="light" (click)="navCtrl.navigateRoot('')"><ion-icon slot="start" name="log-out"></ion-icon>Logout</ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+<ion-content>
+    <ion-segment (ionChange)="switchSegment($event)">
+        <ion-segment-button value="queued">
+            <ion-label>Queued</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="archive">
+            <ion-label>Archive</ion-label>
+        </ion-segment-button>
+    </ion-segment>
+    <!--Incoming-->
+    <div *ngIf="segment === 'queued'">
+        <ion-card>
+            <ion-card-header>
+                <ion-card-title>Inbox</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+                <ion-spinner *ngIf="inboxIsLoading"></ion-spinner>
+                <ion-text text-center *ngIf="inbox.length == 0 && !inboxIsLoading">No trades in inbox</ion-text>
+                <ion-list *ngIf="inbox.length > 0 && !inboxIsLoading">
+                    <ion-item *ngFor="let in of inbox" (click)="viewTrade(in.trade_id)">
+                        <ion-label>{{in.title}}<br /><span>{{in.merchant.name}}</span></ion-label>
+                    </ion-item>
+                </ion-list>
+            </ion-card-content>
+        </ion-card>
+        <!--Outgoing-->
+        <ion-card>
+            <ion-card-header>
+                <ion-card-title>Outbox</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+                <ion-spinner *ngIf="outboxIsLoading"></ion-spinner>
+                <ion-text text-center *ngIf="outbox.length == 0 && !outboxIsLoading">No trades in outbox</ion-text>
+                <ion-list *ngIf="outbox.length > 0 && !outboxIsLoading">
+                    <ion-item *ngFor="let out of outbox" (click)="viewTrade(out.trade_id)">
+                        <ion-label>{{out.title}}<br /><span>{{out.merchant.name}}</span></ion-label>
+                    </ion-item>
+                </ion-list>
+            </ion-card-content>
+        </ion-card>
+    </div>
+    <div *ngIf="segment == 'archive'">
+        <ion-card>
+            <ion-card-header>
+                <ion-card-title>Archive</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+                <ion-spinner *ngIf="archiveIsLoading"></ion-spinner>
+                <ion-text text-center *ngIf="archive.length == 0 && !archiveIsLoading">No trades in archive</ion-text>
+                <ion-list *ngIf="archive.length > 0 && !archiveIsLoading">
+                    <ion-item *ngFor="let arch of archive" (click)="viewTrade(arch.trade_id)">
+                        <ion-label>{{arch.title}}<br/><span>{{arch.merchant.name}}</span></ion-label>
+                    </ion-item>
+                </ion-list>
+            </ion-card-content>
+        </ion-card>
+    </div> 
+    <!--Start New Trade-->
+        <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+            <ion-button size="large" shape="round" color="secondary" (click)="startNewTrade()">
+                <ion-icon name="add" slot="start"></ion-icon>
+                <ion-label>New</ion-label>
+            </ion-button>
+        </ion-fab>
+</ion-content>

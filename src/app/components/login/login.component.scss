@@ -1,0 +1,26 @@
+ion-item {
+
+    --ion-item-background-activated: transparent;
+    --highlight-background:transparent;
+
+    &.header {
+        --ion-background-color: #fff;
+        margin-bottom:1em;
+        
+        img {
+            margin:1em 0;
+        }
+    }
+
+    ion-button {
+        --box-shadow:none;
+        --border-width:1px;
+        font-weight:normal;
+        width:100%;
+    }
+
+}
+
+ion-input {
+    text-align: center;
+}

@@ -1,5 +1,7 @@
 {
   "name": "BarterApp",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }
