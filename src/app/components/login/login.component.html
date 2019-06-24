@@ -7,14 +7,14 @@
             <ion-input type="password" color="light" [(ngModel)]="account.password" name="password" placeholder="Password"></ion-input>
         </ion-item>
         <ion-item margin-top>
-            <ion-button color="highlight" margin-top margin-bottom fill="solid" shape="round" size="large" expand="block" type="submit" [attr.disabled]="isLoading">
+            <ion-button color="light" margin-top margin-bottom fill="solid" shape="round" size="large" expand="block" type="submit" [attr.disabled]="isLoading">
                 <span *ngIf="!isLoading">Login</span>
-                <ion-spinner name="crescent" *ngIf="isLoading"></ion-spinner>
+                <ion-spinner color="dark" *ngIf="isLoading"></ion-spinner>
             </ion-button>
         </ion-item>
-        <ion-item>
-            <ion-button size="large" margin-bottom (click)="forgotPassword()" expand="block" shape="round" color="light" fill="solid" [attr.disabled]="isLoading">Reset Password</ion-button>
-        </ion-item>
+        <!-- <ion-item>
+            <ion-button size="large" margin-bottom (click)="forgotPassword()" expand="block" shape="round" color="dark" fill="solid" [attr.disabled]="isLoading">Reset Password</ion-button>
+        </ion-item> -->
     </ion-list>
     <ion-text *ngIf="message" id="message" color="danger">{{message}}</ion-text>
 </form>

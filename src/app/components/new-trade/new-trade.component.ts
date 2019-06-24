@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { ModalController, IonSlides } from '@ionic/angular';
+import { ModalController, IonSlides, ToastController } from '@ionic/angular';
 import { HttpService } from 'src/app/services/http.service';
 import { VarsService } from 'src/app/services/vars.service';
 import { HttpClient } from '@angular/common/http';
@@ -43,7 +43,8 @@ export class NewTradeComponent implements OnInit {
         private httpClient: HttpClient,
         private http: HttpService,
         private vars: VarsService,
-        private modalCtrl: ModalController
+        private modalCtrl: ModalController,
+        private toastCtrl: ToastController
     ) {}
 
     ngOnInit() {
@@ -198,13 +199,24 @@ export class NewTradeComponent implements OnInit {
 
     createTrade() {
         const body = {
-            action: 'createTrade',
-            body: JSON.stringify(this.urlBody)
+            body: JSON.stringify({action: 'createTrade', ...this.urlBody})
         }
-        this.http.postData('tradehub', body).subscribe((resp:any) => {
+        this.http.postData('tradehub', body).subscribe(async (resp:any) => {
             if(resp.status === 1){
+                const toast = await this.toastCtrl.create({
+                    message: 'Trade Created',
+                    duration: 2000,
+                    color: 'dark'
+                });
+                await toast.present();
                 this.modalCtrl.dismiss();
             } else {
+                const toast = await this.toastCtrl.create({
+                    message: 'Unable to created trade',
+                    duration: 2000,
+                    color: 'dark'
+                });
+                await toast.present();
                 console.log(resp);
             }
         }, (err) => {

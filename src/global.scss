@@ -11,8 +11,7 @@
 @import '~@ionic/angular/css/flex-utils.css';
 
 ion-content {
-    --ion-font-family: 'Helvetica Neue', 'Helvetica', 'Roboto', sans-serif;
-    --background: linear-gradient(var(--ion-color-primary), var(--ion-color-secondary));
+    --background: radial-gradient(var(--ion-color-primary), var(--ion-color-highlight));
 }
 /* --------------------
 Utility Classes

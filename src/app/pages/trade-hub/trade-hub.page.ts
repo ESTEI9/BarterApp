@@ -14,7 +14,7 @@ export class TradeHubPage implements OnInit {
     private inbox: any = [];
     private outbox: any = [];
     private archive: any = [];
-    private segment: string = 'queued';
+    private segment: string = 'inbox';
     private inboxIsLoading: boolean = true;
     private outboxIsLoading: boolean = true;
     private archiveIsLoading: boolean = true;
@@ -29,6 +29,7 @@ export class TradeHubPage implements OnInit {
     ngOnInit() {
         this.loadInbox();
         this.loadOutbox();
+        this.loadArchive();
     }
 
     async loadInbox() {
@@ -90,12 +91,18 @@ export class TradeHubPage implements OnInit {
 
     switchSegment(event: any) {
         this.segment = event.detail.value;
-
-        if (this.segment == 'queued') {
-            this.loadInbox();
-            this.loadOutbox();
-        } else {
-            this.loadArchive();
+        switch(this.segment){
+            case 'inbox':
+                this.loadInbox();
+                break;
+            case 'outbox':
+                this.loadOutbox();
+                break;
+            case 'archive':
+                this.loadArchive();
+                break;
+            default:
+                null;
         }
     }
 

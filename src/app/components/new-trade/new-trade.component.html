@@ -1,5 +1,5 @@
 <ion-header>
-    <ion-toolbar color="medium-light">
+    <ion-toolbar color="light">
         <ion-title>Add New Trade</ion-title>
         <ion-buttons slot="end">
             <ion-button (click)="modalCtrl.dismiss()">
@@ -11,9 +11,9 @@
 <ion-content>
     <ion-slides #slider [options]="sliderOptions">
         <ion-slide>
-            <ion-card color="light">
-                <ion-card-header color="secondary">
-                    <ion-card-title>Their Exchange</ion-card-title>
+            <ion-card color="light-alt">
+                <ion-card-header color="medium-light">
+                    <ion-card-title>Partner Details</ion-card-title>
                 </ion-card-header>
                 <ion-card-content no-padding>
                     <ion-searchbar 
@@ -21,13 +21,13 @@
                         (ionChange)="filterLocations()"
                         (ionBlur)="checkLocation()"
                         debounce="300"
-                        color="medium-light"
+                        color="primary"
                         placeholder="Search Locations">
                     </ion-searchbar>
                     <ion-select (ionChange)="loadWallets($event)" placeholder="Select Merchant" padding interface="action-sheet">
                         <ion-select-option *ngFor="let merch of merchants" [value]="merch">{{merch.dba}}</ion-select-option>
                     </ion-select>
-                    <ion-select (ionChange)="wallet = $event.detail.value" interface="action-sheet" padding placholder="Select Wallet">
+                    <ion-select (ionChange)="wallet = $event.detail.value" interface="action-sheet" padding placeholder="Select Wallet">
                         <ion-select-option *ngFor="let wal of wallets" [value]="wal">{{wal.dba}}</ion-select-option>
                     </ion-select>
                     <ion-input
@@ -43,20 +43,19 @@
             </ion-card>
         </ion-slide>
         <ion-slide>
-            <ion-card color="light">
-                <ion-card-header color="secondary">
-                    <ion-card-title>Your Exchange</ion-card-title>
+            <ion-card color="light-alt">
+                <ion-card-header color="medium-light">
+                    <ion-card-title>Your Trade</ion-card-title>
                 </ion-card-header>
                 <ion-card-content no-padding>
                     <ion-searchbar
                         [(ngModel)]="myLocationSearch"
                         (ionChange)="filterLocations('my')"
                         debounce="300"
-                        color="medium-light"
+                        color="primary"
                         placeholder="Search Locations">
                     </ion-searchbar>
                     <ion-select (ionChange)="myWallet = $event.detail.value" padding placeholder="Select My Wallet" interface="action-sheet">
-                        <ion-select-option value="0">Me (Universal)</ion-select-option>
                         <ion-select-option *ngFor="let wallet of myWallets" [value]="wallet">{{wallet.dba}}</ion-select-option>
                     </ion-select>
                     <ion-input
@@ -72,18 +71,25 @@
             </ion-card>
         </ion-slide>
         <ion-slide>
-            <ion-card color="light">
+            <ion-card color="light-alt" style="min-width:300px;">
                 <ion-card-header>
-                    <ion-card-title color="secondary">
-                        Trade Details
+                    <ion-card-title color="medium-light">
+                        Final Details
                     </ion-card-title>
                 </ion-card-header>
-                <ion-card-content>
-                    <ion-list>
-                        <ion-item>Details</ion-item>
-                        <!-- <ion-item *ngFor="let detail of details">
-                            detail!
-                        </ion-item> -->
+                <ion-card-content no-padding>
+                    <ion-list lines="none">
+                        <ion-item *ngIf="myAmount && myWallet"><ion-label>Trade</ion-label><ion-text text-right>{{myAmount}}<br/><span class="valuType">{{myWallet.dba}}</span></ion-text></ion-item>
+                        <ion-item *ngIf="!myAmount || !myWallet">You haven't selected<span *ngIf="!myAmount"> the amount from</span> your wallet</ion-item>
+                        <ion-item *ngIf="amount && wallet"><ion-label>Receive</ion-label><ion-text text-right>{{amount}}<br/><span class="valuType">{{wallet.dba}}</span></ion-text></ion-item>
+                        <ion-item *ngIf="!amount || !wallet">You haven't selected<span *ngIf="amount"> the amount from</span> your partner's wallet</ion-item>
+                        <ion-item margin-top><strong style="margin:0 auto;">Your Partner</strong></ion-item>
+                        <div *ngIf="merchant">
+                            <ion-item><ion-label>DBA</ion-label><ion-text>{{merchant.dba}}</ion-text></ion-item>
+                            <ion-item><ion-label>Phone</ion-label><ion-text *ngIf="merchant.phone">{{merchant.phone | tel}}</ion-text></ion-item>
+                            <ion-item><ion-label>Email</ion-label><ion-text>{{merchant.email}}</ion-text></ion-item>
+                        </div>
+                        <div text-center *ngIf="!merchant">No trading partner selected.</div>
                     </ion-list>
                 </ion-card-content>
             </ion-card>
@@ -104,16 +110,16 @@
 
     <!-- Navigation Buttons -->
     <ion-fab *ngIf="!initialSlide" vertical="bottom" horizontal="start" slot="fixed">
-        <ion-button color="highlight" shape="round" (click)="slidePrev()">
+        <ion-button color="light-alt" shape="round" (click)="slidePrev()">
             <ion-icon slot="start" name="arrow-back"></ion-icon>Previous
         </ion-button>
     </ion-fab>
     <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-        <ion-button color="highlight" shape="round" *ngIf="!lastSlide" (click)="slideNext()">
+        <ion-button color="light" shape="round" *ngIf="!lastSlide" (click)="slideNext()">
             <ion-icon slot="start" name="arrow-forward"></ion-icon>Next
         </ion-button>
-        <ion-button color="success" *ngIf="enableCreateTrade" size="large" shape="round" (click)="createTrade()" #createTradeButton>
-            <ion-icon slot="start" name="add"></ion-icon>Create Trade
+        <ion-button color="light" *ngIf="enableCreateTrade" shape="round" (click)="createTrade()" #createTradeButton>
+            <ion-icon slot="start" name="add"></ion-icon>Create
         </ion-button>
     </ion-fab>
 </ion-content>

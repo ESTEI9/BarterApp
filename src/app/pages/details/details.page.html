@@ -1,12 +1,79 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="light">
     <ion-title>Trade Details</ion-title>
     <ion-buttons slot="start">
         <ion-back-button></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-
 <ion-content>
-    {{tradeId}}
+    <ion-card color="light">
+        <ion-card-header color="medium-light">
+            <ion-card-title>Specifics</ion-card-title>
+        </ion-card-header>
+        <ion-card-content no-padding>
+            <div text-center padding *ngIf="!trade || tradeIsLoading">
+                <ion-spinner *ngIf="tradeIsLoading"></ion-spinner>
+                <span *ngIf="!trade && !tradeIsLoading">Could not retrieve your trade details</span>
+            </div>
+            <ion-list color="light" *ngIf="trade">
+                <ion-item>
+                    <ion-label>Trade</ion-label>
+                    <ion-text text-right *ngIf="referrer === 'outbox'">{{details.valu}}<br/><span class="valuType">{{details.wallet_dba}}</span></ion-text>
+                    <ion-text text-right *ngIf="referrer !== 'outbox'">{{myDetails.valu}}<br/><span class="valuType">{{myDetails.wallet_dba}}</span></ion-text>
+                </ion-item>
+                <ion-item>
+                    <ion-label>Receive</ion-label>
+                    <ion-text text-right *ngIf="referrer === 'outbox'">{{myDetails.valu}}<br/><span class="valuType">{{myDetails.wallet_dba}}</span></ion-text>
+                    <ion-text text-right *ngIf="referrer !== 'outbox'">{{details.valu}}<br/><span class="valuType">{{details.wallet_dba}}</span></ion-text>
+                </ion-item>
+                <ion-item lines="none">
+                    <ion-label>{{trade.tradeData.trade_status}}</ion-label>
+                    <ion-text text-right>
+                        <span *ngIf="trade.tradeData.trade_status === 'Proposed'">{{trade.tradeData.trade_proposed | date:'short'}}</span>
+                        <span *ngIf="trade.tradeData.trade_status === 'Completed'">{{trade.tradeData.trade_completed | date:'short'}}</span>
+                        <span *ngIf="trade.tradeData.trade_status === 'Canceled'">{{trade.tradeData.trade_completed | date:'short'}}</span>
+                    </ion-text>
+                </ion-item>
+            </ion-list>
+        </ion-card-content>
+    </ion-card>
+    <ion-card color="light">
+        <ion-card-header color="medium-light">
+            <ion-card-title>Trade Partner</ion-card-title>
+        </ion-card-header>
+        <ion-card-content no-padding>
+            <div text-center padding *ngIf="!trade || tradeIsLoading">
+                <ion-spinner *ngIf="tradeIsLoading"></ion-spinner>
+                <span *ngIf="!trade && !tradeIsLoading">Could not get trade partner</span>
+            </div>
+            <ion-list color="light" *ngIf="trade">
+                <ion-item>
+                    <ion-label>DBA</ion-label>
+                    <ion-text *ngIf="referrer === 'outbox'">{{myDetails.dba}}</ion-text>
+                    <ion-text *ngIf="referrer !== 'outbox'">{{details.dba}}</ion-text>
+                </ion-item>
+                <ion-item>
+                    <ion-label>Phone</ion-label>
+                    <ion-text *ngIf="referrer === 'outbox'">{{myDetails.phone | tel}}</ion-text>
+                    <ion-text *ngIf="referrer !== 'outbox'">{{details.phone | tel}}</ion-text>
+                </ion-item>
+                <ion-item lines="none">
+                    <ion-label>Email</ion-label>
+                    <ion-text *ngIf="referrer === 'outbox'">{{myDetails.email}}</ion-text>
+                    <ion-text *ngIf="referrer !== 'outbox'">{{details.email}}</ion-text>
+                </ion-item>
+            </ion-list>
+        </ion-card-content>
+    </ion-card>
 </ion-content>
+<ion-footer *ngIf="referrer !== 'archive'">
+    <ion-toolbar color="primary">
+        <div class="ion-justify-content-around" style="display:flex">
+            <ion-button *ngIf="referrer === 'inbox' && !executing" color="dark" shape="round" fill="solid" [disabled]="executing" (click)="doAction('decline')">Decline</ion-button>
+            <ion-button *ngIf="referrer === 'outbox' && !executing" color="dark" shape="round" fill="solid" [disabled]="executing" (click)="doAction('cancel')">Cancel Trade</ion-button>
+            <ion-button *ngIf="referrer === 'inbox' && !executing" color="light" shape="round" fill="solid" [disabled]="executing" (click)="doAction('accept')">Accept</ion-button>
+            <ion-spinner color="light" *ngIf="executing"></ion-spinner>
+        </div>
+    </ion-toolbar>
+</ion-footer>
