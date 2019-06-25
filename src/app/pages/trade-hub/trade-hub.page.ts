@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpService } from 'src/app/services/http.service';
 import { VarsService } from 'src/app/services/vars.service';
-import { NavController, ModalController } from '@ionic/angular';
+import { NavController, ModalController, ActionSheetController } from '@ionic/angular';
 import { NewTradeComponent } from 'src/app/components/new-trade/new-trade.component';
 
 @Component({
@@ -18,12 +18,14 @@ export class TradeHubPage implements OnInit {
     private inboxIsLoading: boolean = true;
     private outboxIsLoading: boolean = true;
     private archiveIsLoading: boolean = true;
+    private tradeType: string;
 
     constructor(
         private http: HttpService,
         private vars: VarsService,
         private navCtrl: NavController,
-        private modalCtrl: ModalController
+        private modalCtrl: ModalController,
+        private actionSheetCtrl: ActionSheetController
     ) { }
 
     ngOnInit() {
@@ -107,12 +109,41 @@ export class TradeHubPage implements OnInit {
     }
 
     async startNewTrade(){
-        const modal = await this.modalCtrl.create({
-            component: NewTradeComponent
-        });
-        await modal.present();
-        await modal.onDidDismiss().then(()=>{
-            this.loadOutbox();
+        this.tradeType = '';
+        const sheet = await this.actionSheetCtrl.create({
+            header: 'Select Trade Type',
+            buttons:[{
+                text: 'Trade',
+                handler: () => {
+                    this.tradeType = 'Trade';
+                }
+            }, {
+                text: 'Invoice',
+                handler: () => {
+                    this.tradeType = 'Invoice'
+                }
+            }, {
+                text: 'Gift',
+                handler: () => {
+                    this.tradeType = 'Gift'
+                }
+            }, {
+                text: 'Cancel',
+                role: 'cancel'
+            }]
+        })
+        await sheet.present();
+        await sheet.onDidDismiss().then(async () => {
+            if(this.tradeType){
+                const modal = await this.modalCtrl.create({
+                    component: NewTradeComponent,
+                    componentProps: {tradeType: this.tradeType}
+                });
+                await modal.present();
+                await modal.onDidDismiss().then(()=>{
+                    this.loadOutbox();
+                });
+            }
         });
     }
 

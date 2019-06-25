@@ -23,26 +23,91 @@
     <!--Incoming-->
     <div *ngIf="segment === 'inbox'">
         <ion-card color="light-alt">
+            <ion-card-header color="medium-light">
+                <ion-card-title>Trades</ion-card-title>
+            </ion-card-header>
             <ion-card-content no-padding>
-                <div text-center margin *ngIf="inboxIsLoading || inbox.length == 0">
-                    <span *ngIf="inbox.length == 0 && !inboxIsLoading">No trades in inbox</span>
-                    <ion-spinner *ngIf="inboxIsLoading"></ion-spinner>
+                <div text-center>
+                    <div padding *ngIf="inbox.trades && inbox.trades.length == 0 && !inboxIsLoading">No Trades</div>
+                    <ion-spinner *ngIf="inboxIsLoading" margin></ion-spinner>
                 </div>
-                <ion-list *ngIf="inbox.length > 0 && !inboxIsLoading" lines="none" no-padding>
-                    <ion-item color="medium-light">
+                <ion-list *ngIf="inbox.trades && inbox.trades.length > 0 && !inboxIsLoading" lines="none" no-padding>
+                    <ion-item color="light-alt">
                         <ion-grid no-padding>
                             <ion-row>
-                                <ion-col size="6">Partner</ion-col>
-                                <ion-col size="3" text-center>Trade</ion-col>
-                                <ion-col text-right>Proposed</ion-col>
+                                <ion-col size="6"><strong>Partner</strong></ion-col>
+                                <ion-col size="3" text-center><strong>Trade</strong></ion-col>
+                                <ion-col text-right><strong>Proposed</strong></ion-col>
                             </ion-row>
                         </ion-grid>
                     </ion-item>
-                    <ion-item *ngFor="let in of inbox" (click)="viewTrade(in.trade_id)">
+                    <ion-item *ngFor="let in of inbox.trades" (click)="viewTrade(in.trade_id)">
                         <ion-grid no-padding>
                             <ion-row class="ion-align-items-center">
                                 <ion-col size="6">{{in.dba}}</ion-col>
                                 <ion-col size="3" class="ion-justify-content-evenly ion-align-items-center" style="display:flex;">{{in.rec_valu}} <ion-icon name="repeat" size="small"></ion-icon> {{in.init_valu}}</ion-col>
+                                <ion-col text-right>{{in.trade_proposed | date:'shortDate'}}</ion-col>
+                            </ion-row>
+                        </ion-grid>
+                    </ion-item>
+                </ion-list>
+            </ion-card-content>
+        </ion-card>
+        <ion-card color="light-alt">
+            <ion-card-header color="medium-light">
+                <ion-card-title>Invoices</ion-card-title>
+            </ion-card-header>
+            <ion-card-content no-padding>
+                <div text-center>
+                    <div padding *ngIf="inbox.invoices && inbox.invoices.length == 0 && !inboxIsLoading">No Invoices</div>
+                    <ion-spinner *ngIf="inboxIsLoading" margin></ion-spinner>
+                </div>
+                <ion-list *ngIf="inbox.invoices && inbox.invoices.length > 0 && !inboxIsLoading" lines="none" no-padding>
+                    <ion-item color="light-alt">
+                        <ion-grid no-padding>
+                            <ion-row>
+                                <ion-col size="6"><strong>Partner</strong></ion-col>
+                                <ion-col size="3" text-center><strong>Invoice</strong></ion-col>
+                                <ion-col text-right><strong>Proposed</strong></ion-col>
+                            </ion-row>
+                        </ion-grid>
+                    </ion-item>
+                    <ion-item *ngFor="let in of inbox.invoices" (click)="viewTrade(in.trade_id)">
+                        <ion-grid no-padding>
+                            <ion-row class="ion-align-items-center">
+                                <ion-col size="6">{{in.dba}}</ion-col>
+                                <ion-col size="3" class="ion-justify-content-evenly ion-align-items-center" style="display:flex;">{{in.init_valu}}</ion-col>
+                                <ion-col text-right>{{in.trade_proposed | date:'shortDate'}}</ion-col>
+                            </ion-row>
+                        </ion-grid>
+                    </ion-item>
+                </ion-list>
+            </ion-card-content>
+        </ion-card>
+        <ion-card color="light-alt">
+            <ion-card-header color="medium-light">
+                <ion-card-title>Gifts</ion-card-title>
+            </ion-card-header>
+            <ion-card-content no-padding>
+                <div text-center>
+                    <div padding *ngIf="inbox.gifts && inbox.gifts.length == 0 && !inboxIsLoading">No Gifts</div>
+                    <ion-spinner *ngIf="inboxIsLoading" margin></ion-spinner>
+                </div>
+                <ion-list *ngIf="inbox.gifts && inbox.gifts.length > 0 && !inboxIsLoading" lines="none" no-padding>
+                    <ion-item color="light-alt">
+                        <ion-grid no-padding>
+                            <ion-row>
+                                <ion-col size="6"><strong>Partner</strong></ion-col>
+                                <ion-col size="3" text-center><strong>Gift</strong></ion-col>
+                                <ion-col text-right><strong>Proposed</strong></ion-col>
+                            </ion-row>
+                        </ion-grid>
+                    </ion-item>
+                    <ion-item *ngFor="let in of inbox.gifts" (click)="viewTrade(in.trade_id)">
+                        <ion-grid no-padding>
+                            <ion-row class="ion-align-items-center">
+                                <ion-col size="6">{{in.dba}}</ion-col>
+                                <ion-col size="3" class="ion-justify-content-evenly ion-align-items-center" style="display:flex;">{{in.init_valu}}</ion-col>
                                 <ion-col text-right>{{in.trade_proposed | date:'shortDate'}}</ion-col>
                             </ion-row>
                         </ion-grid>

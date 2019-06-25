@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
 import { ModalController, IonSlides, ToastController } from '@ionic/angular';
 import { HttpService } from 'src/app/services/http.service';
 import { VarsService } from 'src/app/services/vars.service';
@@ -11,13 +11,18 @@ import { HttpClient } from '@angular/common/http';
 })
 export class NewTradeComponent implements OnInit {
 
+    @Input() tradeId: number;
+    @Input() tradeType: string;
+    private tradeDetails: any;
     private locations: any = '';
     private urlBody: any = null;
     private merchants: any;
     private enableCreateTrade: boolean = false;
-
-    private initialSlide: boolean = true;
-    private lastSlide: boolean = false;
+    private notes: string;
+    private loadingWallet: boolean = false;
+    private loadingMyWallet: boolean = false;
+    private loadingTrade: boolean = false;
+    private notesLeft: number = 500;
 
     private locationSearch: string;
     private searchLocations: any = [];
@@ -30,14 +35,9 @@ export class NewTradeComponent implements OnInit {
     private myLocationSearch: string;
     private mySearchLocations: any = [];
     private myLocation: any = [];
-    private myWallets: any = [];
+    private myWallets: any;
     private myWallet: any;
     private myAmount: number;
-    
-    private sliderOptions: any = {}
-
-    @ViewChild('slider') slider: IonSlides;
-    @ViewChild('createTradeButton', {read: ElementRef}) createTradeButton: ElementRef;
 
     constructor(
         private httpClient: HttpClient,
@@ -51,29 +51,52 @@ export class NewTradeComponent implements OnInit {
         if(!this.locations){
             this.httpClient.get("../assets/cities.json").subscribe((resp: any) => {
                 this.locations = resp;
-                this.locations.filter((loc:any) => {
-                    const city = this.vars.merchantData['city'];
-                    const state = this.vars.merchantData['state'];
-                    if(loc.city === city && loc.state === state){
-                        this.location = loc;
-                        this.locationSearch = loc.city+', '+loc.abbr;
-                        this.myLocation = loc;
-                        this.myLocationSearch = loc.city+', '+loc.abbr;
-                        this.loadMerchants();
-                        this.loadMerchants('my');
-                        this.loadWallets();
-                    }
-                });
+                // this.locations.filter((loc:any) => {
+                //     const city = this.vars.merchantData['city'];
+                //     const state = this.vars.merchantData['state'];
+                //     if(loc.city === city && loc.state === state){
+                //         this.location = loc;
+                //         this.locationSearch = loc.city+', '+loc.abbr;
+                //         this.myLocation = loc;
+                //         this.myLocationSearch = loc.city+', '+loc.abbr;
+                //         this.loadMerchants();
+                //         this.loadMerchants('my');
+                //         this.loadWallets();
+                //     }
+                // });
             });
+
+            if(this.tradeId){
+                this.loadingTrade = true;
+                const body = {
+                    action: 'getTrade',
+                    tradeId: this.tradeId
+                };
+                this.http.getData('details', body).subscribe(async (resp:any) => {
+                    if(resp.status === 1){
+                        this.tradeDetails = resp.data;
+                        this.tradeType = this.tradeDetails.tradeData.type;
+                    } else {
+                        const toast = await this.toastCtrl.create({
+                            message: 'Fatal Error: Unable to load trade details',
+                            duration: 3000,
+                            color: 'dark'
+                        });
+                        await toast.present();
+                        this.modalCtrl.dismiss();
+                    }
+                    this.loadingTrade = false;
+                });
+            }
         }
     }
 
     filterLocations(my?: any) {
-        if(this.locations){
-            const searchString = (my) ? this.myLocationSearch : this.locationSearch;
+        const searchString = (my) ? this.myLocationSearch : this.locationSearch;
+        if(this.locations && searchString){
             let searchLocations = [];
             searchLocations = this.locations.filter((loc: any) => {
-                if (searchLocations.length < 10) {
+                if (searchLocations.length < 6) {
                     let combos = [
                         loc['city'],
                         loc['city'] + "," + loc['abbr'],
@@ -89,10 +112,12 @@ export class NewTradeComponent implements OnInit {
             if(searchLocations[0]['city']+', '+searchLocations[0]['abbr'] == searchString || !searchString){ //removes odd bug showing last option after clicking
                 searchLocations = [];
             }
+
+            searchLocations = searchLocations.slice(0, 6);
             if (my) {
-                this.mySearchLocations = searchLocations.slice(0, 10);
+                this.mySearchLocations = searchLocations;
             } else {
-                this.searchLocations = searchLocations.slice(0, 10);
+                this.searchLocations = searchLocations;
             }
         }
     }
@@ -115,6 +140,12 @@ export class NewTradeComponent implements OnInit {
                 }
             }
         })
+        if(this.myLocation){
+            this.loadWallets('my');
+        }
+        if(this.location){
+            this.loadWallets();
+        }
     }
 
     setLocation(loc: any, my?: string) {
@@ -147,10 +178,10 @@ export class NewTradeComponent implements OnInit {
         });
     }
 
-    loadWallets(event?: any) {
-        if(event) {this.merchant = event.detail.value;}
-        let merchantId = (event) ? this.merchant['merchant_id'] : this.vars.merchantData['merchant_id'];
-        let location = (event) ? this.location : this.myLocation;
+    loadWallets(my?:any) {
+        my ? this.loadingMyWallet = true : this.loadingWallet = true;
+        let merchantId = this.vars.merchantData['merchant_id'];
+        const location = (my) ? this.myLocation : this.location;
         let body = {
             action: 'getWallets',
             location: location,
@@ -158,61 +189,99 @@ export class NewTradeComponent implements OnInit {
         };
         this.http.getData('wallet', body).subscribe((resp: any) => {
             if (resp.status === 1) {
-                if(event){this.wallets = resp.data;} else {this.myWallets = resp.data;}
+                if(my) { this.myWallets = resp.data } else { this.wallets = resp.data;};
             } else {
                 console.log(resp);
             }
+            my ? this.loadingMyWallet = false : this.loadingWallet = false;
         }, (err: any) => {
             console.log("There was an error loading wallets");
         });
     }
 
-    slidePrev(){
-        this.slider.slidePrev();
-        this.lastSlide = false;
-        this.slider.getActiveIndex().then((i:number) => {
-            this.initialSlide = (i == 0);
-        });
-    }
+    async sendGift() {
+        if(!this.myWallet || this.myAmount){
+            const toast = await this.toastCtrl.create({
+                message: 'Please fill out all the required fields',
+                duration: 2000,
+                color: 'dark'
+            });
 
-    async slideNext() {
-        this.slider.slideNext();
-        this.slider.getActiveIndex().then((i:number) => {
-            this.lastSlide = (i === 2);
-            if(i === 2){
-                this.urlBody = {
-                    'merchant': this.merchant.merchant_id,
-                    'wallet': this.wallet.wallet_id,
-                    'amount': this.amount,
-                    'myMerchant': this.vars.merchantData['merchant_id'],
-                    'myWallet': this.myWallet.wallet_id,
-                    'myAmount': this.myAmount
-                };
-                console.log(this.urlBody);
-                this.enableCreateTrade = (this.merchant && this.wallet && this.amount && this.myWallet && this.myAmount) ? true : false;
-            }
-            if(i > 0){
-                this.initialSlide = false;
-            }
-        });
-    }
-
-    createTrade() {
+            return await toast.present();
+        }
+        this.urlBody = {
+            'myMerchant': this.vars.merchantData['merchant_id'],
+            'myWallet': this.myWallet.wallet_id,
+            'myAmount': this.myAmount
+        };
         const body = {
             body: JSON.stringify({action: 'createTrade', ...this.urlBody})
+        };
+        this.executeType(body);
+    }
+
+    async createTrade() {
+        if(!this.merchant.merchant_id || !this.myAmount){
+            const toast = await this.toastCtrl.create({
+                message: 'Please fill out all required fields',
+                duration: 2000,
+                color: 'dark'
+            });
+
+            return await toast.present();
+        } else {
+            this.urlBody = {
+                merchant: this.merchant.merchant_id,
+                myMerchant: this.vars.merchantData['merchant_id'],
+                myWallet: this.myWallet.wallet_id,
+                myAmount: this.myAmount,
+                notes : this.notes,
+                action: 'createTrade'
+            };
+            const body = {
+                body: JSON.stringify(this.urlBody)
+            }
+            this.executeType(body);
         }
+    }
+
+    async updateTrade() {
+        if(!this.myWallet || !this.myAmount){
+            const toast = await this.toastCtrl.create({
+                message: 'Please fill out all the required fields',
+                duration: 2000,
+                color: 'dark'
+            });
+            return await toast.present();
+        } else {
+            this.urlBody = {
+                tradeId: this.tradeId,
+                myWallet: this.myWallet.wallet_id,
+                myAmount: this.myAmount,
+                action: 'updateTrade'
+            };
+            const body = {
+                body: JSON.stringify(this.urlBody)
+            };
+            this.executeType(body);
+        }
+    }
+
+    executeType(body:any){
         this.http.postData('tradehub', body).subscribe(async (resp:any) => {
             if(resp.status === 1){
+                const message = (this.tradeType === 'Gift') ? 'Gift Sent' : (this.urlBody['action'] === 'createTrade') ? `${this.tradeType} Created` : `${this.tradeType} Updated`;
                 const toast = await this.toastCtrl.create({
-                    message: 'Trade Created',
+                    message: message,
                     duration: 2000,
                     color: 'dark'
                 });
                 await toast.present();
                 this.modalCtrl.dismiss();
             } else {
+                const message = (this.urlBody['action'] === 'createTrade') ? `create` : `update`;
                 const toast = await this.toastCtrl.create({
-                    message: 'Unable to created trade',
+                    message: `Unable to ${message} ${this.tradeType}`,
                     duration: 2000,
                     color: 'dark'
                 });
@@ -220,8 +289,16 @@ export class NewTradeComponent implements OnInit {
                 console.log(resp);
             }
         }, (err) => {
-            console.log("There was an error creating a trade.");
+            console.log("There was an error creating/updating a trade.");
         });
+    }
+
+    checkNotesLength(length: any){
+        let notes = this.notes;
+        this.notesLeft = 500 - length;
+        if(this.notesLeft <= 0){
+            this.notes = notes;
+        }
     }
 
 }
