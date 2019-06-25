@@ -18,7 +18,7 @@
                 <span *ngIf="!trade && !tradeIsLoading">Could not retrieve your trade details</span>
             </div>
             <ion-list color="light" *ngIf="trade">
-                <ion-item>
+                <ion-item *ngIf="referrer !=='outbox' && tradeType !== 'Invoice'">
                     <ion-label *ngIf="tradeType === 'Trade'">Trade</ion-label>
                     <ion-label *ngIf="referrer === 'inbox' && tradeType === 'Invoice'">
                         <span *ngIf="referrer === 'inbox'">Payment</span>
@@ -36,10 +36,16 @@
                     <ion-text text-right *ngIf="referrer === 'outbox' && tradeType === 'Gift'">{{myDetails.valu}}<br/><span class="valuType">{{myDetails.wallet_dba}}</span></ion-text>
                     <ion-text text-right *ngIf="referrer === 'archive' && tradeType !== 'Gift'">{{myDetails.valu}}<br/><span class="valuType">{{myDetails.wallet_dba}}</span></ion-text>
                 </ion-item>
-                <ion-item *ngIf="tradeType === 'Invoice'"><ion-label>Invoice</ion-label><ion-text>{{details.valu}}</ion-text></ion-item>
+                <ion-item *ngIf="tradeType === 'Invoice'">
+                    <ion-label>Invoice</ion-label>
+                    <ion-text *ngIf="referrer !== 'Inbox'">{{myDetails.valu}}</ion-text>
+                    <ion-text *ngIf="referrer === 'Inbox'">{{details.valu}}</ion-text>
+                </ion-item>
                 <ion-item *ngIf="tradeType === 'Trade'">
                     <ion-label>Receive</ion-label>
-                    <ion-text text-right *ngIf="referrer === 'outbox'">{{myDetails.valu}}<br/><span class="valuType">{{myDetails.wallet_dba}}</span></ion-text>
+                    <ion-text text-right *ngIf="referrer === 'outbox'">
+                        {{myDetails.valu}}<br/><span class="valuType">{{myDetails.wallet_dba}}</span>
+                    </ion-text>
                     <ion-text text-right *ngIf="referrer !== 'outbox'">{{details.valu}}<br/><span class="valuType">{{details.wallet_dba}}</span></ion-text>
                 </ion-item>
                 <ion-item>
@@ -78,18 +84,15 @@
             <ion-list color="light" *ngIf="trade">
                 <ion-item>
                     <ion-label>DBA</ion-label>
-                    <ion-text *ngIf="referrer === 'outbox'">{{myDetails.dba}}</ion-text>
-                    <ion-text *ngIf="referrer !== 'outbox'">{{details.dba}}</ion-text>
+                    <ion-text>{{details.dba}}</ion-text>
                 </ion-item>
                 <ion-item>
                     <ion-label>Phone</ion-label>
-                    <ion-text *ngIf="referrer === 'outbox'">{{myDetails.phone | tel}}</ion-text>
-                    <ion-text *ngIf="referrer !== 'outbox'">{{details.phone | tel}}</ion-text>
+                    <ion-text>{{details.phone | tel}}</ion-text>
                 </ion-item>
                 <ion-item lines="none">
                     <ion-label>Email</ion-label>
-                    <ion-text *ngIf="referrer === 'outbox'">{{myDetails.email}}</ion-text>
-                    <ion-text *ngIf="referrer !== 'outbox'">{{details.email}}</ion-text>
+                    <ion-text>{{details.email}}</ion-text>
                 </ion-item>
             </ion-list>
         </ion-card-content>
@@ -101,7 +104,7 @@
             <ion-button *ngIf="referrer === 'inbox' && !executing && tradeType !== 'Invoice'" color="dark" shape="round" fill="solid" [disabled]="executing" (click)="doAction('decline')">Decline</ion-button>
             <ion-button *ngIf="referrer === 'outbox' && !executing" color="dark" shape="round" fill="solid" [disabled]="executing" (click)="doAction('cancel')">Cancel</ion-button>
             <ion-button *ngIf="referrer === 'inbox' && !executing && tradeType === 'Gift'" color="light" shape="round" fill="solid" [disabled]="executing" (click)="doAction('accept')">Accept Gift</ion-button>
-            <ion-button *ngIf="referrer === 'outbox' && !executing && tradeType === 'Trade'" color="light" shape="round" fill="solid" [disabled]="executing" (click)="doAction('accept')">Accept Trade</ion-button>
+            <ion-button *ngIf="referrer === 'outbox' && !executing && tradeType === 'Trade' && trade.tradeData.trade_status !== 'Initiated'" color="light" shape="round" fill="solid" [disabled]="executing" (click)="doAction('accept')">Accept Trade</ion-button>
             <ion-button *ngIf="referrer === 'inbox' && !executing && tradeType == 'Invoice'" color="light" shape="round" fill="solid" [disabled]="executing || myDetails.valu !== details.valu" (click)="doAction('accept')">Make Payment</ion-button>
             <ion-spinner color="light" *ngIf="executing"></ion-spinner>
         </div>

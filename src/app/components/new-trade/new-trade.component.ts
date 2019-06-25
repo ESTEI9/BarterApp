@@ -245,6 +245,31 @@ export class NewTradeComponent implements OnInit {
         }
     }
 
+    async sendInvoice(){
+        if(!this.merchant.merchant_id || !this.amount){
+            const toast = await this.toastCtrl.create({
+                message: 'Please fill out all required fields',
+                duration: 2000,
+                color: 'dark'
+            });
+
+            return await toast.present();
+        } else {
+            this.urlBody = {
+                merchant: this.merchant.merchant_id,
+                myMerchant: this.vars.merchantData['merchant_id'],
+                amount: this.amount,
+                notes : this.notes,
+                action: 'creatInvoice'
+            };
+
+            const body = {
+                body: JSON.stringify(this.urlBody)
+            }
+            this.executeType(body);
+        }
+    }
+
     async updateTrade() {
         if(!this.myWallet || !this.myAmount){
             const toast = await this.toastCtrl.create({

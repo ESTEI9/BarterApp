@@ -138,7 +138,7 @@
                         <ion-grid no-padding>
                             <ion-row class="ion-align-items-center">
                                 <ion-col size="6">{{out.dba}}</ion-col>
-                                <ion-col size="3" class="ion-justify-content-evenly ion-align-items-center" style="display:flex;">{{out.init_valu}} <ion-icon name="repeat" size="small"></ion-icon> {{out.rec_valu}}</ion-col>
+                                <ion-col size="3" class="ion-justify-content-evenly ion-align-items-center" style="display:flex;">{{out.init_valu}} <ion-icon *ngIf="out.type === 'Trade'" name="repeat" size="small"></ion-icon> {{out.rec_valu}}</ion-col>
                                 <ion-col text-right>{{out.trade_proposed | date:'shortDate'}}<br/>{{out.trade_proposed | date:'shortTime'}}</ion-col>
                             </ion-row>
                         </ion-grid>
