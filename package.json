@@ -1,6 +1,6 @@
 {
-  "name": "BarterApp",
-  "version": "0.0.1",
+  "name": "XBarter",
+  "version": "1.0.0",
   "author": "Ionic Framework",
   "homepage": "https://ionicframework.com/",
   "scripts": {
@@ -66,7 +66,7 @@
     "tslint": "~5.17.0",
     "typescript": "~3.1.6"
   },
-  "description": "An Ionic project",
+  "description": "A barter app for X merchants",
   "cordova": {
     "plugins": {
       "cordova-plugin-secure-storage": {},
