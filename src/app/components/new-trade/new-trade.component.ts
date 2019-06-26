@@ -139,8 +139,8 @@ export class NewTradeComponent implements OnInit {
                     }
                 }
             }
-        })
-        if(this.myLocation){
+        });
+        if(my && this.myLocation){
             this.loadWallets('my');
         }
         if(this.location){
@@ -260,7 +260,7 @@ export class NewTradeComponent implements OnInit {
                 myMerchant: this.vars.merchantData['merchant_id'],
                 amount: this.amount,
                 notes : this.notes,
-                action: 'creatInvoice'
+                action: 'createInvoice'
             };
 
             const body = {
@@ -295,7 +295,7 @@ export class NewTradeComponent implements OnInit {
     executeType(body:any){
         this.http.postData('tradehub', body).subscribe(async (resp:any) => {
             if(resp.status === 1){
-                const message = (this.tradeType === 'Gift') ? 'Gift Sent' : (this.urlBody['action'] === 'createTrade') ? `${this.tradeType} Created` : `${this.tradeType} Updated`;
+                const message = (this.tradeType === 'Gift') ? 'Gift Sent' : (this.urlBody['action'] === 'createTrade' || this.urlBody['action'] === 'createInvoice') ? `${this.tradeType} Created` : `${this.tradeType} Updated`;
                 const toast = await this.toastCtrl.create({
                     message: message,
                     duration: 2000,
