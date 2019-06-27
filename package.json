@@ -1,8 +1,8 @@
 {
   "name": "XBarter",
-  "version": "1.0.1",
-  "author": "Ionic Framework",
-  "homepage": "https://ionicframework.com/",
+  "version": "1.0.2",
+  "author": "XDevs",
+  "homepage": "http://cometothex.com",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
