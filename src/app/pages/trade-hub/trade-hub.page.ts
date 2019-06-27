@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { HttpService } from 'src/app/services/http.service';
 import { VarsService } from 'src/app/services/vars.service';
 import { NavController, ModalController, ActionSheetController } from '@ionic/angular';
@@ -15,10 +15,14 @@ export class TradeHubPage implements OnInit {
     private outbox: any = [];
     private archive: any = [];
     private segment: string = 'inbox';
-    private inboxIsLoading: boolean = true;
-    private outboxIsLoading: boolean = true;
-    private archiveIsLoading: boolean = true;
+    private isLoading: boolean = true;
+    private tradeLoading: boolean = false;
+    private invoiceLoading: boolean = false;
+    private giftLoading: boolean = false;
     private tradeType: string;
+    private inboxType: string = 'Trade';
+    private outboxType: string = 'Trade';
+    private archiveType: string = 'Trade';
 
     constructor(
         private http: HttpService,
@@ -29,83 +33,156 @@ export class TradeHubPage implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.loadInbox();
-        this.loadOutbox();
-        this.loadArchive();
     }
 
-    async loadInbox() {
-        this.inboxIsLoading = true;
-        const body = {
-            action: 'getInbox',
-            merchantID: this.vars.merchantData['merchant_id']
-        };
-        await this.http.getData('tradehub', body).subscribe((resp: any) => {
-            if (resp.status === 1) {
-                this.inbox = resp.data;
-            } else {
-                console.log(resp);
-            }
-            this.inboxIsLoading = false;
-        }, (err: any) => {
-            console.log("There was an error");
-            this.inboxIsLoading = false;
+    async loadTypeMenu(){
+        const action = await this.actionSheetCtrl.create({
+            header: 'Select Type',
+            buttons: [{
+                text: 'Trade',
+                handler: () => {
+                    this.isLoading = true;
+                    switch(this.segment){
+                        case 'inbox':
+                            this.inboxType = "Trade";
+                            break;
+                        case 'outbox':
+                            this.outboxType = "Trade";
+                            break;
+                        case 'archive':
+                            this.archiveType = "Trade";
+                        default: null
+                    }
+                }
+            },{
+                text: 'Invoice',
+                handler: () => {
+                    this.isLoading = true;
+                    switch(this.segment){
+                        case 'inbox':
+                            this.inboxType = "Invoice";
+                            break;
+                        case 'outbox':
+                            this.outboxType = "Invoice";
+                            break;
+                        case 'archive':
+                            this.archiveType = "Invoice";
+                        default: null
+                    }
+                }
+            },{
+                text: 'Gift',
+                handler: () => {
+                    this.isLoading = true;
+                    switch(this.segment){
+                        case 'inbox':
+                            this.inboxType = "Gift";
+                            break;
+                        case 'outbox':
+                            this.outboxType = "Gift";
+                            break;
+                        case 'archive':
+                            this.archiveType = "Gift";
+                        default: null
+                    }
+                }
+            },{
+                text: 'Cancel',
+                role: 'cancel'
+            }]
+        });
+        await action.present();
+        await action.onDidDismiss().then(()=>{
+            this.isLoading = true;
+            this.loadSegment();
         });
     }
 
-    async loadOutbox() {
-        this.outboxIsLoading = true;
+    async loadSegment(event?:any) {
+        const boxType = () => {
+            switch(this.segment){
+                case 'inbox':
+                    return this.inboxType;
+                case 'outbox':
+                    return this.outboxType;
+                case 'archive':
+                    return this.archiveType;
+                default:
+                    return null;
+        }};
         const body = {
-            action: 'getOutbox',
-            merchantID: this.vars.merchantData['merchant_id']
+            merchantID: this.vars.merchantData['merchant_id'],
+            type: boxType(),
+            segment: this.segment
         };
+        if(event){
+            switch(boxType()){
+                case 'Trade':
+                    this.tradeLoading = true;
+                    break;
+                case 'Invoice':
+                    this.invoiceLoading = true;
+                    break;
+                case 'Gift':
+                    this.giftLoading = true;
+                    break;
+            }
+        }
         await this.http.getData('tradehub', body).subscribe((resp: any) => {
             if (resp.status === 1) {
-                this.outbox = resp.data;
+                switch(this.segment) {
+                    case 'inbox':
+                        this.inbox = resp.data;
+                        break;
+                    case 'outbox':
+                        this.outbox = resp.data;
+                        break;
+                    case 'archive':
+                        this.archive = resp.data;
+                        break;
+                    default:
+                        null;
+                }
             } else {
                 console.log(resp);
             }
-            this.outboxIsLoading = false;
+            this.isLoading = false;
+            if(event){
+                switch(boxType()){
+                    case 'Trade':
+                        this.tradeLoading = false;
+                        break;
+                    case 'Invoice':
+                        this.invoiceLoading = false;
+                        break;
+                    case 'Gift':
+                        this.giftLoading = false;
+                        break;
+                }
+            }
         }, (err: any) => {
             console.log("There was an error");
-            this.outboxIsLoading = false;
-        });
-    }
-
-    async loadArchive() {
-        this.archiveIsLoading = true;
-        const body = {
-            action: 'getArchive',
-            merchantID: this.vars.merchantData['merchant_id']
-        };
-        await this.http.getData('tradehub', body).subscribe((resp: any) => {
-            if (resp.status === 1) {
-                this.archive = resp.data;
-            } else {
-                console.log(resp);
+            this.isLoading = false;
+            if(event){
+                switch(boxType()){
+                    case 'Trade':
+                        this.tradeLoading = false;
+                        break;
+                    case 'Invoice':
+                        this.invoiceLoading = false;
+                        break;
+                    case 'Gift':
+                        this.giftLoading = false;
+                        break;
+                }
             }
-            this.archiveIsLoading = false;
-        }, (err: any) => {
-            console.log('There was an error');
-            this.archiveIsLoading = false;
-        })
+        });
     }
 
     switchSegment(event: any) {
         this.segment = event.detail.value;
-        switch(this.segment){
-            case 'inbox':
-                this.loadInbox();
-                break;
-            case 'outbox':
-                this.loadOutbox();
-                break;
-            case 'archive':
-                this.loadArchive();
-                break;
-            default:
-                null;
-        }
+        this.isLoading = true;
+        this.loadSegment();
     }
 
     async startNewTrade(){
@@ -120,12 +197,12 @@ export class TradeHubPage implements OnInit {
             }, {
                 text: 'Invoice',
                 handler: () => {
-                    this.tradeType = 'Invoice'
+                    this.tradeType = 'Invoice';
                 }
             }, {
                 text: 'Gift',
                 handler: () => {
-                    this.tradeType = 'Gift'
+                    this.tradeType = 'Gift';
                 }
             }, {
                 text: 'Cancel',
@@ -141,14 +218,10 @@ export class TradeHubPage implements OnInit {
                 });
                 await modal.present();
                 await modal.onDidDismiss().then(()=>{
-                    this.loadOutbox();
+                    this.loadSegment();
                 });
             }
         });
-    }
-
-    viewTrade(id:any){
-        this.navCtrl.navigateForward('/details/'+id);
     }
 
     finalizeTrade(action: string, id:any){

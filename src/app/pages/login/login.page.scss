@@ -1,4 +1,8 @@
 
+ion-content{
+    --background: #fff;
+}
+
 ion-list {
     background:transparent;
 }
@@ -28,12 +32,12 @@ ion-item {
     &.header {
         margin-bottom:1em;
     }
-
-    img {
-        max-width:250px;
-        margin:0 auto;
-    }
 }
+
+img {
+    max-width:200px;
+}
+
 ion-input {
     text-align: center;
 }

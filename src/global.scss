@@ -10,8 +10,14 @@
 @import '~@ionic/angular/css/text-transformation.css';
 @import '~@ionic/angular/css/flex-utils.css';
 
-ion-content {
-    --background: radial-gradient(var(--ion-color-primary), var(--ion-color-highlight));
+
+.spinning {
+    animation: rotation 1s infinite ease-in-out;
+}
+
+@keyframes rotation {
+    from {-webkit-transform: rotate(0deg);}
+    to   {-webkit-transform: rotate(359deg);}
 }
 /* --------------------
 Utility Classes
@@ -53,14 +59,16 @@ Utility Classes
 
 //Other Text Changes
 .white {color: #fff;}
-//.text-shadow-dark {text-shadow: 1px 1px 2px $grey-dark;}
-//.text-shadow-medium {text-shadow: 1px 1px 2px $grey-medium;}
 
 .item-input {
     font-size:1em;
     ::placeholder {
         font-size:1em;
     }
+}
+
+ion-content {
+    --background: radial-gradient(var(--ion-color-primary), var(--ion-color-highlight));
 }
 
 ion-menu {

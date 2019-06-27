@@ -1,0 +1,46 @@
+<ion-card color="light-alt">
+    <ion-toolbar color="medium-light">
+        <ion-title>Invoices</ion-title>
+        <ion-buttons slot="end">
+            <ion-button color="primary" (click)="loadInvoices()"[disabled]="loading"><ion-icon name="refresh" slot="icon-only" [class.spinning]="loading"></ion-icon></ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+    <ion-card-content no-padding>
+        <div text-center padding *ngIf="loading || !invoices">
+            <ion-spinner *ngIf="loading"></ion-spinner>
+            <div *ngIf="!invoices && !loading">No Invoices</div>
+        </div>
+        <ion-list *ngIf="invoices && !loading" lines="none" no-padding>
+            <ion-item color="light-alt">
+                <ion-grid no-padding>
+                    <ion-row>
+                        <ion-col [size]="segment === 'archive' ? 4 : 6"><strong>Partner</strong></ion-col>
+                        <ion-col [size]="segment === 'archive' ? 2 : 3" text-center><strong>Invoice</strong></ion-col>
+                        <ion-col *ngIf="segment !== 'archive'" text-right><strong>Proposed</strong></ion-col>
+                        <ion-col size="3" *ngIf="segment === 'archive'"><strong>Status</strong></ion-col>
+                        <ion-col *ngIf="segment === 'archive'" text-right><strong>Date</strong></ion-col>
+                    </ion-row>
+                </ion-grid>
+            </ion-item>
+        </ion-list>
+        <ion-list lines="none" no-padding *ngIf="invoices && !loading" class="scrollable">
+            <ion-item *ngFor="let in of invoices" (click)="viewTrade(in.trade_id)">
+                <ion-grid no-padding>
+                    <ion-row class="ion-align-items-center">
+                        <ion-col *ngIf="segment === 'archive'" size="4">
+                            <span *ngIf="in.init_dba !== vars.merchantData.dba">{{in.init_dba}}</span>
+                            <span *ngIf="in.init_dba === vars.merchantData.dba">{{in.rec_dba}}</span>
+                        </ion-col>
+                        <ion-col *ngIf="segment !== 'archive'" size="6">{{in.dba}}</ion-col>
+                        <ion-col [size]="segment === 'archive' ? 2 : 3" class="ion-justify-content-evenly ion-align-items-center" style="display:flex;">
+                            {{in.rec_valu}}<ion-icon name="repeat" size="small"></ion-icon>{{in.init_valu}}
+                        </ion-col>
+                        <ion-col size="3" *ngIf="segment === 'archive'">{{in.trade_status}}</ion-col>
+                        <ion-col text-right *ngIf="segment !== 'archive'">{{in.trade_proposed | date:'shortDate'}}</ion-col>
+                        <ion-col text-right *ngIf="segment === 'archive'">{{in.trade_completed | date:'shortDate'}}</ion-col>
+                    </ion-row>
+                </ion-grid>
+            </ion-item>
+        </ion-list>
+    </ion-card-content>
+</ion-card>

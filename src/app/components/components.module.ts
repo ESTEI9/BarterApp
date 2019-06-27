@@ -5,11 +5,17 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './login/login.component';
 import { NewTradeComponent } from './new-trade/new-trade.component';
 import { PipesModule } from '../pipes/pipes.module';
+import { TradesComponent } from './tradehub/trades/trades.component';
+import { InvoicesComponent } from './tradehub/invoices/invoices.component';
+import { GiftsComponent } from './tradehub/gifts/gifts.component';
 
 @NgModule({
   declarations: [
         LoginComponent,
-        NewTradeComponent
+        NewTradeComponent,
+        TradesComponent,
+        InvoicesComponent,
+        GiftsComponent
     ],
   imports: [
       IonicModule,
@@ -18,6 +24,12 @@ import { PipesModule } from '../pipes/pipes.module';
       CommonModule,
       PipesModule
   ],
-  exports: [LoginComponent, NewTradeComponent]
+  exports: [
+      LoginComponent,
+      NewTradeComponent,
+      TradesComponent,
+      InvoicesComponent,
+      GiftsComponent
+    ]
 })
 export class ComponentsModule { }
