@@ -8,6 +8,9 @@ import { PipesModule } from '../pipes/pipes.module';
 import { TradesComponent } from './tradehub/trades/trades.component';
 import { InvoicesComponent } from './tradehub/invoices/invoices.component';
 import { GiftsComponent } from './tradehub/gifts/gifts.component';
+import { TradeComponent } from './details/trade/trade.component';
+import { InvoiceComponent } from './details/invoice/invoice.component';
+import { GiftComponent } from './details/gift/gift.component';
 
 @NgModule({
   declarations: [
@@ -15,7 +18,10 @@ import { GiftsComponent } from './tradehub/gifts/gifts.component';
         NewTradeComponent,
         TradesComponent,
         InvoicesComponent,
-        GiftsComponent
+        GiftsComponent,
+        TradeComponent,
+        InvoiceComponent,
+        GiftComponent
     ],
   imports: [
       IonicModule,
@@ -29,7 +35,10 @@ import { GiftsComponent } from './tradehub/gifts/gifts.component';
       NewTradeComponent,
       TradesComponent,
       InvoicesComponent,
-      GiftsComponent
+      GiftsComponent,
+      TradeComponent,
+      InvoiceComponent,
+      GiftComponent
     ]
 })
 export class ComponentsModule { }

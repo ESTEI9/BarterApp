@@ -200,7 +200,7 @@ export class NewTradeComponent implements OnInit {
     }
 
     async sendGift() {
-        if(!this.myWallet || this.myAmount){
+        if(!this.merchant || !this.myAmount){
             const toast = await this.toastCtrl.create({
                 message: 'Please fill out all the required fields',
                 duration: 2000,
@@ -212,10 +212,13 @@ export class NewTradeComponent implements OnInit {
         this.urlBody = {
             'myMerchant': this.vars.merchantData['merchant_id'],
             'myWallet': this.myWallet.wallet_id,
-            'myAmount': this.myAmount
+            'myAmount': this.myAmount,
+            'merchant': this.merchant.merchant_id,
+            'notes':    this.notes,
+            'action': 'sendGift'
         };
         const body = {
-            body: JSON.stringify({action: 'createTrade', ...this.urlBody})
+            body: JSON.stringify(this.urlBody)
         };
         this.executeType(body);
     }

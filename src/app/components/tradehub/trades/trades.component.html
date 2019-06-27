@@ -33,7 +33,7 @@
                         </ion-col>
                         <ion-col *ngIf="segment !== 'archive'" size="6">{{in.dba}}</ion-col>
                         <ion-col [size]="segment === 'archive' ? 2 : 3" class="ion-justify-content-evenly ion-align-items-center" style="display:flex;">
-                            {{in.rec_valu}}<ion-icon name="repeat" size="small"></ion-icon>{{in.init_valu}}
+                            {{in.rec_valu}}<ion-icon *ngIf="in.rec_valu && in.init_valu" name="repeat" size="small"></ion-icon>{{in.init_valu}}
                         </ion-col>
                         <ion-col size="3" *ngIf="segment === 'archive'">{{in.trade_status}}</ion-col>
                         <ion-col text-right *ngIf="segment !== 'archive'">{{in.trade_proposed | date:'shortDate'}}</ion-col>

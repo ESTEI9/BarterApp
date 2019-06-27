@@ -15,7 +15,7 @@ export class DetailsPage implements OnInit {
     private tradeId: number;
     private trade: any;
     private tradeType: string;
-    private tradeIsLoading: boolean = true;
+    private loading: boolean = true;
     private executing: boolean = false;
     private details: any;
     private myDetails: any;
@@ -35,7 +35,7 @@ export class DetailsPage implements OnInit {
             this.tradeId = params.id;
         });
         this.getTrade().then(()=>{
-            this.tradeIsLoading = false;
+            this.loading = false;
         });
     }
 
@@ -264,9 +264,9 @@ export class DetailsPage implements OnInit {
         });
         await modal.present();
         await modal.onDidDismiss().then(()=>{
-            this.tradeIsLoading = true;
+            this.loading = true;
             this.getTrade().then(()=>{
-                this.tradeIsLoading = false;
+                this.loading = false;
             });
         });
     }
