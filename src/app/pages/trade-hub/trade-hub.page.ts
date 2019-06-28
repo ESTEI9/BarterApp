@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewChecked, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { HttpService } from 'src/app/services/http.service';
 import { VarsService } from 'src/app/services/vars.service';
 import { NavController, ModalController, ActionSheetController } from '@ionic/angular';
@@ -35,9 +35,7 @@ export class TradeHubPage implements OnInit {
     ngOnInit() {
     }
 
-    ngAfterViewChecked(){
-        this.loadSegment();
-    }
+    //Need to loadSegment after details page dismisses (ngAfterViewChecked crashes the app)
 
     async loadTypeMenu(){
         const action = await this.actionSheetCtrl.create({

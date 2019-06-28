@@ -6,6 +6,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 })
 export class HttpService {
     private url: string = "http://www.cometothex.com/api/barter/";
+    //private url: string = "http://localhost/gynesus/api/barter/"; //dev server
 
     constructor(
         private http: HttpClient
