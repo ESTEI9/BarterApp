@@ -9,10 +9,6 @@
     overflow-y: scroll;
 }
 
-ion-searchbar {
-    background: var(--ion-color-medium-light);
-}
-
 .valuType {
     font-size:0.9em;
     font-style: italic;
@@ -20,4 +16,15 @@ ion-searchbar {
 
 .select-disabled {
     opacity: 1;
+}
+
+ion-card {
+    --background: #fff;
+
+    &:nth-child(2){
+        ion-select, ion-textarea, ion-input {
+            border: 1px solid var(--ion-color-medium-light);
+            border-radius:5px;
+        }
+    }
 }

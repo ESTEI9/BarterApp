@@ -4,9 +4,11 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', loadChildren: './pages/login/login.module#LoginPageModule' },
-  { path: 'trade', loadChildren: './pages/trade/trade.module#TradePageModule' },
-  { path: 'trade-hub', loadChildren: './pages/trade-hub/trade-hub.module#TradeHubPageModule' },
-  { path: 'details/:id', loadChildren: './pages/details/details.module#DetailsPageModule', pathMatch: 'full'}
+  { path: 'inbox', loadChildren: './pages/inbox/inbox.module#InboxPageModule' },
+  { path: 'outbox', loadChildren: './pages/outbox/outbox.module#OutboxPageModule' },
+  { path: 'archives', loadChildren: './pages/archives/archives.module#ArchivesPageModule'},
+  { path: 'details/:id', loadChildren: './pages/details/details.module#DetailsPageModule', pathMatch: 'full'},  { path: 'wallet', loadChildren: './pages/wallet/wallet.module#WalletPageModule' }
+
 ];
 @NgModule({
   imports: [

@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { IonSlides, NavController } from '@ionic/angular';
+import { Component, OnInit } from '@angular/core';
+import { NavController } from '@ionic/angular';
 import { VarsService } from 'src/app/services/vars.service';
 import { HttpService } from 'src/app/services/http.service';
 
@@ -16,8 +16,6 @@ export class LoginComponent implements OnInit {
     };
     private message: string;
     private isLoading: boolean = false;
-    @ViewChild('#slider') slider: IonSlides;
-    private sliderOptions: {}
     private rememberMe: boolean = true;
 
     constructor(
@@ -40,7 +38,7 @@ export class LoginComponent implements OnInit {
                 }
                 this.vars.merchantData = resp.data;
                 this.message = null;
-                this.navCtrl.navigateRoot('/trade-hub');
+                this.navCtrl.navigateRoot('/inbox');
             } else {
                 this.account.password = '';
                 this.message = "Username & password mismatch.";

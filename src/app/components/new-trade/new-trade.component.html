@@ -1,5 +1,5 @@
 <ion-header>
-    <ion-toolbar color="light">
+    <ion-toolbar color="primary">
         <ion-title *ngIf="!tradeId">
             <span *ngIf="tradeType === 'Gift'">Send a Gift</span>
             <span *ngIf="tradeType === 'Trade'">Start a Trade</span>
@@ -14,7 +14,7 @@
     </ion-toolbar>
 </ion-header>
 <ion-content>
-    <ion-card color="light-alt" *ngIf="!tradeId">
+    <ion-card *ngIf="!tradeId">
         <ion-card-header color="medium-light">
             <ion-card-title>Select Your Partner</ion-card-title>
         </ion-card-header>
@@ -24,7 +24,7 @@
                 (ionChange)="filterLocations()"
                 (ionBlur)="checkLocation()"
                 debounce="300"
-                color="primary"
+                color="light-alt"
                 [placeholder]="tradeType === 'Trade' ? 'Partner City' : 'Recipient City'">
             </ion-searchbar>
             <ion-select padding [(ngModel)]="merchant" [disabled]="!location" [placeholder]="tradeType === 'Trade' ? 'Select Partner' : 'Select Recipient'" interface="action-sheet">
@@ -32,13 +32,13 @@
             </ion-select>
         </ion-card-content>
     </ion-card>
-    <ion-card color="light-alt" *ngIf="tradeType === 'Invoice'">
+    <ion-card *ngIf="tradeType === 'Invoice'">
         <ion-card-header color="medium-light">
             <ion-card-title>Your Bill</ion-card-title>
         </ion-card-header>
         <ion-card-content>
-            <ion-input [(ngModel)]="amount" type="tel" min="0" size="5" placeholder="Amount e.g. 100"></ion-input>
-            <strong margin-top>Notes</strong>
+            <ion-input margin-top margin-bottom [(ngModel)]="amount" type="tel" min="0" size="5" placeholder="Amount e.g. 100"></ion-input>
+            <strong>Notes</strong>
             <ion-textarea 
                 color="dark"
                 [(ngModel)]="notes"
@@ -52,7 +52,7 @@
             </ion-text>
         </ion-card-content>
     </ion-card>
-    <ion-card color="light-alt" *ngIf="tradeType !== 'Invoice' && !tradeId">
+    <ion-card *ngIf="tradeType !== 'Invoice' && !tradeId">
         <ion-card-header color="medium-light">
             <ion-card-title>Your {{tradeType}}</ion-card-title>
         </ion-card-header>
@@ -62,7 +62,7 @@
                 (ionChange)="filterLocations('my')"
                 (ionBlur)="checkLocation('my')"
                 debounce="300"
-                color="primary"
+                color="light-alt"
                 placeholder="Your City">
             </ion-searchbar>
             <ion-grid>
@@ -86,25 +86,27 @@
                         </ion-input>
                     </ion-col>
                 </ion-row>
+                <ion-row>
+                    <ion-col>
+                        <strong>Notes</strong>
+                        <ion-textarea
+                            color="dark"
+                            [(ngModel)]="notes"
+                            rows="6" cols="20"
+                            placeholder="Enter any notes here..." 
+                            maxLength="500"
+                            (ionChange)="checkNotesLength($event.detail.value.length)">
+                        </ion-textarea>
+                        <ion-text [color]="(notesLeft <= 50 && notesLeft > 0) ? 'tertiary': notesLeft <= 0 ? 'danger' : 'dark'">
+                            <strong *ngIf="notes">{{500 - notes.length}}/500</strong><strong *ngIf="!notes">500/500</strong>
+                        </ion-text>
+                    </ion-col>
+                </ion-row>
             </ion-grid>
-            <div padding>
-                <strong>Notes</strong>
-                <ion-textarea
-                    color="dark"
-                    [(ngModel)]="notes"
-                    rows="6" cols="20"
-                    placeholder="Enter any notes here..." 
-                    maxLength="500"
-                    (ionChange)="checkNotesLength($event.detail.value.length)">
-                </ion-textarea>
-                <ion-text [color]="(notesLeft <= 50 && notesLeft > 0) ? 'tertiary': notesLeft <= 0 ? 'danger' : 'dark'">
-                    <strong *ngIf="notes">{{500 - notes.length}}/500</strong><strong *ngIf="!notes">500/500</strong>
-                </ion-text>
-            </div>
         </ion-card-content>
     </ion-card>
     <!-- If already established trade or invoice -->
-    <ion-card color="light-alt" *ngIf="tradeId">
+    <ion-card *ngIf="tradeId">
         <ion-card-header color="medium-light">
             <ion-card-title *ngIf="tradeDetails && tradeDetails.tradeData.type === 'Invoice'">Payment Details</ion-card-title>
             <ion-card-title *ngIf="tradeDetails && tradeDetails.tradeData.type === 'Trade'">What to Trade</ion-card-title>
@@ -144,7 +146,7 @@
             </ion-grid>
         </ion-card-content>
     </ion-card>
-    <ion-card *ngIf="tradeId" color="light-alt">
+    <ion-card *ngIf="tradeId">
         <ion-card-header color="medium-light">
             <ion-card-title *ngIf="tradeDetails">{{tradeDetails.tradeData.type}} Details</ion-card-title>
             <ion-card-title *ngIf="!tradeDetails">Loading...</ion-card-title>
@@ -186,16 +188,16 @@
 
     <!-- Navigation Buttons -->
     <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-        <ion-button color="light" shape="round" *ngIf="!tradeId && tradeType === 'Trade'" (click)="createTrade()">
+        <ion-button color="primary" shape="round" *ngIf="!tradeId && tradeType === 'Trade'" (click)="createTrade()">
             <ion-icon slot="start" name="arrow-forward"></ion-icon>Create Trade
         </ion-button>
-        <ion-button color="light" shape="round" *ngIf="!tradeId && tradeType === 'Invoice'" (click)="sendInvoice()">
+        <ion-button color="primary" shape="round" *ngIf="!tradeId && tradeType === 'Invoice'" (click)="sendInvoice()">
             <ion-icon slot="start" name="arrow-forward"></ion-icon>Send Invoice
         </ion-button>
-        <ion-button color="light" shape="round" *ngIf="!tradeId && tradeType === 'Gift'" (click)="sendGift()">
+        <ion-button color="primary" shape="round" *ngIf="!tradeId && tradeType === 'Gift'" (click)="sendGift()">
             Send Gift
         </ion-button>
-        <ion-button color="light" *ngIf="tradeId" shape="round" (click)="updateTrade()">
+        <ion-button color="primary" *ngIf="tradeId" shape="round" (click)="updateTrade()">
             <ion-icon slot="start" name="add"></ion-icon>Update
         </ion-button>
     </ion-fab>

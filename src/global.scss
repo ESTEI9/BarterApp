@@ -68,7 +68,7 @@ Utility Classes
 }
 
 ion-content {
-    --background: radial-gradient(var(--ion-color-primary), var(--ion-color-highlight));
+    --background: var(--ion-color-light);
 }
 
 ion-menu {
@@ -88,76 +88,44 @@ ion-header {
     }
 }
 
-ion-searchbar {
-    //background: $toolbar-background;
-    //margin-top:56px;
+// ion-button, ion-menu-button {
+//     --text-shadow:1px 1px 2px rgba(0,0,0,0.2);
+//     --transition: all 0.2s;
+// }
 
-    .searchbar-input-container{
-        input.searchbar-input{
-            box-shadow: none;
-            background: var(--ion-color-light);
-            border-radius: 4px;
-        }
+ion-item {
+    // --ion-item-background-activated: transparent;
+    // --highlight-background:transparent;
+
+    &.oddItem {
+        --background: #e8eaf3;
     }
 }
 
-ion-button, ion-menu-button {
-    --text-shadow:1px 1px 2px rgba(0,0,0,0.2);
-    --transition: all 0.2s;
-}
-
-.dealscontainer {
-    margin: 0 -1em;
-}
-
-ion-item {
-    --ion-item-background-activated: transparent;
-    --highlight-background:transparent;
-}
-
-ion-card.dealcard {
-    width:100%;
+.searchbar-input {
+   &.sc-ion-searchbar-md, &.sc-ion-search-ios {
+        box-shadow:none;
+    }
 }
 
 ion-input .text-input-ios, ion-select .text-input-ios, ion-textarea .text-input-ios {
     padding-left:0;
 }
 
-ion-modal.modal.show-modal {
-
-    div[role="dialog"]{
-        border-radius:10px;
-        width: calc(100% - 40px);
-        max-width: 1000px;
-        max-height: 700px;
-        height: calc(100% - 40px);
-    }
-
-    &.size-350 {
-        div[role="dialog"]{
-            height:350px;
-        }
-    }
-
-    &.size-300 {
-        div[role="dialog"]{
-            height:300px;
-        }
-    }
-
-    &#daterange {
-        div[role="dialog"]{
-            height:200px;
-        }
-    }
+.no-data {
+    opacity: 0.5;
+    font-size:5vh;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
-.selectedCard {
-    --background: var(--ion-color-secondary-tint);
-    color: #fff;
-}
-
-.cartCount {
-    border-radius:50%;
-    min-width:20px;
+.comp-spinner {
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%);
+    height:15vh;
+    width:15vh;
 }

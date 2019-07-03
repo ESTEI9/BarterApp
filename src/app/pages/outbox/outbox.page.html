@@ -1,0 +1,32 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-title>Sent</ion-title>
+        <ion-buttons slot="start">
+            <ion-menu-button slot="start" menu="primary"></ion-menu-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+            <ion-button (click)="navCtrl.navigateRoot('')"><ion-icon slot="start" name="log-out"></ion-icon>Logout</ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+<ion-content>
+    <seg-trades *ngIf="segment === 'trades'" segment="outbox"></seg-trades>
+    <seg-invoices *ngIf="segment === 'invoices'" segment="outbox"></seg-invoices>
+    <seg-gifts *ngIf="segment === 'gifts'" segment="outbox"></seg-gifts>
+
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+        <ion-button size="large" shape="round" color="highlight" (click)="startNewTrade()">
+            <ion-icon name="add" slot="start"></ion-icon>
+            <ion-label>New</ion-label>
+        </ion-button>
+    </ion-fab>
+</ion-content>
+<ion-footer>
+    <ion-toolbar color="primary">
+        <ion-segment (ionChange)="switchSegment($event)">
+            <ion-segment-button value="trades" checked><ion-icon name="swap"></ion-icon>Trades</ion-segment-button>
+            <ion-segment-button value="invoices"><ion-icon name="today"></ion-icon>Invoices</ion-segment-button>
+            <ion-segment-button value="gifts"><ion-icon name="gift"></ion-icon>Gifts</ion-segment-button>
+        </ion-segment>
+    </ion-toolbar>
+</ion-footer>

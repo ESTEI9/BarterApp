@@ -1,6 +1,7 @@
-import { Component, OnInit, OnChanges, Input, Output, EventEmitter, SimpleChange } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { VarsService } from 'src/app/services/vars.service';
+import { HttpService } from 'src/app/services/http.service';
 
 @Component({
     selector: 'seg-invoices',
@@ -9,33 +10,42 @@ import { VarsService } from 'src/app/services/vars.service';
 })
 export class InvoicesComponent implements OnInit {
 
-    @Input('invoices') invoices: any;
     @Input('segment') segment: string;
-    @Input('loading') loading: boolean;
-    @Output('getInvoices') getInvoices = new EventEmitter<any>();
+    private loading: boolean;
+    private invoices: any;
 
     constructor(
         private navCtrl: NavController,
-        private vars: VarsService
+        private vars: VarsService,
+        private http: HttpService
     ) { }
 
     ngOnInit() {
-        this.loading = false;
-    }
-
-    ngOnChanges(changes: {[loading: string]: SimpleChange}) {
-        if(changes.loading){
-            this.loading = changes.loading.currentValue;
-        }
+        this.loadInvoices();
     }
 
     viewTrade(id: any) {
         this.navCtrl.navigateForward('/details/' + id);
     }
 
-    loadInvoices(){
+    async loadInvoices(){
         this.loading = true;
-        this.getInvoices.emit(true);
+        const body = {
+            merchantID: this.vars.merchantData['merchant_id'],
+            type: 'Invoice',
+            segment: this.segment
+        };
+        await this.http.getData('tradehub', body).subscribe((resp: any) => {
+            if (resp.status === 1) {
+                this.invoices = resp.data.invoices;
+            } else {
+                console.log(resp);
+            }
+            this.loading = false;
+        }, (err: any) => {
+            console.log("There was an error");
+            this.loading = false;
+        });
     }
 
 }
