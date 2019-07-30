@@ -49,7 +49,7 @@ export class DetailsPage implements OnInit {
                 if (resp.status === 1) {
                     this.trade = resp.data;
                     this.tradeType = this.trade.tradeData.type;
-                    if(this.trade.initData.dba === this.vars.merchantData['dba']){ //this merchant started trade
+                    if(this.trade.initData.merchant_id === this.vars.merchantData['merchant_id']){ //this merchant started trade
                         this.referrer = this.trade.tradeData.trade_completed ? "archive" : "outbox";
                         this.details = this.trade.recData;
                         this.myDetails = this.trade.initData;
@@ -77,12 +77,14 @@ export class DetailsPage implements OnInit {
             //Error handling: These should be very rare. Might occur when something has drained their wallet from the initial setup.)
             this.getTrade().then(async ()=>{
                 if(type === 'accept'){
-                    if(+this.myDetails.valu > +this.myDetails.wallet_cap && (this.tradeType === 'Invoice' || this.tradeType === 'Trade')){
+                    if(+this.myDetails.valu > +this.myDetails.wallet_cap 
+                        && this.myDetails.merchant_id != this.vars.merchantData['merchant_id'] 
+                        && (this.tradeType === 'Invoice' || this.tradeType === 'Trade')){
                         const header = (this.tradeType === 'Trade') ? "Cannot Accept Trade" : "Cannot Pay Invoice";
                         const alert = await this.alertCtrl.create({
                             header: header,
                             subHeader: `Exceeds Your Wallet`,
-                            message: `Your wallet has only ${this.myDetails.wallet_cap} (vs ${this.myDetails.valu}) in ${this.myDetails.wallet_dba} Valu.`,
+                            message: `Your wallet has only ${this.myDetails.wallet_cap} (vs ${this.myDetails.valu}) ${this.myDetails.wallet_dba} tokens.`,
                             buttons: [{
                                 text: 'OK',
                                 role: 'cancel',
@@ -99,7 +101,7 @@ export class DetailsPage implements OnInit {
                         const alert = await this.alertCtrl.create({
                             header: `Cannot Accept ${this.tradeType}`,
                             subHeader: `Exceeds Their Wallet`,
-                            message: `Your partner has only ${this.details.wallet_cap} (vs. ${this.details.valu}) in ${this.details.wallet_dba} Valu.<br/><br/>Please contact your parter to resolve the issue.`,
+                            message: `Your partner doesn't have enough ${this.details.wallet_dba} tokens.<br/><br/>Please contact your parter to resolve the issue.`,
                             buttons: [{
                                 text: 'OK',
                                 role: 'cancel',
@@ -115,7 +117,7 @@ export class DetailsPage implements OnInit {
                     if(this.tradeType === "Trade"){
                         const alert = await this.alertCtrl.create({
                             header: 'Confirm Trade',
-                            message: `Do you want to trade ${this.myDetails.valu} ${this.myDetails.wallet_dba} Valu for ${this.details.valu} ${this.details.wallet_dba} Valu?`,
+                            message: `Do you want to trade ${this.myDetails.valu} ${this.myDetails.wallet_dba} for ${this.details.valu} ${this.details.wallet_dba}?`,
                             buttons: [{
                                 text: 'Cancel',
                                 role: 'cancel',
@@ -136,7 +138,7 @@ export class DetailsPage implements OnInit {
                     if(this.tradeType === "Gift"){
                         const alert = await this.alertCtrl.create({
                             header: 'Accept Gift',
-                            message: `Do you want to accept ${this.details.valu} in ${this.details.wallet_dba} Valu?`,
+                            message: `Do you want to accept ${this.details.valu} ${this.details.wallet_dba} tokens?`,
                             buttons: [{
                                 text: 'No',
                                 role: 'cancel',
@@ -158,7 +160,7 @@ export class DetailsPage implements OnInit {
                     if(this.tradeType === "Invoice"){
                         const alert = await this.alertCtrl.create({
                             header: 'Confirm Payment',
-                            message: `Do you want to pay ${this.myDetails.valu} in ${this.myDetails.wallet_dba} Valu to ${this.details.dba}?`,
+                            message: `Do you want to pay ${this.myDetails.valu} tokens to ${this.details.dba}?`,
                             buttons: [{
                                 text: 'Cancel',
                                 role: 'cancel',

@@ -22,12 +22,17 @@
                     <span *ngIf="trade.tradeData.trade_status === 'Canceled'">{{trade.tradeData.trade_completed | date:'short'}}</span>
                 </ion-text>
             </ion-item>
+            <ion-item>
+                <ion-label>Title</ion-label>
+                <ion-text *ngIf="!trade.tradeData.title">No title</ion-text>
+                <ion-text *ngIf="trade.tradeData.title">{{trade.tradeData.title}}</ion-text>
+            </ion-item>
             <ion-item lines="none">
-                <ion-label *ngIf="!trade.tradeData.notes">Notes</ion-label>
-                <ion-text *ngIf="!trade.tradeData.notes">No notes</ion-text>
-                <ion-text *ngIf="trade.tradeData.notes">
-                    <ion-label style="margin-top:8px; margin-bottom:8px;">Notes</ion-label>
-                    <div style="font-size:0.9em; max-height:200px; overflow-y:auto;" margin>{{trade.tradeData.notes}}</div>
+                <ion-label *ngIf="!trade.tradeData.description">Description</ion-label>
+                <ion-text *ngIf="!trade.tradeData.description">No description</ion-text>
+                <ion-text *ngIf="trade.tradeData.description">
+                    <ion-label style="margin-top:8px; margin-bottom:8px;">Description</ion-label>
+                    <div style="font-size:0.9em; max-height:200px; overflow-y:auto;" margin>{{trade.tradeData.description}}</div>
                 </ion-text>
             </ion-item>
         </ion-list>

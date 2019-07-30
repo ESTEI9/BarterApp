@@ -18,11 +18,13 @@ export class NewTradeComponent implements OnInit {
     private urlBody: any = null;
     private merchants: any;
     private enableCreateTrade: boolean = false;
-    private notes: string;
+    private title: string;
+    private description: string;
     private loadingWallet: boolean = false;
     private loadingMyWallet: boolean = false;
     private loadingTrade: boolean = false;
-    private notesLeft: number = 500;
+    private descriptionLeft: number = 500;
+    private titleLeft: number = 255;
 
     private locationSearch: string;
     private searchLocations: any = [];
@@ -32,6 +34,8 @@ export class NewTradeComponent implements OnInit {
     private wallet: any;
     private amount: number;
 
+    private merchantSearch: string;
+    private searchMerchants: any = [];
     private myLocationSearch: string;
     private mySearchLocations: any = [];
     private myLocation: any = [];
@@ -51,19 +55,6 @@ export class NewTradeComponent implements OnInit {
         if(!this.locations){
             this.httpClient.get("../assets/cities.json").subscribe((resp: any) => {
                 this.locations = resp;
-                // this.locations.filter((loc:any) => {
-                //     const city = this.vars.merchantData['city'];
-                //     const state = this.vars.merchantData['state'];
-                //     if(loc.city === city && loc.state === state){
-                //         this.location = loc;
-                //         this.locationSearch = loc.city+', '+loc.abbr;
-                //         this.myLocation = loc;
-                //         this.myLocationSearch = loc.city+', '+loc.abbr;
-                //         this.loadMerchants();
-                //         this.loadMerchants('my');
-                //         this.loadWallets();
-                //     }
-                // });
             });
 
             if(this.tradeId){
@@ -93,32 +84,27 @@ export class NewTradeComponent implements OnInit {
 
     filterLocations(my?: any) {
         const searchString = (my) ? this.myLocationSearch : this.locationSearch;
-        if(this.locations && searchString){
+        if(searchString){
             let searchLocations = [];
             searchLocations = this.locations.filter((loc: any) => {
-                if (searchLocations.length < 6) {
-                    let combos = [
-                        loc['city'],
-                        loc['city'] + "," + loc['abbr'],
-                        loc['city'] + ", " + loc['abbr']
-                    ];
-                    for (let option of combos) {
-                        if (option.toLowerCase().search(searchString.toLowerCase()) > -1) {
-                            return loc;
-                        }
+                let combos = [
+                    loc['city'],
+                    loc['city'] + "," + loc['abbr'],
+                    loc['city'] + ", " + loc['abbr']
+                ];
+                for (let option of combos) {
+                    if (option.toLowerCase().search(searchString.toLowerCase()) > -1) {
+                        return loc;
                     }
-                };
+                }
             });
+            searchLocations = searchLocations.slice(0,10);
             if(searchLocations[0]['city']+', '+searchLocations[0]['abbr'] == searchString || !searchString){ //removes odd bug showing last option after clicking
                 searchLocations = [];
             }
-
-            searchLocations = searchLocations.slice(0, 6);
-            if (my) {
-                this.mySearchLocations = searchLocations;
-            } else {
-                this.searchLocations = searchLocations;
-            }
+            my ? this.mySearchLocations = searchLocations : this.searchLocations = searchLocations;
+        } else {
+            my ? this.mySearchLocations = [] : this.searchLocations = [];
         }
     }
 
@@ -141,10 +127,7 @@ export class NewTradeComponent implements OnInit {
             }
         });
         if(my && this.myLocation){
-            this.loadWallets('my');
-        }
-        if(this.location){
-            this.loadWallets();
+            this.loadMyWallets();
         }
     }
 
@@ -162,6 +145,7 @@ export class NewTradeComponent implements OnInit {
     }
 
     loadMerchants(my?:string) {
+        this.merchants = [];
         let location = my ? this.myLocation : this.location;
         let body = {
             action: 'getMerchants',
@@ -178,22 +162,45 @@ export class NewTradeComponent implements OnInit {
         });
     }
 
-    loadWallets(my?:any) {
-        my ? this.loadingMyWallet = true : this.loadingWallet = true;
+    filterMerchants() {
+        if(this.merchantSearch){
+            this.searchMerchants = [];
+            this.searchMerchants = this.merchants.filter((merchant: any) => {
+                if (merchant.dba.toLowerCase().search(this.merchantSearch.toLowerCase()) > -1) {
+                    return merchant;
+                }
+            });
+            this.searchMerchants = this.searchMerchants.slice(0,10);
+            if(this.searchMerchants[0]['dba'] == this.merchantSearch || this.merchantSearch.length === 0){ //removes odd bug showing last option after clicking
+                this.searchMerchants = [];
+            }
+        } else {
+            this.searchMerchants = [];
+        }
+    }
+
+    setMerchant(merchant:any){
+        this.merchantSearch = merchant.dba;
+        this.merchant = merchant;
+    }
+
+    loadMyWallets() {
+        this.loadingMyWallet = true;
         let merchantId = this.vars.merchantData['merchant_id'];
-        const location = (my) ? this.myLocation : this.location;
+        const location = this.myLocation;
         let body = {
             action: 'getWallets',
+            status: 'private',
             location: location,
             merchantId: merchantId
         };
         this.http.getData('wallet', body).subscribe((resp: any) => {
             if (resp.status === 1) {
-                if(my) { this.myWallets = resp.data } else { this.wallets = resp.data;};
+                this.myWallets = resp.data;
             } else {
                 console.log(resp);
             }
-            my ? this.loadingMyWallet = false : this.loadingWallet = false;
+           this.loadingMyWallet = false;
         }, (err: any) => {
             console.log("There was an error loading wallets");
         });
@@ -210,12 +217,13 @@ export class NewTradeComponent implements OnInit {
             return await toast.present();
         }
         this.urlBody = {
-            'myMerchant': this.vars.merchantData['merchant_id'],
-            'myWallet': this.myWallet.wallet_id,
-            'myAmount': this.myAmount,
-            'merchant': this.merchant.merchant_id,
-            'notes':    this.notes,
-            'action': 'sendGift'
+            myMerchant: this.vars.merchantData['merchant_id'],
+            myWallet: this.myWallet.wallet_id,
+            myAmount: this.myAmount,
+            merchant: this.merchant.merchant_id,
+            title: this.title,
+            description:    this.description,
+            action: 'sendGift'
         };
         const body = {
             body: JSON.stringify(this.urlBody)
@@ -238,7 +246,8 @@ export class NewTradeComponent implements OnInit {
                 myMerchant: this.vars.merchantData['merchant_id'],
                 myWallet: this.myWallet.wallet_id,
                 myAmount: this.myAmount,
-                notes : this.notes,
+                title: this.title,
+                description : this.description,
                 action: 'createTrade'
             };
             const body = {
@@ -262,7 +271,8 @@ export class NewTradeComponent implements OnInit {
                 merchant: this.merchant.merchant_id,
                 myMerchant: this.vars.merchantData['merchant_id'],
                 amount: this.amount,
-                notes : this.notes,
+                title: this.title,
+                description : this.description,
                 action: 'createInvoice'
             };
 
@@ -274,6 +284,12 @@ export class NewTradeComponent implements OnInit {
     }
 
     async updateTrade() {
+        if(this.tradeType === 'Invoice'){
+            this.myAmount = this.tradeDetails.tradeData.rec_valu;
+            this.myWallet = {
+                wallet_id: this.tradeDetails.tradeData.rec_wallet_id
+            }
+        }
         if(!this.myWallet || !this.myAmount){
             const toast = await this.toastCtrl.create({
                 message: 'Please fill out all the required fields',
@@ -321,11 +337,18 @@ export class NewTradeComponent implements OnInit {
         });
     }
 
-    checkNotesLength(length: any){
-        let notes = this.notes;
-        this.notesLeft = 500 - length;
-        if(this.notesLeft <= 0){
-            this.notes = notes;
+    checkDescriptionLength(length: any){
+        let description = this.description;
+        this.descriptionLeft = 500 - length;
+        if(this.descriptionLeft <= 0){
+            this.description = description;
+        }
+    }
+    checkTitleLength(length: any){
+        let title = this.title;
+        this.titleLeft = 255 - length;
+        if(this.titleLeft <= 0){
+            this.title = title;
         }
     }
 
