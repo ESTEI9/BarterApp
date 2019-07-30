@@ -8,26 +8,10 @@
             <span *ngIf="!trade && !loading">Could not retrieve invoice details</span>
         </div>
         <ion-list color="light" *ngIf="trade">
-            <ion-item *ngIf="referrer === 'inbox'">
-                <ion-label>Payment</ion-label>
-                <ion-text text-right *ngIf="referrer === 'inbox'">
-                    <div *ngIf="myDetails.valu">{{myDetails.valu}}<br/>
-                        <span class="valuType">{{myDetails.wallet_dba}}</span><br/>
-                        <ion-button *ngIf="myDetails.valu && trade && trade.tradeData.trade_status !== 'Completed' && trade.tradeData.trade_status !== 'Canceled'" fill="solid" shape="round" color="primary" (click)="selectValu()">Change</ion-button>
-                    </div>
-                    <ion-button *ngIf="!myDetails.valu" class="padding-h-20" fill="solid" shape="round" color="primary" (click)="selectValu()">
-                        <ion-icon name="add"></ion-icon>Valu
-                    </ion-button>
-                </ion-text>
-            </ion-item>
-            <ion-item *ngIf="referrer === 'archive'">
-                <ion-text text-right *ngIf="referrer === 'archive'">{{myDetails.valu}}<br/><span class="valuType">{{myDetails.wallet_dba}}</span></ion-text>
-            </ion-item>
             <ion-item>
                 <ion-label>Invoice</ion-label>
-                <ion-text *ngIf="referrer !== 'inbox'">{{myDetails.valu}}</ion-text>
-                <ion-text *ngIf="referrer === 'inbox'">{{details.valu}}</ion-text>
-                <!--<ion-text text-right *ngIf="referrer === 'outbox'">{{details.valu}}<br/><span class="valuType">{{details.wallet_dba}}</span></ion-text>-->
+                <ion-text text-right *ngIf="referrer === 'inbox'">{{myDetails.valu}}</ion-text>
+                <ion-text text-right *ngIf="referrer !== 'inbox'">{{details.valu}}</ion-text>
             </ion-item>
             <ion-item>
                 <ion-label>{{trade.tradeData.trade_status}}</ion-label>
@@ -38,12 +22,17 @@
                     <span *ngIf="trade.tradeData.trade_status === 'Canceled'">{{trade.tradeData.trade_completed | date:'short'}}</span>
                 </ion-text>
             </ion-item>
+            <ion-item>
+                <ion-label>Title</ion-label>
+                <ion-text *ngIf="!trade.tradeData.title">No title</ion-text>
+                <ion-text *ngIf="trade.tradeData.title">{{trade.tradeData.title}}</ion-text>
+            </ion-item>
             <ion-item lines="none">
-                <ion-label *ngIf="!trade.tradeData.notes">Notes</ion-label>
-                <ion-text *ngIf="!trade.tradeData.notes">No notes</ion-text>
-                <ion-text *ngIf="trade.tradeData.notes">
-                    <ion-label style="margin-top:8px; margin-bottom:8px;">Notes</ion-label>
-                    <div style="font-size:0.9em; max-height:200px; overflow-y:auto;" margin>{{trade.tradeData.notes}}</div>
+                <ion-label *ngIf="!trade.tradeData.description">Description</ion-label>
+                <ion-text *ngIf="!trade.tradeData.description">No description</ion-text>
+                <ion-text *ngIf="trade.tradeData.description">
+                    <ion-label style="margin-top:8px; margin-bottom:8px;">Description</ion-label>
+                    <div style="font-size:0.9em; max-height:200px; overflow-y:auto;" margin>{{trade.tradeData.description}}</div>
                 </ion-text>
             </ion-item>
         </ion-list>

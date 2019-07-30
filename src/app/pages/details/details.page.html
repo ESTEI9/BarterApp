@@ -19,7 +19,7 @@
             <ion-button *ngIf="referrer === 'outbox' && !executing" color="dark" shape="round" fill="solid" [disabled]="executing" (click)="doAction('cancel')">Cancel</ion-button>
             <ion-button *ngIf="referrer === 'inbox' && !executing && tradeType === 'Gift'" color="light" shape="round" fill="solid" [disabled]="executing" (click)="doAction('accept')">Accept Gift</ion-button>
             <ion-button *ngIf="referrer === 'outbox' && !executing && tradeType === 'Trade' && trade.tradeData.trade_status !== 'Initiated'" color="light" shape="round" fill="solid" [disabled]="executing" (click)="doAction('accept')">Accept Trade</ion-button>
-            <ion-button *ngIf="referrer === 'inbox' && !executing && tradeType == 'Invoice'" color="light" shape="round" fill="solid" [disabled]="executing || myDetails.valu !== details.valu" (click)="doAction('accept')">Make Payment</ion-button>
+            <ion-button *ngIf="referrer === 'inbox' && !executing && tradeType == 'Invoice'" color="light" shape="round" fill="solid" [disabled]="executing" (click)="doAction('accept')">Make Payment</ion-button>
             <ion-spinner color="light" *ngIf="executing"></ion-spinner>
         </div>
     </ion-toolbar>
