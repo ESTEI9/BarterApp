@@ -157,7 +157,7 @@
             </ion-card-content>
         </ion-card>
         <!-- If already established trade -->
-        <ion-card *ngIf="tradeId && tradeDetails.tradeData.type === 'Trade'">
+        <ion-card *ngIf="tradeId && tradeDetails && tradeDetails.tradeData.type === 'Trade'">
             <ion-card-header color="medium-light">
                 <ion-card-title *ngIf="tradeDetails">What to Trade</ion-card-title>
                 <ion-card-title *ngIf="!tradeDetails">Loading...</ion-card-title>

@@ -51,7 +51,8 @@ export class WalletPage implements OnInit {
         let body = {
             action: 'getWallets',
             location: this.location,
-            merchantId: this.vars.merchantData['merchant_id']
+            merchantId: this.vars.merchantData['merchant_id'],
+            status: 'private'
         };
         this.http.getData('wallet', body).subscribe((resp: any) => {
             if (resp.status === 1) {

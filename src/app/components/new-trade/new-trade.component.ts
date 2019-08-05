@@ -302,6 +302,7 @@ export class NewTradeComponent implements OnInit {
                 tradeId: this.tradeId,
                 myWallet: this.myWallet.wallet_id,
                 myAmount: this.myAmount,
+                status: 'Proposed',
                 action: 'updateTrade'
             };
             const body = {
