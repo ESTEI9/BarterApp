@@ -9,7 +9,7 @@ import { NewTradeComponent } from 'src/app/components/new-trade/new-trade.compon
 })
 export class InboxPage implements OnInit {
 
-    private segment: string = "trades";
+    private segment = 'trades';
     private tradeType: string;
 
     constructor(
@@ -18,7 +18,7 @@ export class InboxPage implements OnInit {
         private actionSheetCtrl: ActionSheetController,
         private modalCtrl: ModalController
     ) {
-        this.menuCtrl.enable(true, "primary");
+        this.menuCtrl.enable(true, 'primary');
     }
 
     ngOnInit() { }
@@ -27,11 +27,11 @@ export class InboxPage implements OnInit {
         this.segment = event.detail.value;
     }
 
-    async startNewTrade(){
+    async startNewTrade() {
         this.tradeType = '';
         const sheet = await this.actionSheetCtrl.create({
             header: 'Select Trade Type',
-            buttons:[{
+            buttons: [{
                 text: 'Trade',
                 handler: () => {
                     this.tradeType = 'Trade';
@@ -50,10 +50,10 @@ export class InboxPage implements OnInit {
                 text: 'Cancel',
                 role: 'cancel'
             }]
-        })
+        });
         await sheet.present();
         await sheet.onDidDismiss().then(async () => {
-            if(this.tradeType){
+            if (this.tradeType) {
                 const modal = await this.modalCtrl.create({
                     component: NewTradeComponent,
                     componentProps: {tradeType: this.tradeType}

@@ -1,5 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { NavController } from '@ionic/angular';
+import { Component, OnInit, Input, ViewChild, ElementRef, Renderer2 } from '@angular/core';
+import { NavController, IonRefresher } from '@ionic/angular';
 import { VarsService } from 'src/app/services/vars.service';
 import { HttpService } from 'src/app/services/http.service';
 
@@ -10,18 +10,22 @@ import { HttpService } from 'src/app/services/http.service';
 })
 export class TradesComponent implements OnInit {
 
-    @Input('segment') segment: string;
-    private loading: boolean;
+    @Input() segment: string;
+
+    private initLoading = true;
     private trades: any;
 
     constructor(
         private navCtrl: NavController,
         private vars: VarsService,
-        private http: HttpService
+        private http: HttpService,
+        private renderer: Renderer2
     ) { }
 
     ngOnInit() {
-        this.loadTrades();
+        this.loadTrades().then(() => {
+            this.initLoading = false;
+        });
     }
 
     viewTrade(id: any) {
@@ -29,7 +33,6 @@ export class TradesComponent implements OnInit {
     }
 
     async loadTrades() {
-        this.loading = true;
         const body = {
             merchantID: this.vars.merchantData['merchant_id'],
             type: 'Trade',
@@ -41,10 +44,8 @@ export class TradesComponent implements OnInit {
             } else {
                 console.log(resp);
             }
-            this.loading = false;
         }, (err: any) => {
-            console.log("There was an error");
-            this.loading = false;
+            console.log(err);
         });
     }
 

@@ -1,11 +1,11 @@
-<ion-text text-center padding *ngIf="loading || !gifts" color="medium">
-    <ion-spinner *ngIf="loading" color="highlight" class="comp-spinner"></ion-spinner>
-    <div *ngIf="!gifts && !loading" class="no-data">
-        ¯\_(ツ)_/¯<br/>
-        No Gifts
+<ion-md-refresher (doRefresh)="loadGifts()"></ion-md-refresher>
+<div *ngIf="initLoading" padding>
+        <ion-spinner color="highlight" class="comp-spinner"></ion-spinner>
     </div>
+<ion-text text-center padding *ngIf="!initLoading && !gifts" color="medium">
+    <div class="no-data">No Gifts</div>
 </ion-text>
-<ion-list *ngIf="gifts && !loading" lines="none" no-padding>
+<ion-list *ngIf="gifts" lines="none" no-padding>
     <ion-item color="medium-light">
         <ion-grid no-padding>
             <ion-row>

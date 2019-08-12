@@ -11,6 +11,7 @@ import { GiftsComponent } from './tradehub/gifts/gifts.component';
 import { TradeComponent } from './details/trade/trade.component';
 import { InvoiceComponent } from './details/invoice/invoice.component';
 import { GiftComponent } from './details/gift/gift.component';
+import { IonMdRefresherComponent } from './ion-md-refresher/ion-md-refresher.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { GiftComponent } from './details/gift/gift.component';
         GiftsComponent,
         TradeComponent,
         InvoiceComponent,
-        GiftComponent
+        GiftComponent,
+        IonMdRefresherComponent
     ],
   imports: [
       IonicModule,
@@ -38,7 +40,8 @@ import { GiftComponent } from './details/gift/gift.component';
       GiftsComponent,
       TradeComponent,
       InvoiceComponent,
-      GiftComponent
+      GiftComponent,
+      IonMdRefresherComponent
     ]
 })
 export class ComponentsModule { }

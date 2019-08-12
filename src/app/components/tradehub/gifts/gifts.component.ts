@@ -11,7 +11,8 @@ import { HttpService } from 'src/app/services/http.service';
 export class GiftsComponent implements OnInit {
 
     @Input('segment') segment: string;
-    private loading: boolean;
+
+    private initLoading = true;
     private gifts: any;
 
     constructor(
@@ -21,18 +22,25 @@ export class GiftsComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.loadGifts();
+        this.loadGifts().then(() => {
+            this.initLoading = false;
+        });
     }
 
     viewTrade(id: any) {
         this.navCtrl.navigateForward('/details/' + id);
     }
 
+    refresh(event: any) {
+        this.loadGifts().then(() => {
+            event.target.complete();
+        });
+    }
+
     async loadGifts(){
-        this.loading = true;
         const body = {
             merchantID: this.vars.merchantData['merchant_id'],
-            type: 'Trade',
+            type: 'Gift',
             segment: this.segment
         };
         await this.http.getData('tradehub', body).subscribe((resp: any) => {
@@ -41,10 +49,8 @@ export class GiftsComponent implements OnInit {
             } else {
                 console.log(resp);
             }
-            this.loading = false;
         }, (err: any) => {
-            console.log("There was an error");
-            this.loading = false;
+            console.log(err);
         });
     }
 

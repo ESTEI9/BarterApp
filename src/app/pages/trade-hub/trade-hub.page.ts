@@ -35,7 +35,7 @@ export class TradeHubPage implements OnInit {
     ngOnInit() {
     }
 
-    //Need to loadSegment after details page dismisses (ngAfterViewChecked crashes the app)
+    // Need to loadSegment after details page dismisses (ngAfterViewChecked crashes the app)
 
     async loadTypeMenu(){
         const action = await this.actionSheetCtrl.create({
@@ -53,7 +53,6 @@ export class TradeHubPage implements OnInit {
                             break;
                         case 'archive':
                             this.archiveType = "Trade";
-                        default: null
                     }
                 }
             },{
@@ -69,7 +68,6 @@ export class TradeHubPage implements OnInit {
                             break;
                         case 'archive':
                             this.archiveType = "Invoice";
-                        default: null
                     }
                 }
             },{
@@ -85,7 +83,6 @@ export class TradeHubPage implements OnInit {
                             break;
                         case 'archive':
                             this.archiveType = "Gift";
-                        default: null
                     }
                 }
             },{
@@ -101,7 +98,7 @@ export class TradeHubPage implements OnInit {
     }
 
     async loadSegment(event?:any) {
-        const boxType = () => {
+        const boxType = (() => {
             switch(this.segment){
                 case 'inbox':
                     return this.inboxType;
@@ -111,14 +108,14 @@ export class TradeHubPage implements OnInit {
                     return this.archiveType;
                 default:
                     return null;
-        }};
+        }}).call(this);
         const body = {
             merchantID: this.vars.merchantData['merchant_id'],
-            type: boxType(),
+            type: boxType,
             segment: this.segment
         };
         if(event){
-            switch(boxType()){
+            switch(boxType){
                 case 'Trade':
                     this.tradeLoading = true;
                     break;
@@ -142,15 +139,13 @@ export class TradeHubPage implements OnInit {
                     case 'archive':
                         this.archive = resp.data;
                         break;
-                    default:
-                        null;
                 }
             } else {
                 console.log(resp);
             }
             this.isLoading = false;
             if(event){
-                switch(boxType()){
+                switch(boxType){
                     case 'Trade':
                         this.tradeLoading = false;
                         break;
@@ -163,10 +158,10 @@ export class TradeHubPage implements OnInit {
                 }
             }
         }, (err: any) => {
-            console.log("There was an error");
+            console.log(err);
             this.isLoading = false;
             if(event){
-                switch(boxType()){
+                switch(boxType){
                     case 'Trade':
                         this.tradeLoading = false;
                         break;
@@ -242,8 +237,8 @@ export class TradeHubPage implements OnInit {
                 console.log(resp);
             }
         }, (err: any) => {
-            console.log("There was an error");
-        })
+            console.log(err);
+        });
     }
 
 }

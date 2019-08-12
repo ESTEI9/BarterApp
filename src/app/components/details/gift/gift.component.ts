@@ -19,7 +19,6 @@ export class GiftComponent implements OnInit {
 
   ngOnInit() {
       this.loading = false;
-      console.log({details: this.details, myDetails: this.myDetails})
   }
 
   selectValu() {

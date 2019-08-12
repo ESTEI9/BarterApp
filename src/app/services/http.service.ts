@@ -5,7 +5,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
     providedIn: 'root'
 })
 export class HttpService {
-    private url: string = "http://www.cometothex.com/api/barter/";
+    private url: string = "https://www.cometothex.com/api/barter/";
     //private url: string = "http://localhost/gynesus/api/barter/"; //dev server
 
     constructor(

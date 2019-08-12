@@ -1,0 +1,15 @@
+<ion-content (touchend)="checkProgress()">
+    <div #container class="ion-md-spinner hidden">
+        <svg #spinner viewBox="0 0 64 64"><circle transform="translate(32,32)" r="26"></circle></svg>
+        <!-- <ion-spinner color="highlight"></ion-spinner> -->
+    </div>
+    <ion-refresher #refresher
+        color="primary"
+        (ionPull)="returnProgress($event)" 
+        (ionRefresh)="refresh($event)"
+        pullFactor="0.5"
+        pullMin="30"
+        snapBackDuration="400ms">
+        <ion-refresher-content pullingIcon="" refreshingSpinner=""></ion-refresher-content>
+    </ion-refresher>
+</ion-content>

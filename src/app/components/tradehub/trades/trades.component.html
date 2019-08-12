@@ -1,11 +1,11 @@
-<ion-text text-center padding *ngIf="loading || !trades" color="medium">
-    <ion-spinner *ngIf="loading" color="highlight" class="comp-spinner"></ion-spinner>
-    <div *ngIf="!trades && !loading" class="no-data">
-        ¯\_(ツ)_/¯<br/>
-        No Trades
-    </div>
+<ion-md-refresher (doRefresh)="loadTrades()"></ion-md-refresher>
+<div *ngIf="initLoading" padding>
+    <ion-spinner color="highlight" class="comp-spinner"></ion-spinner>
+</div>
+<ion-text text-center padding *ngIf="!initLoading && !trades" color="medium">
+    <div class="no-data">No Trades</div>
 </ion-text>
-<ion-list *ngIf="trades && !loading" lines="none" no-padding>
+<ion-list *ngIf="trades" lines="none" no-padding>
     <ion-item color="medium-light">
         <ion-grid no-padding>
             <ion-row>

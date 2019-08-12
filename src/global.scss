@@ -122,10 +122,7 @@ ion-input .text-input-ios, ion-select .text-input-ios, ion-textarea .text-input-
 }
 
 .comp-spinner {
-    position:absolute;
-    top:50%;
-    left:50%;
-    transform:translate(-50%, -50%);
-    height:15vh;
-    width:15vh;
+    position:relative;
+    left: 50%;
+    transform:translateX(-50%);
 }
