@@ -15,8 +15,8 @@ export class LoginComponent implements OnInit {
         password: null
     };
     private message: string;
-    private isLoading: boolean = false;
-    private rememberMe: boolean = true;
+    private isLoading = false;
+    private rememberMe = true;
 
     constructor(
         private vars: VarsService,
@@ -30,10 +30,16 @@ export class LoginComponent implements OnInit {
 
     doLogin() {
         this.isLoading = true;
-        const payload = {'body': JSON.stringify({...this.account, 'action': 'login'})};
+        const password = btoa(this.account.password);
+        const body = {
+            email: this.account.email,
+            password,
+            action: 'login'
+        };
+        const payload = {body: JSON.stringify(body)};
         this.http.postData('login', payload).subscribe(async (resp: any) => {
             if (resp.status === 1) {
-                if (this.rememberMe && this.account.email != this.vars.login) {
+                if (this.rememberMe && this.account.email !== this.vars.login) {
                     this.vars.nStorage.setItem('login', this.account.email);
                 }
                 this.vars.merchantData = resp.data;
@@ -41,13 +47,13 @@ export class LoginComponent implements OnInit {
                 this.navCtrl.navigateRoot('/inbox');
             } else {
                 this.account.password = '';
-                this.message = "Username & password mismatch.";
+                this.message = 'Username & password mismatch.';
             }
             this.isLoading = false;
         }, async (err) => {
-            this.message = "There was an error. Please try again."
+            this.message = 'There was an error. Please try again.';
+            console.log(err);
             this.isLoading = false;
         });
     }
-
 }

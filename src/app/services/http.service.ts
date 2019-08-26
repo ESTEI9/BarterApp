@@ -5,25 +5,26 @@ import { HttpClient, HttpParams } from '@angular/common/http';
     providedIn: 'root'
 })
 export class HttpService {
-    private url: string = "https://www.cometothex.com/api/barter/";
-    //private url: string = "http://localhost/gynesus/api/barter/"; //dev server
+    // private url = 'https://www.cometothex.com/api/barter/demo/'; // sandbox
+    private url = 'https://www.cometothex.com/api/barter/'; // live
+    // private url = 'http://localhost/gynesus/api/barter/'; // dev server
 
     constructor(
         private http: HttpClient
     ) { }
 
-    getData(route: string, body:object){
-        let params = new HttpParams().set('route', route).set('body', JSON.stringify(body));
-        return this.http.get(this.url, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, params: params});
+    getData(route: string, body: object) {
+        const params = new HttpParams().set('route', route).set('body', JSON.stringify(body));
+        return this.http.get(this.url, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, params});
     }
 
-    postData(route: string, body:object){
-        body = {...body, 'route': route};
-        let payload = "";
-        for (let param in body) {
-            let amp = (param === 'route') ? "" : "&";
-            payload += encodeURIComponent(param)+"="+encodeURIComponent(body[param])+amp;
-        }
+    postData(route: string, body: any) {
+        body = {...body, route};
+        let payload = '';
+        Object.keys(body).map((param: string) => {
+            const amp = (param === 'route') ? '' : '&';
+            payload += encodeURIComponent(param) + '=' + encodeURIComponent(body[param]) + amp;
+        });
         return this.http.post(this.url, payload, {headers: {'Content-Type': 'application/x-www-form-urlencoded'}});
     }
 }

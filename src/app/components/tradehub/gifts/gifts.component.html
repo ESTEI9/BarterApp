@@ -1,11 +1,11 @@
-<ion-md-refresher (doRefresh)="loadGifts()"></ion-md-refresher>
-<div *ngIf="initLoading" padding>
-        <ion-spinner color="highlight" class="comp-spinner"></ion-spinner>
-    </div>
-<ion-text text-center padding *ngIf="!initLoading && !gifts" color="medium">
+<ion-md-refresher (doRefresh)="loadData()"></ion-md-refresher>
+<div *ngIf="boxLoading" padding>
+    <ion-spinner color="highlight" class="comp-spinner"></ion-spinner>
+</div>
+<ion-text text-center padding *ngIf="(!data || !data.length) && !boxLoading" color="medium">
     <div class="no-data">No Gifts</div>
 </ion-text>
-<ion-list *ngIf="gifts" lines="none" no-padding>
+<ion-list *ngIf="!!data && data.length" lines="none" no-padding>
     <ion-item color="medium-light">
         <ion-grid no-padding>
             <ion-row>
@@ -18,8 +18,8 @@
         </ion-grid>
     </ion-item>
 </ion-list>
-<ion-list lines="none" no-padding *ngIf="gifts && !loading">
-    <ion-item *ngFor="let in of gifts; let i = index;" (click)="viewTrade(in.trade_id)" [color]="i % 2 ? 'light-alt' : null">
+<ion-list lines="none" no-padding *ngIf="data && !boxLoading">
+    <ion-item *ngFor="let in of data; let i = index;" (click)="viewTrade(in.trade_id)" [color]="i % 2 ? 'light-alt' : null">
         <ion-grid no-padding>
             <ion-row class="ion-align-items-center">
                 <ion-col [size]="segment === 'archives' ? 4 : 6">

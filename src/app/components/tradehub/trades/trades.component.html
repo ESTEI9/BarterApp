@@ -1,11 +1,11 @@
-<ion-md-refresher (doRefresh)="loadTrades()"></ion-md-refresher>
-<div *ngIf="initLoading" padding>
+<ion-md-refresher (doRefresh)="loadData()"></ion-md-refresher>
+<div *ngIf="boxLoading" padding>
     <ion-spinner color="highlight" class="comp-spinner"></ion-spinner>
 </div>
-<ion-text text-center padding *ngIf="!initLoading && !trades" color="medium">
+<ion-text text-center padding *ngIf="(!data || !data.length) && !boxLoading" color="medium">
     <div class="no-data">No Trades</div>
 </ion-text>
-<ion-list *ngIf="trades" lines="none" no-padding>
+<ion-list *ngIf="!!data && data.length" lines="none" no-padding>
     <ion-item color="medium-light">
         <ion-grid no-padding>
             <ion-row>
@@ -18,8 +18,8 @@
         </ion-grid>
     </ion-item>
 </ion-list>
-<ion-list lines="none" no-padding *ngIf="trades && !loading">
-    <ion-item *ngFor="let in of trades; let i = index;" (click)="viewTrade(in.trade_id)" [class.oddItem]="i % 2">
+<ion-list lines="none" no-padding *ngIf="data && data.length">
+    <ion-item *ngFor="let in of data; let i = index;" (click)="viewTrade(in.trade_id)" [class.oddItem]="i % 2">
         <ion-grid no-padding>
             <ion-row class="ion-align-items-center">
                 <ion-col size="6">

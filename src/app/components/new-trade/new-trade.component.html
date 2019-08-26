@@ -14,216 +14,57 @@
     </ion-toolbar>
 </ion-header>
 <ion-content>
-    <ion-card *ngIf="!tradeId">
+    <ion-card>
         <ion-card-header color="medium-light">
             <ion-card-title>Select Your Partner</ion-card-title>
         </ion-card-header>
         <ion-card-content no-padding>
-            <ion-searchbar
-                *ngIf="locations"
-                [(ngModel)]="locationSearch"
-                (ionChange)="filterLocations()"
+            <app-searchable-dropdown
+                *ngIf="vars.locations"
+                [options]="searchLocations"
                 debounce="300"
                 color="light-alt"
-                placeholder="Search Cities">
-            </ion-searchbar>
+                placeholder="Partner City"
+                (updateOptions)="updateSearchLocations($event)"
+                (selectValue)="setLocation($event)"
+            ></app-searchable-dropdown>
             <div text-center padding *ngIf="location && !merchants"><ion-spinner color="primary"></ion-spinner></div>
-            <ion-searchbar
+            <app-searchable-dropdown
                 *ngIf="location && merchants"
-                [(ngModel)]="merchantSearch"
-                (ionChange)="filterMerchants()"
+                [options]="searchMerchants"
                 debounce="300"
                 color="light-alt"
-                placeholder="Choose Merchant">
-            </ion-searchbar>
+                placeholder="Choose Partner"
+                (updateOptions)="updateMerchants($event)"
+                (selectValue)="setMerchant($event)"
+            ></app-searchable-dropdown>
         </ion-card-content>
     </ion-card>
-
-    <!-- Lists -->
-    <ion-list *ngIf="searchLocations && searchLocations.length > 0">
-        <ion-item *ngFor="let loc of searchLocations; let i = index" (click)="setLocation(loc)" [lines]="i === searchLocations.length-1 ? 'none' : 'full'">
-            <ion-label>{{loc.city}}, {{loc.abbr}}</ion-label>
-        </ion-item>
-    </ion-list>
-    <ion-list *ngIf="mySearchLocations && mySearchLocations.length > 0">
-        <ion-item *ngFor="let loc of mySearchLocations; let i = index" (click)="setLocation(loc, 'my')" [lines]="i === mySearchLocations.length-1 ? 'none' : 'full'">
-            <ion-label>{{loc.city}}, {{loc.abbr}}</ion-label>
-        </ion-item>
-    </ion-list>
-    <ion-list *ngIf="searchMerchants && searchMerchants.length > 0">
-        <ion-item *ngFor="let merch of searchMerchants; let i = index" (click)="setMerchant(merch)" [lines]="i === searchMerchants.length -1 ? 'none' : 'full'">
-            <ion-label>{{merch.dba}}</ion-label>
-        </ion-item>
-    </ion-list>
-
-    <div *ngIf="searchLocations.length === 0 && mySearchLocations.length === 0 && searchMerchants.length === 0">
-        <ion-card *ngIf="tradeType === 'Invoice'">
-            <ion-card-header color="medium-light">
-                <ion-card-title>Your Bill</ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-                <ion-list>
-                    <ion-item>
-                        <ion-label position="floating">Amount</ion-label>
-                        <ion-input [(ngModel)]="amount" type="tel" min="0" size="5"></ion-input>
-                    </ion-item>
-                    <ion-item>
-                        <ion-label position="floating">Title</ion-label>
-                        <ion-input 
-                            type="text" 
-                            [(ngModel)]="title" 
-                            maxLength="255"
-                            (ionChange)="checkTitleLength($event.detail.value.length)">
-                        </ion-input>
-                    </ion-item>
-                    <ion-item>
-                        <ion-label position="floating">Description</ion-label>
-                        <ion-textarea 
-                            color="dark"
-                            [(ngModel)]="description"
-                            rows="4"
-                            maxLength="500"
-                            (ionChange)="checkDescriptionLength($event.detail.value.length)">
-                        </ion-textarea>
-                    </ion-item>
-                    <ion-text [color]="(descriptionLeft <= 50 && descriptionLeft > 0) ? 'tertiary': descriptionLeft <= 0 ? 'danger' : 'dark'">
-                        <strong>{{descriptionLeft}}/500</strong>
-                    </ion-text>
-                </ion-list>
-            </ion-card-content>
-        </ion-card>
-        <ion-card *ngIf="tradeType !== 'Invoice' && !tradeId">
-            <ion-card-header color="medium-light">
-                <ion-card-title>Your {{tradeType}}</ion-card-title>
-            </ion-card-header>
-            <ion-card-content no-padding>
-                <ion-searchbar
-                    [(ngModel)]="myLocationSearch"
-                    (ionChange)="filterLocations('my')"
-                    (ionBlur)="checkLocation('my')"
-                    debounce="300"
-                    color="light-alt"
-                    placeholder="Your City">
-                </ion-searchbar>
-                <ion-grid>
-                    <ion-row>
-                        <ion-col text-center>
-                            <ion-spinner *ngIf="loadingMyWallet" style="margin:0 auto;"></ion-spinner>
-                            <ion-select *ngIf="!loadingMyWallet" [disabled]="!myWallets" (ionChange)="myWallet = $event.detail.value" padding placeholder="Select Wallet" interface="action-sheet">
-                                <ion-select-option *ngFor="let wallet of myWallets" [value]="wallet">{{wallet.dba}}</ion-select-option>
-                            </ion-select>
-                        </ion-col>
-                        <ion-col>
-                            <ion-input
-                                type="tel"
-                                min="0"
-                                size="5"
-                                [max]="myWallet && myWallet.feathers ? myWallet.feathers : 0"
-                                [placeholder]="myWallet && myWallet.feathers ? 'Max: '+myWallet.feathers : 'Select Wallet First'"
-                                [(ngModel)]="myAmount"
-                                [disabled]="!myWallet"
-                                padding>
-                            </ion-input>
-                        </ion-col>
-                    </ion-row>
-                    <ion-row>
-                        <ion-col>
-                            <strong>Title</strong>
-                            <ion-input 
-                                type="text" 
-                                [(ngModel)]="title" 
-                                maxLength="255"
-                                (ionChange)="checkTitleLength($event.detail.value.length)">
-                            </ion-input>
-                        </ion-col>
-                    </ion-row>
-                    <ion-row>
-                        <ion-col>
-                            <strong>Description</strong>
-                            <ion-textarea
-                                color="dark"
-                                [(ngModel)]="description"
-                                rows="6" cols="20"
-                                placeholder="Enter a description..." 
-                                maxLength="500"
-                                (ionChange)="checkDescriptionLength($event.detail.value.length)">
-                            </ion-textarea>
-                            <ion-text [color]="(descriptionLeft <= 50 && descriptionLeft > 0) ? 'tertiary': descriptionLeft <= 0 ? 'danger' : 'dark'">
-                                <strong *ngIf="description">{{500 - description.length}}/500</strong><strong *ngIf="!description">500/500</strong>
-                            </ion-text>
-                        </ion-col>
-                    </ion-row>
-                </ion-grid>
-            </ion-card-content>
-        </ion-card>
-        <!-- If already established trade -->
-        <ion-card *ngIf="tradeId && tradeDetails && tradeDetails.tradeData.type === 'Trade'">
-            <ion-card-header color="medium-light">
-                <ion-card-title *ngIf="tradeDetails">What to Trade</ion-card-title>
-                <ion-card-title *ngIf="!tradeDetails">Loading...</ion-card-title>
-            </ion-card-header>
-            <ion-card-content no-padding>
-                <ion-searchbar
-                    [(ngModel)]="myLocationSearch"
-                    (ionChange)="filterLocations('my')"
-                    (ionBlur)="checkLocation('my')"
-                    debounce="300"
-                    color="primary"
-                    placeholder="Your City">
-                </ion-searchbar>
-                <ion-grid>
-                    <ion-row>
-                        <ion-col text-center>
-                            <ion-spinner *ngIf="loadingMyWallet" style="margin:0 auto;"></ion-spinner>
-                            <ion-select *ngIf="!loadingMyWallet" [disabled]="!myWallets" (ionChange)="myWallet = $event.detail.value" padding placeholder="Select My Wallet" interface="action-sheet">
-                                <ion-select-option *ngIf="!myWallets"><ion-spinner></ion-spinner></ion-select-option>
-                                <ion-select-option *ngFor="let wallet of myWallets" [value]="wallet">{{wallet.dba}}</ion-select-option>
-                            </ion-select>
-                        </ion-col>
-                        <ion-col>
-                            <ion-input
-                                type="tel"
-                                min="0"
-                                size="5"
-                                [max]="myWallet && myWallet.feathers ? myWallet.feathers : 0"
-                                [placeholder]="myWallet && myWallet.feathers ? 'Max: '+myWallet.feathers : 'Select Wallet First'"
-                                [(ngModel)]="myAmount"
-                                [disabled]="!myWallet"
-                                padding>
-                            </ion-input>
-                        </ion-col>
-                    </ion-row>
-                </ion-grid>
-            </ion-card-content>
-        </ion-card>
-        <ion-card *ngIf="tradeId">
-            <ion-card-header color="medium-light">
-                <ion-card-title *ngIf="tradeDetails">{{tradeDetails.tradeData.type}} Details</ion-card-title>
-                <ion-card-title *ngIf="!tradeDetails">Loading...</ion-card-title>
-            </ion-card-header>
-            <ion-card-content no-padding>
-                <ion-list *ngIf="!loadingTrade && tradeDetails">
-                    <ion-item><ion-label>DBA</ion-label><ion-text>{{tradeDetails.initData.dba}}</ion-text></ion-item>
-                    <ion-item>
-                        <ion-label>{{tradeDetails.tradeData.type}}</ion-label>
-                        <ion-text text-right>{{tradeDetails.initData.valu}}<br/><span class="valuType">{{tradeDetails.initData.wallet_dba}}</span></ion-text>
-                    </ion-item>
-                    <ion-item><ion-label>Phone</ion-label><ion-text>{{tradeDetails.initData.phone | tel}}</ion-text></ion-item>
-                    <ion-item><ion-label>Email</ion-label><ion-text>{{tradeDetails.initData.email}}</ion-text></ion-item>
-                    <ion-item lines="none" *ngIf="tradeDetails && tradeDetails.tradeData.description">
-                        <ion-label *ngIf="!tradeDetails.tradeData.description">Description</ion-label>
-                        <ion-text *ngIf="!tradeDetails.tradeData.description">No description</ion-text>
-                        <ion-text *ngIf="tradeDetails && tradeDetails.tradeData.description">
-                            <ion-label style="margin-top:8px; margin-bottom:8px;">Description</ion-label>
-                            <div style="font-size:0.9em; max-height:200px; overflow-y:auto;" margin>{{tradeDetails.tradeData.description}}</div>
-                        </ion-text>
-                    </ion-item>
-                </ion-list>
-                <div text-center margin *ngIf="!loadingTrade && !tradeDetails">There has been an error loading details.</div>
-                <div text-center margin *ngIf="loadingTrade"><ion-spinner></ion-spinner></div>
-            </ion-card-content>
-        </ion-card>
-    </div>
+    <ion-card>
+        <ion-card-header color="medium-light">
+            <ion-card-title>
+                <span *ngIf="tradeType === 'Invoice'">Your Bill</span>
+                <span *ngIf="tradeType !== 'Invoice'">Your {{tradeType}}</span>
+            </ion-card-title>
+        </ion-card-header>
+        <ion-card-content no-padding>
+            <ion-list *ngIf="tradeType === 'Invoice'" lines="none">
+                <ion-item>
+                    <ion-label position="stacked"><strong>Amount</strong></ion-label>
+                    <ion-input [(ngModel)]="amount" type="tel" min="0" size="5"></ion-input>
+                </ion-item>
+            </ion-list>
+            <app-wallet
+                *ngIf="tradeType !== 'Invoice'"
+                (update)="updateWallet($event)"
+            ></app-wallet>
+            <app-description
+                [title]="title"
+                [description]="description"
+                (update)="updateDescription($event)"
+            ></app-description>
+        </ion-card-content>
+    </ion-card>
 </ion-content>
 <ion-footer>
     <ion-toolbar color="primary">
@@ -236,9 +77,6 @@
             </ion-button>
             <ion-button *ngIf="!tradeId && tradeType === 'Gift'" (click)="sendGift()">
                 Send Gift
-            </ion-button>
-            <ion-button *ngIf="tradeId" (click)="updateTrade()">
-                Update
             </ion-button>
         </ion-buttons>
     </ion-toolbar>

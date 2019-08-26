@@ -1,0 +1,30 @@
+.walletBlock {
+    display:flex;
+    flex-direction: column;
+
+    ion-input {
+        flex-basis: 0;
+        margin:8px 8px 8px 0;
+        background: var(--ion-color-light);
+        border: 1px solid var(--ion-color-light-shade);
+    }
+    
+    .flex-row {
+        display: flex;
+        flex-direction: row;
+
+        &.walletSelected {
+            app-searchable-dropdown {
+                flex-basis: 66.67%;
+            }
+            ion-input {
+                flex-basis: 33.33%;
+            }
+        }
+    }
+
+    &.modal {
+        height: 100%;
+        padding: 16px;
+    }
+}

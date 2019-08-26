@@ -28,23 +28,23 @@
     <div *ngIf="!isLoading">
         <!-- Incoming -->
         <div *ngIf="segment === 'inbox'">
-            <seg-trades *ngIf="inboxType === 'Trade'" [trades]="inbox.trades" segment="inbox" (getTrades)="loadSegment($event)" [loading]="tradeLoading"></seg-trades>
-            <seg-invoices *ngIf="inboxType === 'Invoice'" [invoices]="inbox.invoices" segment="inbox" (getInvoices)="loadSegment($event)" [loading]="invoiceLoading"></seg-invoices>
-            <seg-gifts *ngIf="inboxType === 'Gift'" [gifts]="inbox.gifts" segment="inbox" (getGifts)="loadSegment($event)" [loading]="giftLoading"></seg-gifts>
+            <seg-trades *ngIf="inboxType === 'Trade'" [trades]="inbox.trades" segment="inbox" [loading]="tradeLoading" (update)="updateSegment($event)"></seg-trades>
+            <seg-invoices *ngIf="inboxType === 'Invoice'" [invoices]="inbox.invoices" segment="inbox" [loading]="invoiceLoading" (update)="updateSegment($event)"></seg-invoices>
+            <seg-gifts *ngIf="inboxType === 'Gift'" [gifts]="inbox.gifts" segment="inbox" [loading]="giftLoading" (update)="updateSegment($event)"></seg-gifts>
         </div>
 
         <!-- Outgoing -->
         <div *ngIf="segment === 'outbox'">
-            <seg-trades *ngIf="outboxType === 'Trade'" [trades]="outbox.trades" segment="outbox" (getTrades)="loadSegment($event)" [loading]="tradeLoading"></seg-trades>
-            <seg-invoices *ngIf="outboxType === 'Invoice'" [invoices]="outbox.invoices" segment="outbox" (getInvoices)="loadSegment($event)" [loading]="invoiceLoading"></seg-invoices>
-            <seg-gifts *ngIf="outboxType === 'Gift'" [gifts]="outbox.gifts" segment="outbox" (getGifts)="loadSegment($event)" [loading]="giftLoading"></seg-gifts>
+            <seg-trades *ngIf="outboxType === 'Trade'" [trades]="outbox.trades" segment="outbox" [loading]="tradeLoading" (update)="updateSegment($event)"></seg-trades>
+            <seg-invoices *ngIf="outboxType === 'Invoice'" [invoices]="outbox.invoices" segment="outbox" [loading]="invoiceLoading" (update)="updateSegment($event)"></seg-invoices>
+            <seg-gifts *ngIf="outboxType === 'Gift'" [gifts]="outbox.gifts" segment="outbox" [loading]="giftLoading" (update)="updateSegment($event)"></seg-gifts>
         </div>
 
         <!-- Archive -->
         <div *ngIf="segment === 'archive'">
-            <seg-trades *ngIf="archiveType === 'Trade'" [trades]="archive.trades" segment="archive" (getTrades)="loadSegment($event)" [loading]="tradeLoading"></seg-trades>
-            <seg-invoices *ngIf="archiveType === 'Invoice'" [invoices]="archive.invoices" segment="archive" (getInvoices)="loadSegment($event)" [loading]="invoiceLoading"></seg-invoices>
-            <seg-gifts *ngIf="archiveType === 'Gift'" [gifts]="archive.gifts" segment="archive" (getGifts)="loadSegment($event)" [loading]="giftLoading"></seg-gifts>
+            <seg-trades *ngIf="archiveType === 'Trade'" [trades]="archive.trades" segment="archive" [loading]="tradeLoading" (update)="updateSegment($event)"></seg-trades>
+            <seg-invoices *ngIf="archiveType === 'Invoice'" [invoices]="archive.invoices" segment="archive"[loading]="invoiceLoading" (update)="updateSegment($event)"></seg-invoices>
+            <seg-gifts *ngIf="archiveType === 'Gift'" [gifts]="archive.gifts" segment="archive" [loading]="giftLoading" (update)="updateSegment($event)"></seg-gifts>
         </div>
     </div>
 

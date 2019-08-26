@@ -1,0 +1,26 @@
+<ion-list lines="none">
+    <ion-item>
+        <ion-label position="stacked"><strong>Title</strong></ion-label>
+        <ion-input 
+            type="text" [(ngModel)]="compTitle" maxLength="255"
+            (ionChange)="checkTitleLength($event.detail.value.length)"
+            clearInput>
+        </ion-input>
+    </ion-item>
+    <ion-item>
+        <ion-label position="stacked"><strong>Description</strong></ion-label>
+        <ion-textarea
+            color="dark"
+            [(ngModel)]="compDescription"
+            rows="6" cols="20"
+            placeholder="Enter a description..." 
+            maxLength="500"
+            (ionChange)="checkDescriptionLength($event.detail.value.length)">
+        </ion-textarea>
+    </ion-item>
+    <ion-item>
+        <ion-label [color]="(descriptionLeft <= 50 && descriptionLeft > 0) ? 'tertiary': descriptionLeft <= 0 ? 'danger' : 'dark'">
+            <strong *ngIf="compDescription">{{500 - compDescription.length}}/500</strong><strong *ngIf="!compDescription">500/500</strong>
+        </ion-label>
+    </ion-item>
+</ion-list>

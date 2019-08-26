@@ -21,16 +21,27 @@
 ion-card {
     --background: #fff;
 
-    &:nth-child(2){
-        ion-select, ion-textarea, ion-input {
-            border: 1px solid var(--ion-color-medium-light);
-            border-radius:5px;
-        }
+    ion-select, ion-textarea, ion-input {
+        border: 1px solid var(--ion-color-light-shade);
+        border-radius: 5px;
+        background: var(--ion-color-light);
+        --padding-start: 8px;
+        --inner-padding-end: 8px;
     }
 }
 
 ion-footer {
     ion-button {
         flex-basis:100%;
+    }
+}
+
+ion-item {
+    --highlight-color-valid: transparent;
+    --highlight-color-invalid: transparent;
+
+    ion-label[position="stacked"] {
+        margin-bottom:10px;
+        font-size:1.2em;
     }
 }

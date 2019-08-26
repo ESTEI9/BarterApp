@@ -1,0 +1,21 @@
+ion-item {
+    --highlight-color-valid: transparent;
+    --highlight-color-invalid: transparent;
+
+    ion-label {
+        font-size:1.2em;
+    }
+    &:first-child {
+        ion-label {
+            margin-bottom: 10px;
+        }
+    }
+}
+
+ion-textarea, ion-input {
+    border: 1px solid var(--ion-color-light-shade);
+    background: var(--ion-color-light) !important;
+    --padding-start: 8px !important;
+    --inner-padding-end: 8px;
+    border-radius: 4px;
+}

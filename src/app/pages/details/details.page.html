@@ -1,26 +1,38 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title *ngIf="trade">{{tradeType}} Details</ion-title>
-    <ion-title *ngIf="loading">Loading...</ion-title>
+    <ion-title>
+        <span *ngIf="!loading">{{tradeType}} Details</span>
+        <span *ngIf="loading">Loading...</span>
+    </ion-title>
     <ion-buttons slot="start">
         <ion-back-button></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 <ion-content>
-    <det-trade *ngIf="tradeType === 'Trade'" [data]="trade" [myDetails]="myDetails" [details]="details" [loading]="loading" [referrer]="referrer" (addValu)="selectValu()"></det-trade>
-    <det-invoice *ngIf="tradeType === 'Invoice'" [data]="trade" [myDetails]="myDetails" [details]="details" [loading]="loading" [referrer]="referrer" (addValu)="selectValu()"></det-invoice>
-    <det-gift *ngIf="tradeType === 'Gift'" [data]="trade" [myDetails]="myDetails" [details]="details" [loading]="loading" [referrer]="referrer" (addValu)="selectValu()"></det-gift>
+<det-trade *ngIf="tradeType === 'Trade'"
+    [trade]="trade"
+    [myDetails]="myDetails"
+    [details]="details"
+    [loading]="loading"
+    [referrer]="referrer"
+    (doTrade)="doTrade($event)">
+</det-trade>
+<det-invoice *ngIf="tradeType === 'Invoice'"
+    [trade]="trade"
+    [myDetails]="myDetails"
+    [details]="details"
+    [loading]="loading"
+    [referrer]="referrer"
+    (doTrade)="doTrade($event)">
+</det-invoice>
+<det-gift *ngIf="tradeType === 'Gift'" 
+    [trade]="trade"
+    [myDetails]="myDetails"
+    [details]="details"
+    [loading]="loading" 
+    [referrer]="referrer"
+    (doTrade)="doTrade($event)"
+    >
+</det-gift>
 </ion-content>
-<ion-footer *ngIf="trade && trade.tradeData.trade_status !== 'Completed' && trade.tradeData.trade_status !== 'Canceled'">
-    <ion-toolbar color="primary">
-        <div class="ion-justify-content-around" style="display:flex">
-            <ion-button *ngIf="referrer === 'inbox' && !executing && tradeType !== 'Invoice'" color="dark" shape="round" fill="solid" [disabled]="executing" (click)="doAction('decline')">Decline</ion-button>
-            <ion-button *ngIf="referrer === 'outbox' && !executing" color="dark" shape="round" fill="solid" [disabled]="executing" (click)="doAction('cancel')">Cancel</ion-button>
-            <ion-button *ngIf="referrer === 'inbox' && !executing && tradeType === 'Gift'" color="light" shape="round" fill="solid" [disabled]="executing" (click)="doAction('accept')">Accept Gift</ion-button>
-            <ion-button *ngIf="referrer === 'outbox' && !executing && tradeType === 'Trade' && trade.tradeData.trade_status !== 'Initiated'" color="light" shape="round" fill="solid" [disabled]="executing" (click)="doAction('accept')">Accept Trade</ion-button>
-            <ion-button *ngIf="referrer === 'inbox' && !executing && tradeType == 'Invoice'" color="light" shape="round" fill="solid" [disabled]="executing" (click)="doAction('accept')">Make Payment</ion-button>
-            <ion-spinner color="light" *ngIf="executing"></ion-spinner>
-        </div>
-    </ion-toolbar>
-</ion-footer>

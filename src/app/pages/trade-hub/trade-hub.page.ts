@@ -97,9 +97,26 @@ export class TradeHubPage implements OnInit {
         });
     }
 
-    async loadSegment(event?:any) {
+    updateSegment(data: any) {
+        const key = Object.keys(data)[0];
+        let box: string;
+        switch (this.segment) {
+            case 'inbox':
+                box = this.inbox;
+                break;
+            case 'outbox':
+                box = this.outbox;
+                break;
+            case 'archive':
+                box = this.archive;
+                break;
+        }
+        box[key] = data[key];
+    }
+
+    async loadSegment(event?: any) {
         const boxType = (() => {
-            switch(this.segment){
+            switch (this.segment) {
                 case 'inbox':
                     return this.inboxType;
                 case 'outbox':

@@ -12,19 +12,27 @@ import { TradeComponent } from './details/trade/trade.component';
 import { InvoiceComponent } from './details/invoice/invoice.component';
 import { GiftComponent } from './details/gift/gift.component';
 import { IonMdRefresherComponent } from './ion-md-refresher/ion-md-refresher.component';
+import { SearchableDropdownComponent } from './searchable-dropdown/searchable-dropdown.component';
+import { DescriptionComponent } from './blocks/description/description.component';
+import { WalletComponent } from './blocks/wallet/wallet.component';
+
+const components = [
+  LoginComponent,
+  NewTradeComponent,
+  TradesComponent,
+  InvoicesComponent,
+  GiftsComponent,
+  TradeComponent,
+  InvoiceComponent,
+  GiftComponent,
+  IonMdRefresherComponent,
+  SearchableDropdownComponent,
+  DescriptionComponent,
+  WalletComponent
+];
 
 @NgModule({
-  declarations: [
-        LoginComponent,
-        NewTradeComponent,
-        TradesComponent,
-        InvoicesComponent,
-        GiftsComponent,
-        TradeComponent,
-        InvoiceComponent,
-        GiftComponent,
-        IonMdRefresherComponent
-    ],
+  declarations: components,
   imports: [
       IonicModule,
       FormsModule,
@@ -32,16 +40,7 @@ import { IonMdRefresherComponent } from './ion-md-refresher/ion-md-refresher.com
       CommonModule,
       PipesModule
   ],
-  exports: [
-      LoginComponent,
-      NewTradeComponent,
-      TradesComponent,
-      InvoicesComponent,
-      GiftsComponent,
-      TradeComponent,
-      InvoiceComponent,
-      GiftComponent,
-      IonMdRefresherComponent
-    ]
+  entryComponents: [DescriptionComponent, WalletComponent],
+  exports: components
 })
 export class ComponentsModule { }

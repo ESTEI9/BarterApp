@@ -1,0 +1,14 @@
+<ion-searchbar
+    [(ngModel)]="value"
+    [debounce]="debounce"
+    [color]="color"
+    [placeholder]="loading ? loadingString : placeholder"
+    (ionChange)="updateDropdown($event)"
+    [disabled]="disabled"
+    >
+</ion-searchbar>
+<ion-list *ngIf="options && options.length > 0 && !disabled">
+    <ion-item *ngFor="let item of options; let i = index" (click)="updateValue(item)" [lines]="i === options.length-1 ? 'none' : 'full'">
+        <ion-label>{{interpretValue(item)}}</ion-label>
+    </ion-item>
+</ion-list>

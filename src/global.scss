@@ -125,4 +125,21 @@ ion-input .text-input-ios, ion-select .text-input-ios, ion-textarea .text-input-
     position:relative;
     left: 50%;
     transform:translateX(-50%);
+    margin-top: 5vh;
+    height: 10vh;
+    width: 10vh;
+}
+
+.description-modal {
+    .modal-wrapper {
+        width: 80%;
+        height: 344px;
+    }
+}
+
+.wallet-modal {
+    .modal-wrapper {
+        width:80%;
+        height: 400px;
+    }
 }

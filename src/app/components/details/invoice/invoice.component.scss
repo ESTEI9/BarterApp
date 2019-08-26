@@ -2,7 +2,34 @@
     font-size:0.9em;
     font-style: italic;
 }
-.padding-h-20 {
-    --padding-start: 20px;
-    --padding-end: 20px;
+
+.offset {
+    height: calc(100% - 56px);
+}
+
+.editable {
+    --highlight-color-valid: transparent;
+    --highlight-color-invalid: transparent;
+
+    ion-input, ion-textarea {
+        background: var(--ion-color-light);
+        border: 1px solid var(--ion-color-light-shade);
+        border-radius: 4px;
+    }
+}
+
+.descriptionBlock {
+    width: 100%;
+
+    ion-item {
+        --inner-padding-end: 0;
+    }
+    
+    div { margin: 0 auto; }
+
+    &.description {
+        font-size:0.9em;
+        max-height:200px;
+        overflow-y:auto;
+    }
 }

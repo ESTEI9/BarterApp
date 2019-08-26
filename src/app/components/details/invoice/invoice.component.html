@@ -1,6 +1,15 @@
+<ion-content class="offset">
 <ion-card color="primary">
-    <ion-card-header color="primary">
-        <ion-card-title>Specifics</ion-card-title>
+    <ion-card-header color="primary" no-padding>
+        <ion-toolbar color="primary">
+            <ion-title>Specifics</ion-title>
+            <ion-buttons *ngIf="referrer === 'outbox'" slot="end">
+                <ion-button (click)="updateFields()">
+                    <ion-icon *ngIf="!executing" slot="icon-only" [name]="editTrade ? 'md-checkmark' : 'md-create'"></ion-icon>
+                    <ion-spinner *ngIf="executing"></ion-spinner>
+                </ion-button>
+            </ion-buttons>
+        </ion-toolbar>
     </ion-card-header>
     <ion-card-content no-padding>
         <div text-center padding *ngIf="!trade || loading">
@@ -8,10 +17,15 @@
             <span *ngIf="!trade && !loading">Could not retrieve invoice details</span>
         </div>
         <ion-list color="light" *ngIf="trade">
-            <ion-item>
+            <ion-item [class.editable]="editTrade">
                 <ion-label>Invoice</ion-label>
-                <ion-text text-right *ngIf="referrer === 'inbox'">{{myDetails.valu}}</ion-text>
-                <ion-text text-right *ngIf="referrer !== 'inbox'">{{details.valu}}</ion-text>
+                <ion-text slot="end">
+                    <div *ngIf="!editTrade" text-right>
+                        <span *ngIf="referrer === 'outbox'">{{details.valu}}</span>
+                        <span *ngIf="referrer !== 'outbox'">{{myDetails.valu}}</span>
+                    </div>
+                    <ion-input *ngIf="editTrade && referrer === 'outbox'" [(ngModel)]="details.valu"></ion-input>
+                </ion-text>
             </ion-item>
             <ion-item>
                 <ion-label>{{trade.tradeData.trade_status}}</ion-label>
@@ -22,18 +36,18 @@
                     <span *ngIf="trade.tradeData.trade_status === 'Canceled'">{{trade.tradeData.trade_completed | date:'short'}}</span>
                 </ion-text>
             </ion-item>
-            <ion-item>
-                <ion-label>Title</ion-label>
-                <ion-text *ngIf="!trade.tradeData.title">No title</ion-text>
-                <ion-text *ngIf="trade.tradeData.title">{{trade.tradeData.title}}</ion-text>
-            </ion-item>
             <ion-item lines="none">
-                <ion-label *ngIf="!trade.tradeData.description">Description</ion-label>
-                <ion-text *ngIf="!trade.tradeData.description">No description</ion-text>
-                <ion-text *ngIf="trade.tradeData.description">
-                    <ion-label style="margin-top:8px; margin-bottom:8px;">Description</ion-label>
-                    <div style="font-size:0.9em; max-height:200px; overflow-y:auto;" margin>{{trade.tradeData.description}}</div>
-                </ion-text>
+                <ion-list lines="none" *ngIf="title || description" class="descriptionBlock">
+                    <ion-item no-padding [class.editable]="editTrade">
+                        <ion-input type="text" *ngIf="editTrade && referrer === 'outbox'" [(ngModel)]="title" style="font-weight: bold" text-center></ion-input>
+                        <div *ngIf="!editTrade || referrer !== 'outbox'" style="font-weight:bold" [innerHtml]="title ? title : 'No title'"></div>
+                    </ion-item>
+                    <ion-item no-padding [class.editable]="editTrade">
+                        <ion-textarea *ngIf="editTrade && referrer === 'outbox'" class="description" [(ngModel)]="description" text-center></ion-textarea>
+                        <div *ngIf="!editTrade || referrer !== 'outbox'" class="description" [innerHtml]="description ? description : 'No description'"
+                        ></div>
+                    </ion-item>
+                </ion-list>
             </ion-item>
         </ion-list>
     </ion-card-content>
@@ -47,7 +61,7 @@
             <ion-spinner *ngIf="loading"></ion-spinner>
             <span *ngIf="!trade && !loading">Could not get partner info</span>
         </div>
-        <ion-list color="light" *ngIf="trade">
+        <ion-list color="light" *ngIf="trade && !loading">
             <ion-item>
                 <ion-label>DBA</ion-label>
                 <ion-text>{{details.dba}}</ion-text>
@@ -63,3 +77,13 @@
         </ion-list>
     </ion-card-content>
 </ion-card>
+</ion-content>
+<ion-footer *ngIf="trade && referrer !== 'archive'">
+    <ion-toolbar color="primary">
+        <ion-buttons *ngIf="!excuting" class="ion-justify-content-around" style="display:flex">
+            <ion-button *ngIf="referrer === 'outbox'" (click)="tradeAction('cancel')">Cancel</ion-button>
+            <ion-button *ngIf="referrer === 'inbox'" (click)="tradeAction('accept')">Make Payment</ion-button>
+        </ion-buttons>
+        <ion-spinner color="light" *ngIf="executing"></ion-spinner>
+    </ion-toolbar>
+</ion-footer>
