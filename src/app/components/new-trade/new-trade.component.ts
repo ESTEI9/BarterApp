@@ -104,9 +104,8 @@ export class NewTradeComponent implements OnInit {
                 return merchant;
             }
         }).slice(0, 5);
-
         // removes odd bug showing last option after clicking
-        return merchants[0].dba === search || merchants.length === 0 || !search ? [] : merchants;
+        return merchants.length ? merchants[0].dba === search || merchants.length === 0 || !search ? [] : merchants : [];
     }
 
     updateMerchants(event: any) {

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, AfterContentInit, EventEmitter, Output } from '@angular/core';
+import { Component, Input, AfterContentInit, EventEmitter, Output } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { VarsService } from 'src/app/services/vars.service';
 import { HttpService } from 'src/app/services/http.service';
@@ -9,7 +9,7 @@ import { CommonService } from 'src/app/services/common.service';
     templateUrl: './gifts.component.html',
     styleUrls: ['./gifts.component.scss'],
 })
-export class GiftsComponent implements OnInit, AfterContentInit {
+export class GiftsComponent implements AfterContentInit {
 
     @Input() segment: string;
     @Input() data: any = [];
@@ -25,8 +25,6 @@ export class GiftsComponent implements OnInit, AfterContentInit {
         private http: HttpService,
         private common: CommonService
     ) { }
-
-    ngOnInit() { }
 
     ngAfterContentInit() {
         const loadingCheck = setInterval(() => {
@@ -44,7 +42,7 @@ export class GiftsComponent implements OnInit, AfterContentInit {
     async loadData() {
         this.loading = true;
         const body = {
-            merchantID: this.vars.merchantData['merchant_id'],
+            merchantID: this.vars.merchantData.merchant_id,
             type: 'Gift',
             segment: this.segment
         };

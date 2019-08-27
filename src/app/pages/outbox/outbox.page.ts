@@ -11,7 +11,7 @@ import { HttpService } from 'src/app/services/http.service';
 })
 export class OutboxPage implements OnInit {
 
-    private segment: string = "trades";
+    private segment = 'trades';
     private tradeType: string;
     private trades: any;
     private invoices: any;
@@ -37,7 +37,7 @@ export class OutboxPage implements OnInit {
         this.vars.loading = true;
         const body = {
             segment: 'outbox',
-            merchantID: this.vars.merchantData['merchant_id']
+            merchantID: this.vars.merchantData.merchant_id
         };
         this.http.getData('tradehub', body).subscribe((resp: any) => {
             if (resp.status === 1) {

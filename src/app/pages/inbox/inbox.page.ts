@@ -40,7 +40,7 @@ export class InboxPage implements OnInit {
         this.vars.loading = true;
         const body = {
             segment: 'inbox',
-            merchantID: this.vars.merchantData['merchant_id'],
+            merchantID: this.vars.merchantData.merchant_id,
             type: null
         };
         this.http.getData('tradehub', body).subscribe((resp: any) => {
