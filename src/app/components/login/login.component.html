@@ -9,15 +9,15 @@
             </ion-input>
         </ion-item>
         <ion-item>
-            <ion-button color="primary" margin-top margin-bottom fill="solid" shape="round" size="large" expand="block"
+            <ion-button color="secondary" margin-top margin-bottom fill="solid" shape="round" size="large" expand="block"
                 type="submit" [attr.disabled]="isLoading">
                 <span *ngIf="!isLoading">Login</span>
-                <ion-spinner color="dark" *ngIf="isLoading"></ion-spinner>
+                <ion-spinner color="highlight" *ngIf="isLoading"></ion-spinner>
             </ion-button>
         </ion-item>
         <ion-item class="ion-text-end">
             <ion-label position="">Remember Me</ion-label>
-            <ion-checkbox slot="end" [(ngModel)]="rememberMe" name="rememberMe" color="primary"
+            <ion-checkbox slot="end" [(ngModel)]="rememberMe" name="rememberMe" color="secondary"
                 aria-label="Remember Me"></ion-checkbox>
         </ion-item>
     </ion-list>

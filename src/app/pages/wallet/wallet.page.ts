@@ -19,6 +19,7 @@ export class WalletPage implements OnInit {
     private wallets: any;
     private tradeType: string;
     private searchLocations: any;
+    private locPlaceholder = 'Change Location';
 
     constructor(
         private http: HttpService,
@@ -30,29 +31,20 @@ export class WalletPage implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.loading = true;
-        this.httpClient.get("../assets/cities.json").subscribe((resp: any) => {
-            this.locations = resp;
-            this.locations.filter((loc: any) => {
-                const city = this.vars.merchantData['city'];
-                const state = this.vars.merchantData['state'];
-                if (loc.city === city && loc.state === state) {
-                    this.location = loc;
-                    this.locationSearch = loc.city + ', ' + loc.abbr;
-                    this.loadWallets();
-                }
-            });
-            this.loading = false;
+        this.vars.locations.filter((loc: any) => {
+            if (loc.city === this.vars.merchantData.city && loc.state === this.vars.merchantData.state) {
+                this.location = loc;
+                this.loadWallets();
+            }
         });
     }
 
     loadWallets() {
         this.loading = true;
-        let body = {
-            action: 'getWallets',
+        const body = {
+            action: 'getPrivateWallets',
             location: this.location,
-            merchantId: this.vars.merchantData['merchant_id'],
-            status: 'private'
+            merchantId: this.vars.merchantData.merchant_id
         };
         this.http.getData('wallet', body).subscribe((resp: any) => {
             if (resp.status === 1) {
@@ -62,58 +54,38 @@ export class WalletPage implements OnInit {
             }
             this.loading = false;
         }, (err: any) => {
-            console.log("There was an error loading wallets");
+            console.log(err);
         });
     }
 
-    filterLocations() {
-        const searchString = this.locationSearch;
-        if (this.locations && searchString) {
-            let searchLocations = [];
-            searchLocations = this.locations.filter((loc: any) => {
-                if (searchLocations.length < 6) {
-                    let combos = [
-                        loc['city'],
-                        loc['city'] + "," + loc['abbr'],
-                        loc['city'] + ", " + loc['abbr']
-                    ];
-                    for (let option of combos) {
-                        if (option.toLowerCase().search(searchString.toLowerCase()) > -1) {
-                            return loc;
-                        }
-                    }
-                };
-            });
-            if (searchLocations[0]['city'] + ', ' + searchLocations[0]['abbr'] == searchString || !searchString) { //removes odd bug showing last option after clicking
-                searchLocations = [];
+    filterLocations(search: string) {
+        const searchLocations = this.vars.locations.filter((loc: any) => {
+          const combos = [
+            loc.city,
+            `${loc.city}, ${loc.abbr}`,
+            `${loc.city}, ${loc.abbr}`
+          ];
+          for (const option of combos) {
+            if (option.toLowerCase().search(search.toLowerCase()) > -1) {
+              return loc;
             }
+          }
+        }).slice(0, 5);
 
-            searchLocations = searchLocations.slice(0, 6);
-            this.searchLocations = searchLocations;
-        }
-    }
+        // removes odd bug showing last option after clicking
+        return searchLocations[0].city + ', ' + searchLocations[0].abbr === search || !search ? [] : searchLocations;
+      }
 
-    checkLocation() {
-        let searchString = this.locationSearch;
-        this.locations.filter((loc: any) => {
-            let combos = [
-                loc['city'],
-                loc['city'] + "," + loc['abbr'],
-                loc['city'] + ", " + loc['abbr']
-            ];
-            for (let option of combos) {
-                if (option.toLowerCase().search(searchString.toLowerCase()) > -1) {
-                    this.location = loc;
-                }
-            }
-        });
-        this.loadWallets();
-    }
+      updateSearchLocations(event: any) {
+        const searchLocations = this.filterLocations(event.detail.value);
+        this.searchLocations = searchLocations;
+      }
 
-    setLocation(loc: any, my?: string) {
-        this.locationSearch = loc.city + ', ' + loc.abbr;
+    setLocation(loc: any) {
+        this.locationSearch = `${loc.city}, ${loc.abbr}`;
         this.location = loc;
         this.searchLocations = [];
+        this.loadWallets();
     }
 
     async startNewTrade() {
@@ -139,7 +111,7 @@ export class WalletPage implements OnInit {
                 text: 'Cancel',
                 role: 'cancel'
             }]
-        })
+        });
         await sheet.present();
         await sheet.onDidDismiss().then(async () => {
             if (this.tradeType) {

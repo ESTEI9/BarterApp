@@ -1,57 +1,38 @@
 <ion-header>
-  <ion-toolbar color="primary">
-    <ion-title>Wallet</ion-title>
-    <ion-buttons slot="start">
-        <ion-menu-button slot="start" menu="primary"></ion-menu-button>
-    </ion-buttons>
-    <ion-buttons slot="end">
-        <ion-button (click)="navCtrl.navigateRoot('')"><ion-icon slot="start" name="log-out"></ion-icon>Logout</ion-button>
-    </ion-buttons>
-  </ion-toolbar>
+    <ion-toolbar color="primary">
+        <ion-title>Wallet</ion-title>
+        <ion-buttons slot="start">
+            <ion-menu-button slot="start" menu="primary"></ion-menu-button>
+        </ion-buttons>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content>
- <ion-searchbar
-    [(ngModel)]="locationSearch"
-    (ionChange)="filterLocations()"
-    (ionBlur)="checkLocation()"
-    debounce="300"
-    color="medium"
-    placeholder="Your City">
-</ion-searchbar>
-
-<ion-text text-center padding *ngIf="loading || !wallets" color="medium">
+    <app-searchable-dropdown
+        [options]="searchLocations"
+        (updateOptions)="updateSearchLocations($event)"
+        (selectValue)="setLocation($event)"
+        color="dark"
+        [placeholder]="locPlaceholder"
+    ></app-searchable-dropdown>
     <ion-spinner *ngIf="loading" color="highlight" class="comp-spinner"></ion-spinner>
-    <div *ngIf="!wallets && !loading" class="no-data">
-        ¯\_(ツ)_/¯<br/>
-        No Wallet
-    </div>
-</ion-text>
-<ion-card color="light" *ngIf="!loading && wallets">
-    <ion-card-content no-padding>
-        <ion-list no-padding lines="none">
-            <ion-item color="medium-light">
-                <ion-label><strong>DBA</strong></ion-label>
-                <ion-text><strong>Valu</strong></ion-text>
-            </ion-item>
-            <ion-item *ngFor="let wallet of wallets; let i = index;" [class.oddItem]="i % 2">
-                <ion-label>{{wallet.dba}}</ion-label>
-                <ion-text>{{wallet.feathers}}</ion-text>
-            </ion-item>
-        </ion-list>
-    </ion-card-content>
-</ion-card>
+    <ion-text text-center padding color="medium" *ngIf="!wallets && !loading" class="no-data">No Wallet</ion-text>
 
-<ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-button size="large" shape="round" color="highlight" (click)="startNewTrade()">
-        <ion-icon name="add" slot="start"></ion-icon>
-        <ion-label>New</ion-label>
-    </ion-button>
-</ion-fab>
+    <ion-list no-padding lines="none" *ngIf="!loading && wallets">
+        <ion-item color="medium-light">
+            <ion-label><strong>DBA</strong></ion-label>
+            <ion-text><strong>Valu</strong></ion-text>
+        </ion-item>
+        <ion-item *ngFor="let wallet of wallets; let i = index;" [class.oddItem]="i % 2">
+            <ion-label>{{wallet.dba}}</ion-label>
+            <ion-text>{{wallet.feathers}}</ion-text>
+        </ion-item>
+    </ion-list>
 
-<ion-list *ngIf="searchLocations && searchLocations.length > 0" class="bottom-sheet">
-    <ion-item *ngFor="let loc of searchLocations; let i = index" (click)="setLocation(loc)" [lines]="i == searchLocations.length-1 ? 'none' : 'full'">
-        <ion-label>{{loc.city}}, {{loc.abbr}}</ion-label>
-    </ion-item>
-</ion-list>
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+        <ion-button size="large" shape="round" color="highlight" (click)="startNewTrade()">
+            <ion-icon name="add" slot="start"></ion-icon>
+            <ion-label>New</ion-label>
+        </ion-button>
+    </ion-fab>
 </ion-content>

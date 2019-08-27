@@ -21,8 +21,8 @@ export class VarsService {
             this.nStorage.getItem('login').then(data => { this.login = (data ? data : null); });
         } else {
             // Testing Only
-            // this.login = 'support@freedomchoiceglobal.com'; // dev
-            this.login = 'johnedmondson848@yahoo.com'; // live dev
+            this.login = 'support@freedomchoiceglobal.com'; // dev
+            // this.login = 'jedmondson848@yahoo.com'; // live dev
         }
         this.getLocations();
     }

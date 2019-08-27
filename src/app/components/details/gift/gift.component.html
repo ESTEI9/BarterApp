@@ -1,19 +1,19 @@
 <ion-content class="offset">
 <ion-card color="primary">
-    <ion-card-header color="primary" no-padding>
-        <ion-toolbar color="primary">
+    <ion-card-header no-padding>
+        <ion-toolbar color="secondary">
             <ion-title>Specifics</ion-title>
             <ion-buttons *ngIf="referrer === 'outbox'" slot="end">
                 <ion-button (click)="updateFields()">
-                    <ion-icon *ngIf="!executing" slot="icon-only" [name]="editTrade ? 'md-checkmark' : 'md-create'"></ion-icon>
-                    <ion-spinner *ngIf="executing"></ion-spinner>
+                    <ion-icon color="highlight" *ngIf="!executing" slot="icon-only" [name]="editTrade ? 'md-checkmark' : 'md-create'"></ion-icon>
+                    <ion-spinner *ngIf="executing" color="highlight"></ion-spinner>
                 </ion-button>
             </ion-buttons>
         </ion-toolbar>
     </ion-card-header>
     <ion-card-content no-padding>
         <div text-center padding *ngIf="!trade || loading">
-            <ion-spinner *ngIf="loading"></ion-spinner>
+            <ion-spinner *ngIf="loading" color="highlight"></ion-spinner>
             <span *ngIf="!trade && !loading">Could not retrieve gift details</span>
         </div>
         <ion-list color="light" *ngIf="trade">
@@ -55,7 +55,7 @@
     </ion-card-content>
 </ion-card>
 <ion-card color="light">
-    <ion-card-header color="primary">
+    <ion-card-header color="secondary">
         <ion-card-title>Donator</ion-card-title>
     </ion-card-header>
     <ion-card-content no-padding>
@@ -87,6 +87,6 @@
             <ion-button *ngIf="referrer === 'inbox'" (click)="tradeAction('decline')">Decline</ion-button>
             <ion-button *ngIf="referrer === 'inbox'" (click)="tradeAction('accept')">Accept Gift</ion-button>
         </ion-buttons>
-        <ion-spinner color="light" *ngIf="executing"></ion-spinner>
+        <ion-spinner color="higlight" *ngIf="executing"></ion-spinner>
     </ion-toolbar>
 </ion-footer>

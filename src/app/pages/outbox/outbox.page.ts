@@ -54,6 +54,20 @@ export class OutboxPage implements OnInit {
         });
     }
 
+    updateType(data: any) {
+        switch (this.segment) {
+            case 'trades':
+                this.trades = data;
+                break;
+            case 'invoices':
+                this.invoices = data;
+                break;
+            case 'gifts':
+                this.gifts = data;
+                break;
+        }
+    }
+
     async startNewTrade() {
         this.tradeType = '';
         const sheet = await this.actionSheetCtrl.create({

@@ -58,7 +58,7 @@ export class TradesComponent implements OnInit, AfterContentInit {
                             });
                         });
                     });
-                    this.update.emit({trades: resp.data.trades});
+                    this.update.emit(resp.data.trades);
                 } else {
                     this.data = [];
                 }

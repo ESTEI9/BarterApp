@@ -1,19 +1,19 @@
 <ion-content class="offset">
 <ion-card color="primary">
-    <ion-card-header color="primary" no-padding>
-        <ion-toolbar color="primary">
+    <ion-card-header no-padding>
+        <ion-toolbar color="secondary">
             <ion-title>Specifics</ion-title>
             <ion-buttons slot="end">
                 <ion-button *ngIf="myTradeData.wallet_dba" (click)="updateFields()">
-                    <ion-icon *ngIf="!executing" slot="icon-only" [name]="editTrade ? 'md-checkmark' : 'md-create'"></ion-icon>
-                    <ion-spinner *ngIf="executing"></ion-spinner>
+                    <ion-icon color="highlight" *ngIf="!executing" slot="icon-only" [name]="editTrade ? 'md-checkmark' : 'md-create'"></ion-icon>
+                    <ion-spinner *ngIf="executing" color="highlight"></ion-spinner>
                 </ion-button>
             </ion-buttons>
         </ion-toolbar>
     </ion-card-header>
     <ion-card-content no-padding>
         <div text-center padding *ngIf="!trade || loading">
-            <ion-spinner *ngIf="loading"></ion-spinner>
+            <ion-spinner *ngIf="loading" color="highlight"></ion-spinner>
             <span *ngIf="!trade && !loading">Could not retrieve trade details</span>
         </div>
         <ion-list color="light" *ngIf="trade" class="tradeList" lines="none">
@@ -30,8 +30,8 @@
                         <div *ngIf="!myTradeData.valu && !editTrade" class="valuType">No trade yet</div>
                         <div *ngIf="myTradeData.wallet_dba" class="valuType">{{myTradeData.wallet_dba}}</div>
                     </div>
-                    <ion-button size="small" *ngIf="!myTradeData.vendor_id" color="primary" (click)="updateFields()">
-                        <ion-icon slot="start" name="add"></ion-icon>Trade
+                    <ion-button size="small" *ngIf="!myTradeData.vendor_id" color="highlight" (click)="updateFields()">
+                        <ion-icon slot="icon-only" name="add"></ion-icon>
                     </ion-button>
                 </ion-text>
                 <ion-icon name="swap"></ion-icon>
@@ -74,12 +74,12 @@
     </ion-card-content>
 </ion-card>
 <ion-card color="light">
-    <ion-card-header color="primary">
+    <ion-card-header color="secondary">
         <ion-card-title>Trade Partner</ion-card-title>
     </ion-card-header>
     <ion-card-content no-padding>
         <div text-center padding *ngIf="!trade || loading">
-            <ion-spinner *ngIf="loading"></ion-spinner>
+            <ion-spinner color="highlight" *ngIf="loading"></ion-spinner>
             <span *ngIf="!trade && !loading">Could not get partner info</span>
         </div>
         <ion-list color="light" *ngIf="trade && !loading">
@@ -106,6 +106,6 @@
             <ion-button *ngIf="referrer === 'inbox'" (click)="tradeAction('decline')">Decline</ion-button>
             <ion-button *ngIf="referrer === 'outbox'" (click)="tradeAction('cancel')">Cancel</ion-button>
         </ion-buttons>
-        <ion-spinner color="light" *ngIf="executing"></ion-spinner>
+        <ion-spinner color="highlight" *ngIf="executing"></ion-spinner>
     </ion-toolbar>
 </ion-footer>

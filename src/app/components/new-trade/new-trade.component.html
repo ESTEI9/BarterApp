@@ -15,7 +15,7 @@
 </ion-header>
 <ion-content>
     <ion-card>
-        <ion-card-header color="medium-light">
+        <ion-card-header color="secondary">
             <ion-card-title>Select Your Partner</ion-card-title>
         </ion-card-header>
         <ion-card-content no-padding>
@@ -28,7 +28,7 @@
                 (updateOptions)="updateSearchLocations($event)"
                 (selectValue)="setLocation($event)"
             ></app-searchable-dropdown>
-            <div text-center padding *ngIf="location && !merchants"><ion-spinner color="primary"></ion-spinner></div>
+            <div text-center padding *ngIf="location && !merchants"><ion-spinner color="highlight"></ion-spinner></div>
             <app-searchable-dropdown
                 *ngIf="location && merchants"
                 [options]="searchMerchants"
@@ -41,7 +41,7 @@
         </ion-card-content>
     </ion-card>
     <ion-card>
-        <ion-card-header color="medium-light">
+        <ion-card-header color="secondary">
             <ion-card-title>
                 <span *ngIf="tradeType === 'Invoice'">Your Bill</span>
                 <span *ngIf="tradeType !== 'Invoice'">Your {{tradeType}}</span>

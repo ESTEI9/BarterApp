@@ -58,7 +58,7 @@ export class GiftsComponent implements OnInit, AfterContentInit {
                             });
                         });
                     });
-                    this.update.emit({gifts: resp.data.gifts});
+                    this.update.emit(resp.data.gifts);
                 } else {
                     this.data = [];
                 }

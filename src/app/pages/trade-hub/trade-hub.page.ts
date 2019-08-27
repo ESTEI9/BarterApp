@@ -91,27 +91,10 @@ export class TradeHubPage implements OnInit {
             }]
         });
         await action.present();
-        await action.onDidDismiss().then(()=>{
+        await action.onDidDismiss().then(() => {
             this.isLoading = true;
             this.loadSegment();
         });
-    }
-
-    updateSegment(data: any) {
-        const key = Object.keys(data)[0];
-        let box: string;
-        switch (this.segment) {
-            case 'inbox':
-                box = this.inbox;
-                break;
-            case 'outbox':
-                box = this.outbox;
-                break;
-            case 'archive':
-                box = this.archive;
-                break;
-        }
-        box[key] = data[key];
     }
 
     async loadSegment(event?: any) {

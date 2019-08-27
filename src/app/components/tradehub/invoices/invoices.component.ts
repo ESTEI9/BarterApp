@@ -61,7 +61,7 @@ export class InvoicesComponent implements OnInit, AfterContentInit {
                 } else {
                     this.data = [];
                 }
-                this.update.emit({invoices: resp.data.invoices});
+                this.update.emit(resp.data.invoices);
             } else {
                 console.log(resp);
                 this.loading = false;
