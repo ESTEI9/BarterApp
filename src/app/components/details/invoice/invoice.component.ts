@@ -41,7 +41,6 @@ export class InvoiceComponent implements OnInit {
         this.title = this.data.tradeData.title;
         this.description = this.data.tradeData.description;
         this.myTradeData = {...this.myDetails};
-        console.log(this.myDetails);
     }
 
     tradeAction(event: string) {

@@ -1,11 +1,11 @@
 <form (submit)="doLogin()" text-center>
-    <ion-list>
+    <ion-list margin-top>
         <ion-item>
-            <ion-input type="email" margin-bottom [(ngModel)]="account.email" name="email" placeholder="Email" clearInput>
+            <ion-input type="email" margin-bottom padding [(ngModel)]="account.email" name="email" placeholder="Email" clearInput>
             </ion-input>
         </ion-item>
         <ion-item>
-            <ion-input type="password" [(ngModel)]="account.password" name="password" placeholder="Password">
+            <ion-input type="password" padding [(ngModel)]="account.password" name="password" placeholder="Password" clearInput>
             </ion-input>
         </ion-item>
         <ion-item>
@@ -17,7 +17,7 @@
         </ion-item>
         <ion-item class="ion-text-end">
             <ion-label position="">Remember Me</ion-label>
-            <ion-checkbox slot="end" [(ngModel)]="rememberMe" name="rememberMe" color="secondary"
+            <ion-checkbox slot="end" [(ngModel)]="rememberMe" name="rememberMe" color="primary"
                 aria-label="Remember Me"></ion-checkbox>
         </ion-item>
     </ion-list>

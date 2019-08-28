@@ -1,23 +1,10 @@
-
-ion-content{
-    --background: #fff;
-}
-
 ion-list {
     background:transparent;
-}
-ion-grid {
-    flex-basis:100%;
 
-    #tagline {
-        text-align: right;
+    ion-item:first-child {
+        background-color: var(--ion-color-primary);
+        border-bottom: 1px solid var(--ion-color-light-shade);
     }
-}
-
-ion-text {
-    font-size:25px;
-    color: #222;
-    font-family: 'Helvetica', sans-serif;
 }
 
 app-login {
@@ -28,15 +15,12 @@ ion-item {
     --ion-background-color: transparent;
     --ion-item-background-activated: transparent;
     --highlight-background:transparent;
-
-    &.header {
-        margin-bottom:1em;
-    }
 }
 
 img {
     max-width: 200px;
     padding: 16px;
+    margin: 0 auto;
 }
 
 ion-input {

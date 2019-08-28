@@ -3,9 +3,10 @@
     <ion-card-header no-padding>
         <ion-toolbar color="secondary">
             <ion-title>Specifics</ion-title>
-            <ion-buttons slot="end">
-                <ion-button *ngIf="myTradeData.wallet_dba" (click)="updateFields()">
-                    <ion-icon color="highlight" *ngIf="!executing" slot="icon-only" [name]="editTrade ? 'md-checkmark' : 'md-create'"></ion-icon>
+            <ion-buttons slot="end" *ngIf="myTradeData.wallet_dba && (referrer === 'inbox' || (referrer === 'outbox' && !details.valu))">
+                <ion-button (click)="updateFields()">
+                    <ion-icon color="highlight" *ngIf="!executing" slot="icon-only" [name]="editTrade ? 'md-checkmark' : 'md-create'">
+                    </ion-icon>
                     <ion-spinner *ngIf="executing" color="highlight"></ion-spinner>
                 </ion-button>
             </ion-buttons>
@@ -19,7 +20,7 @@
         <ion-list color="light" *ngIf="trade" class="tradeList" lines="none">
             <ion-item [class.editable]="editTrade">
                 <ion-text text-center>
-                    <div><strong>Trade</strong></div>
+                    <div *ngIf="myTradeData.wallet_dba"><strong>Trade</strong></div>
                     <div *ngIf="myTradeData.wallet_dba">
                         <div *ngIf="!editTrade && myTradeData.valu">{{myTradeData.valu}}</div>
                         <ion-input
@@ -30,9 +31,11 @@
                         <div *ngIf="!myTradeData.valu && !editTrade" class="valuType">No trade yet</div>
                         <div *ngIf="myTradeData.wallet_dba" class="valuType">{{myTradeData.wallet_dba}}</div>
                     </div>
-                    <ion-button size="small" *ngIf="!myTradeData.vendor_id" color="highlight" (click)="updateFields()">
-                        <ion-icon slot="icon-only" name="add"></ion-icon>
-                    </ion-button>
+                    <ion-buttons class="ion-justify-content-center">
+                        <ion-button shape="round" fill="solid" *ngIf="!myTradeData.vendor_id" class="addTradeButton" color="highlight" (click)="updateFields()">
+                            <ion-icon name="add"></ion-icon>
+                        </ion-button>
+                    </ion-buttons>
                 </ion-text>
                 <ion-icon name="swap"></ion-icon>
             </ion-item>
