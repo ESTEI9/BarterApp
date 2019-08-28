@@ -13,7 +13,7 @@
         (selectValue)="setLocation($event)"
     ></app-searchable-dropdown>
     <div class="flex-row" [class.walletSelected]="wallet">
-        <ion-spinner *ngIf="loading" color="primary" style="margin: 10px auto;"></ion-spinner>
+        <ion-spinner *ngIf="loading" color="highlight" style="margin: 10px auto;"></ion-spinner>
         <app-searchable-dropdown
             *ngIf="wallets && !loading"
             [disabled]="!wallets"
