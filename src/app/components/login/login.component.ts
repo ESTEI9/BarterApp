@@ -40,7 +40,7 @@ export class LoginComponent implements OnInit {
         this.http.postData('login', payload).subscribe(async (resp: any) => {
             if (resp.status === 1) {
                 if (this.rememberMe && this.account.email !== this.vars.login) {
-                    this.vars.nStorage.setItem('login', this.account.email);
+                    this.vars.storage.set('login', this.account.email);
                 }
                 this.vars.merchantData = resp.data;
                 this.message = null;

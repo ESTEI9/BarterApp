@@ -13,6 +13,7 @@ import { LoginComponent } from './components/login/login.component';
 import { NativeStorage } from '@ionic-native/native-storage/ngx';
 import { HttpClientModule } from '@angular/common/http';
 import { NewTradeComponent } from './components/new-trade/new-trade.component';
+import { IonicStorageModule } from '@ionic/storage';
 
 @NgModule({
   declarations: [AppComponent],
@@ -20,7 +21,14 @@ import { NewTradeComponent } from './components/new-trade/new-trade.component';
       LoginComponent,
       NewTradeComponent
   ],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, ComponentsModule, HttpClientModule],
+  imports: [
+    BrowserModule,
+    IonicModule.forRoot(),
+    AppRoutingModule,
+    ComponentsModule,
+    HttpClientModule,
+    IonicStorageModule.forRoot()
+  ],
   providers: [
     StatusBar,
     SplashScreen,
