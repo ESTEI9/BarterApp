@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, AfterViewInit, SimpleChanges, SimpleChange, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, AfterViewInit } from '@angular/core';
 import { HttpService } from 'src/app/services/http.service';
 import { ModalController } from '@ionic/angular';
 import { VarsService } from 'src/app/services/vars.service';
@@ -8,7 +8,7 @@ import { VarsService } from 'src/app/services/vars.service';
   templateUrl: './wallet.component.html',
   styleUrls: ['./wallet.component.scss'],
 })
-export class WalletComponent implements OnInit, AfterViewInit, OnDestroy {
+export class WalletComponent implements OnInit, AfterViewInit {
   private options: any;
   private wallet: any;
   private amount: number;
@@ -93,7 +93,7 @@ export class WalletComponent implements OnInit, AfterViewInit, OnDestroy {
 
   setOptions(search?: any) {
     this.options = this.wallets.filter((wallet: any) => {
-      if (wallet.dba.toLowerCase().search(search.toLowerCase()) > -1) {
+      if (search && wallet.dba.toLowerCase().search(search.toLowerCase()) > -1) {
         return wallet;
       }
     }).slice(0, 5);
@@ -117,15 +117,6 @@ export class WalletComponent implements OnInit, AfterViewInit, OnDestroy {
       });
     } else {
       this.update.emit({ wallet: this.wallet, amount: this.amount });
-    }
-  }
-
-  ngOnDestroy() {
-    if (this.modal) {
-      this.modalCtrl.dismiss({
-        wallet: this.wallet,
-        amount: this.amount
-      });
     }
   }
 

@@ -99,7 +99,6 @@ export class TradeComponent implements OnInit {
                 });
                 await modal.present();
                 return await modal.onDidDismiss().then((resp) => {
-                    console.log(resp);
                     if (resp.data && resp.data.amount) {
                         this.myTradeData.valu = resp.data.amount;
                         this.myTradeData.wallet_id = resp.data.wallet.wallet_id;

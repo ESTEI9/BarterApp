@@ -20,7 +20,7 @@
         <ion-list color="light" *ngIf="trade" class="tradeList" lines="none">
             <ion-item [class.editable]="editTrade">
                 <ion-text text-center>
-                    <div *ngIf="myTradeData.wallet_dba"><strong>Trade</strong></div>
+                    <div><strong>Trade</strong></div>
                     <div *ngIf="myTradeData.wallet_dba">
                         <div *ngIf="!editTrade && myTradeData.valu">{{myTradeData.valu}}</div>
                         <ion-input
