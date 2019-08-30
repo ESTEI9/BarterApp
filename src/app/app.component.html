@@ -1,14 +1,12 @@
 <ion-app>
     <ion-split-pane>
         <ion-menu side="start" type="overlay" menuId="primary">
-            <ion-header>
-                <ion-toolbar color="primary">
-                    <ion-title>Main Menu</ion-title>
-                </ion-toolbar>
-            </ion-header>
             <ion-content color="light-alt">
                 <ion-menu-toggle auto-hide="false">
-                    <ion-list lines="none" id="main-menu">
+                    <ion-list lines="none" id="main-menu" no-padding>
+                        <ion-item padding>
+                            <img src="assets/logo.svg" />
+                        </ion-item>
                         <ion-item routerDirection="root" routerLink="/inbox">
                             <ion-icon name="ios-mail" slot="start" [color]="currentRoute === '/inbox' ? 'highlight' : 'secondary'"></ion-icon>
                             <ion-label>Received</ion-label>

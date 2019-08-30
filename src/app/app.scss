@@ -13,5 +13,15 @@ body {
     
     ion-item {
         --background: transparent;
+
+        &:first-child {
+            background: linear-gradient(to top right, var(--ion-color-primary), var(--ion-color-secondary));
+            border-bottom: 1px solid var(--ion-color-light-shade);
+            
+            img {
+                max-width:150px;
+                margin: 0 auto;
+            }
+        }
     }
 }

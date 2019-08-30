@@ -32,12 +32,12 @@
                         <div *ngIf="myTradeData.wallet_dba" class="valuType">{{myTradeData.wallet_dba}}</div>
                     </div>
                     <ion-buttons class="ion-justify-content-center">
-                        <ion-button shape="round" fill="solid" *ngIf="!myTradeData.vendor_id" class="addTradeButton" color="highlight" (click)="updateFields()">
+                        <ion-button shape="round" fill="solid" *ngIf="!myTradeData.vendor_id" class="addTradeButton" color="secondary" (click)="updateFields()">
                             <ion-icon name="add"></ion-icon>
                         </ion-button>
                     </ion-buttons>
                 </ion-text>
-                <ion-icon name="swap"></ion-icon>
+                <ion-icon name="swap" color="highlight"></ion-icon>
             </ion-item>
             <ion-item>
                 <ion-text text-center>

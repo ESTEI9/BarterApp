@@ -5,8 +5,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
     providedIn: 'root'
 })
 export class HttpService {
-    // private url = 'https://www.cometothex.com/api/barter/demo/'; // sandbox
-    private url = 'https://www.cometothex.com/api/barter/'; // live
+    private url = 'https://www.cometothex.com/api/barter/demo/'; // sandbox
+    // private url = 'https://www.cometothex.com/api/barter/'; // live
     // private url = 'http://localhost/gynesus/api/barter/'; // dev server
 
     constructor(

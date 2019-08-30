@@ -2,7 +2,7 @@ ion-list {
     background:transparent;
 
     ion-item:first-child {
-        background: linear-gradient(to top right, var(--ion-color-secondary), var(--ion-color-primary));
+        background: linear-gradient(to top right, var(--ion-color-primary), var(--ion-color-secondary));
         border-bottom: 1px solid var(--ion-color-light-shade);
     }
 }

@@ -11,7 +11,7 @@ export class VarsService {
     public merchantData: any;
     public loading = true;
     public locations: any;
-    private dev = false;
+    private dev = true;
 
     constructor(
         public storage: Storage,
