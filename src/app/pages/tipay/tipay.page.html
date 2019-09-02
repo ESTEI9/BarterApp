@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Tpay</ion-title>
+    <ion-buttons slot="start">
+        <ion-menu-button slot="start" menu="primary"></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div *ngIf="segment === 'new'">
+    <ion-slides #tpaySlider>
+      <ion-slide>
+        <tpay-start (setType)="setType($event)"></tpay-start>
+      </ion-slide>
+      <ion-slide>
+        <tpay-send *ngIf="type === 'send'" (goBack)="slider.slidePrev()"></tpay-send>
+        <tpay-complete *ngIf="type === 'complete'" (goBack)="slider.slidePrev()"></tpay-complete>
+      </ion-slide>
+    </ion-slides>
+  </div>
+  <div *ngIf="segment === 'history'">
+    <tpay-history></tpay-history>
+  </div>
+</ion-content>
+<ion-footer>
+  <ion-toolbar color="primary">
+    <ion-segment (ionChange)="switchSegment($event)">
+      <ion-segment-button value="new" checked>Create</ion-segment-button>
+      <ion-segment-button value="history">History</ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-footer>

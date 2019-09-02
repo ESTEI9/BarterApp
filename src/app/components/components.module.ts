@@ -15,6 +15,11 @@ import { IonMdRefresherComponent } from './ion-md-refresher/ion-md-refresher.com
 import { SearchableDropdownComponent } from './searchable-dropdown/searchable-dropdown.component';
 import { DescriptionComponent } from './blocks/description/description.component';
 import { WalletComponent } from './blocks/wallet/wallet.component';
+import { StartComponent } from './tipay/start/start.component';
+import { SendComponent } from './tipay/send/send.component';
+import { CompleteComponent } from './tipay/complete/complete.component';
+import { HistoryComponent } from './tipay/history/history.component';
+import { QRCodeModule } from 'angularx-qrcode';
 
 const components = [
   LoginComponent,
@@ -28,7 +33,11 @@ const components = [
   IonMdRefresherComponent,
   SearchableDropdownComponent,
   DescriptionComponent,
-  WalletComponent
+  WalletComponent,
+  StartComponent,
+  SendComponent,
+  CompleteComponent,
+  HistoryComponent
 ];
 
 @NgModule({
@@ -38,7 +47,8 @@ const components = [
       FormsModule,
       ReactiveFormsModule,
       CommonModule,
-      PipesModule
+      PipesModule,
+      QRCodeModule
   ],
   entryComponents: [DescriptionComponent, WalletComponent],
   exports: components
