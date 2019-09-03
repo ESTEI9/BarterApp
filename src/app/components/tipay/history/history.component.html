@@ -1,3 +1,24 @@
-<p>
-  history works!
-</p>
+<ion-searchbar [(ngModel)]="historySearch" placeholder="Search DBAs" debounce="300" (ionChange)="filterHistory()"></ion-searchbar>
+<ion-spinner *ngIf="loading" color="highlight" class="comp-spinner"></ion-spinner>
+<ion-text text-center padding color="medium" *ngIf="!history && !loading" class="no-data">No Tpays</ion-text>
+<ion-list no-padding lines="none" *ngIf="!loading && history">
+  <ion-item color="secondary">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="6"><strong>DBA</strong></ion-col>
+        <ion-col><strong>Valu</strong></ion-col>
+        <ion-col text-right><strong>Date</strong></ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-item>
+  <ion-item *ngFor="let item of historyList; let i = index;" [class.oddItem]="i % 2" (click)="loadDetails(item.trade_id)">
+    <ion-grid *ngIf="!loadingDetails">
+      <ion-row>
+        <ion-col size="6">{{item.dba}}</ion-col>
+        <ion-col>{{item.receiving_valu}}</ion-col>
+        <ion-col text-right>{{item.date_completed | date:'shortDate'}}</ion-col>
+      </ion-row>
+    </ion-grid>
+    <ion-spinner *ngIf="loadingDetails" color="secondary"></ion-spinner>
+  </ion-item>
+</ion-list>
