@@ -40,7 +40,8 @@ export class SendComponent implements OnInit {
       merchantId: this.vars.merchantData.merchant_id,
       amount: this.amount
     };
-    this.http.postData('tpay', body).subscribe((resp: any) => {
+    const payload = {body: JSON.stringify(body)};
+    this.http.postData('tpay', payload).subscribe((resp: any) => {
       if (resp.status === 1) {
         this.code = resp.data.code;
         this.id = resp.data.id;
@@ -72,7 +73,7 @@ export class SendComponent implements OnInit {
             message: 'Tpay not complete',
             duration: 2000
           });
-          return await toast.present();
+          await toast.present();
         }
       } else {
         console.log(resp);

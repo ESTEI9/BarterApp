@@ -41,18 +41,25 @@ export class CompleteComponent implements OnInit {
     };
     this.http.getData('tpay', body).subscribe(async (resp: any) => {
       if (resp.status === 1) {
-        this.code = this.precode;
-        this.merchant.id = resp.data.giving_user_id;
-        this.merchant.dba = resp.data.dba;
-        this.tid = resp.data.trade_id;
-        this.amount = resp.data.receiving_valu;
+        if (resp.data) {
+          this.code = this.precode;
+          this.merchant = {
+            id: resp.data.giving_user_id,
+            dba: resp.data.dba
+          };
+          this.tid = resp.data.trade_id;
+          this.amount = resp.data.receiving_valu;
+        } else {
+          const toast = await this.toastCtrl.create({
+            message: 'No Tpay associated with this code',
+            duration: 2000,
+            color: 'dark'
+          });
+          await toast.present();
+        }
       } else {
         console.log(resp);
-        const toast = this.toastCtrl.create({
-          message: 'No Tpay associated with this code',
-          duration: 2000,
-          color: 'dark'
-        });
+        this.errorToast();
       }
       this.loading = false;
     }, (err) => {
@@ -70,7 +77,8 @@ export class CompleteComponent implements OnInit {
       tradeId: this.tid,
       merchantId: this.merchant.id
     };
-    this.http.postData('tpay', body).subscribe((resp: any) => {
+    const payload = {body: JSON.stringify(body)};
+    this.http.postData('tpay', payload).subscribe((resp: any) => {
       if (resp.status === 1) {
         this.completed = true;
       } else {
@@ -91,6 +99,7 @@ export class CompleteComponent implements OnInit {
   }
 
   clearData() {
+    this.completed = false;
     this.code = null;
     this.amount = null;
     this.merchant = {
