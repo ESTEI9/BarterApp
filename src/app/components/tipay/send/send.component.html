@@ -1,5 +1,5 @@
 <ion-toolbar color="clear">
-  <ion-buttons>
+  <ion-buttons *ngIf="!completed">
     <ion-button (click)="cancel()" color="medium">
       <ion-icon name="ios-arrow-round-back" slot="start"></ion-icon> Cancel
     </ion-button>

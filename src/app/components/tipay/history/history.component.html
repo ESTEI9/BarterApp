@@ -1,4 +1,10 @@
 <ion-searchbar [(ngModel)]="historySearch" placeholder="Search DBAs" debounce="300" (ionChange)="filterHistory()"></ion-searchbar>
+<ion-toolbar color="clear">
+  <ion-buttons class="ion-justify-content-evenly">
+    <ion-button color="secondary" shape="round" [fill]="segment === 'received' ? 'solid' : 'outline'" (click)="switchSegment()">Received</ion-button>
+    <ion-button color="secondary" shape="round" [fill]="segment === 'sent' ? 'solid' : 'outline'" (click)="switchSegment()">Sent</ion-button>
+  </ion-buttons>
+</ion-toolbar>
 <ion-spinner *ngIf="loading" color="highlight" class="comp-spinner"></ion-spinner>
 <ion-text text-center padding color="medium" *ngIf="!history && !loading" class="no-data">No Tpays</ion-text>
 <ion-list no-padding lines="none" *ngIf="!loading && history">
@@ -11,14 +17,14 @@
       </ion-row>
     </ion-grid>
   </ion-item>
-  <ion-item *ngFor="let item of historyList; let i = index;" [class.oddItem]="i % 2" (click)="loadDetails(item.trade_id)">
-    <ion-grid *ngIf="!loadingDetails">
+  <ion-item *ngFor="let item of historyList; let i = index;" class="item" [class.oddItem]="i%2" (click)="loadDetails(item.trade_id)">
+    <ion-grid [class.disabled]="tpayLoading === item.trade_id">
       <ion-row>
         <ion-col size="6">{{item.dba}}</ion-col>
         <ion-col>{{item.receiving_valu}}</ion-col>
         <ion-col text-right>{{item.date_completed | date:'shortDate'}}</ion-col>
       </ion-row>
     </ion-grid>
-    <ion-spinner *ngIf="loadingDetails" color="secondary"></ion-spinner>
+    <ion-spinner *ngIf="tpayLoading === item.trade_id" color="highlight"></ion-spinner>
   </ion-item>
 </ion-list>

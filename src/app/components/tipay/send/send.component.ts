@@ -65,7 +65,7 @@ export class SendComponent implements OnInit {
     };
     this.http.getData('tpay', body).subscribe(async (resp: any) => {
       if (resp.status === 1) {
-        if (['Completed', 'Canceled'].includes(resp.status)) {
+        if (['Completed', 'Canceled'].includes(resp.data.status)) {
           this.completed = true;
         } else {
           this.completed = false;

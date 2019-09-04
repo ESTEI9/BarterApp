@@ -16,6 +16,8 @@ export class HistoryComponent implements OnInit {
   private historyList: any;
   private loading = false;
   private loadingDetails = false;
+  private tpayLoading = undefined;
+  private segment = 'received';
 
   constructor(
     private vars: VarsService,
@@ -37,7 +39,7 @@ export class HistoryComponent implements OnInit {
     this.http.getData('history', body).subscribe(async (resp: any) => {
       if (resp.status === 1) {
         this.history = resp.data;
-        this.historyList = resp.data;
+        this.historyList = resp.data.received;
       } else {
         const toast = await this.toastCtrl.create({
           message: 'Cannot Get History',
@@ -48,6 +50,7 @@ export class HistoryComponent implements OnInit {
       }
       this.loading = false;
     }, async err => {
+      this.loading = false;
       console.log(err);
       this.loading = false;
       const toast = await this.toastCtrl.create({
@@ -59,23 +62,31 @@ export class HistoryComponent implements OnInit {
     });
   }
 
+  switchSegment() {
+    this.segment = this.segment === 'received' ? 'sent' : 'received';
+    this.historyList = this.segment === 'received' ? this.history.received : this.history.sent;
+  }
+
   filterHistory() {
-    this.historyList = this.history.filter(item => {
+    const history = this.segment === 'received' ? this.history.receieved : this.history.sent;
+    this.historyList = history.filter(item => {
       return item.dba.toLowerCase().includes(this.historySearch);
     });
   }
 
   loadDetails(id: number) {
     this.loadingDetails = true;
+    this.tpayLoading = id;
     const body = {
-      action: 'loadDetails',
+      action: 'getDetails',
       tradeId: id
     };
     this.http.getData('history', body).subscribe(async (resp: any) => {
       if (resp.status === 1) {
         const extras: NavigationExtras = {
           state: {
-            details: resp.data
+            details: resp.data,
+            referrer: this.segment
           }
         };
         this.navCtrl.navigateForward('/tpay/details', extras);
@@ -87,7 +98,9 @@ export class HistoryComponent implements OnInit {
         });
         await toast.present();
       }
+      this.tpayLoading = null;
     }, async err => {
+      this.tpayLoading = null;
       console.log(err);
       const toast = await this.toastCtrl.create({
         message: 'There was an error',
