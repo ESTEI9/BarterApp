@@ -1,0 +1,41 @@
+<ion-toolbar color="clear">
+  <ion-buttons *ngIf="!completed">
+    <ion-button (click)="cancel()" color="medium">
+      <ion-icon name="ios-arrow-round-back" slot="start"></ion-icon> Cancel
+    </ion-button>
+  </ion-buttons>
+</ion-toolbar>
+<ion-list *ngIf="!completed" lines="none">
+  <ion-item class="amount">
+    <ion-input [attr.padding]="!code" text-center type="tel" [(ngModel)]="amount" [disabled]="loading || running || code" placeholder="Enter Amount"></ion-input>
+  </ion-item>
+  <ion-item *ngIf="code" class="code" text-center>
+    <ion-label>{{code}}</ion-label>
+  </ion-item>
+  <ion-item *ngIf="code" class="qrCode">
+      <qrcode *ngIf="code" [qrdata]="code" [size]="256" [level]="'M'"></qrcode>
+  </ion-item>
+  <ion-item>
+    <ion-button color="secondary" shape="round" size="large" fill="solid" (click)="create()" *ngIf="!code" [disabled]="loading || running">
+      <span *ngIf="!loading && !running"><ion-icon name="md-paper-plane" slot="start"></ion-icon> Create</span>
+      <ion-spinner *ngIf="loading || running" color="highlight"></ion-spinner>
+    </ion-button>
+    <ion-button color="secondary" shape="round" size="large" fill="solid" (click)="check()" *ngIf="code" [disabled]="running">
+      <span *ngIf="!running"><ion-icon name="refresh" slot="start"></ion-icon> Check</span>
+      <ion-spinner *ngIf="running" color="highlight"></ion-spinner>
+    </ion-button>
+  </ion-item>
+</ion-list>
+<ion-list *ngIf="completed" lines="none">
+  <ion-item text-center>
+    <ion-label class="completeMessage" color="secondary">
+    <ion-icon size="large" name="checkmark-circle-outline"></ion-icon>
+    Complete
+  </ion-label>
+  </ion-item>
+  <ion-item text-center>
+    <ion-button (click)="cancel()" size="large" fill="outline" color="secondary" shape="round">
+      <ion-icon name="checkmark" slot="start"></ion-icon> Make Another
+    </ion-button>
+  </ion-item>
+</ion-list>

@@ -1,0 +1,14 @@
+.valueDetail {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .strong {
+        margin-bottom: 8px;
+    }
+}
+
+.paymentDetails {
+    min-width: 170px;
+    text-align: right;
+}

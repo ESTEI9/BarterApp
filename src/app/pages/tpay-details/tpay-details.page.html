@@ -1,0 +1,44 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Details</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-card>
+    <ion-card-content no-padding>
+      <ion-list>
+        <ion-item>
+          <ion-label>Tpay ID</ion-label>
+          <ion-text>{{details.trade_id}}</ion-text>
+        </ion-item>
+        <ion-item>
+          <ion-label>Payment</ion-label>
+          <ion-text class="paymentDetails">
+            <ion-grid text-right no-padding>
+              <ion-row *ngIf="details.receiving_valu.yours">
+                <ion-col size="7"><strong>Yours</strong></ion-col>
+                <ion-col>{{details.receiving_valu.yours}}</ion-col>
+              </ion-row>
+              <ion-row *ngIf="details.receiving_valu.merchant">
+                <ion-col size="7"><strong>Partner's</strong></ion-col>
+                <ion-col>{{details.receiving_valu.merchant}}</ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-text>
+        </ion-item>
+        <ion-item>
+          <ion-label>Partner</ion-label>
+          <ion-text *ngIf="referrer === 'sent'">{{details.receiving_dba}}</ion-text>
+          <ion-text *ngIf="referrer === 'received'">{{details.giving_dba}}</ion-text>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-label>Completed</ion-label>
+          <ion-text>{{details.date_completed | date:'short'}}</ion-text>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

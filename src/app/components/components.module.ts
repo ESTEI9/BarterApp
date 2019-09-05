@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, KeyValuePipe } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './login/login.component';
@@ -15,6 +15,11 @@ import { IonMdRefresherComponent } from './ion-md-refresher/ion-md-refresher.com
 import { SearchableDropdownComponent } from './searchable-dropdown/searchable-dropdown.component';
 import { DescriptionComponent } from './blocks/description/description.component';
 import { WalletComponent } from './blocks/wallet/wallet.component';
+import { StartComponent } from './tipay/start/start.component';
+import { SendComponent } from './tipay/send/send.component';
+import { CompleteComponent } from './tipay/complete/complete.component';
+import { HistoryComponent } from './tipay/history/history.component';
+import { QRCodeModule } from 'angularx-qrcode';
 
 const components = [
   LoginComponent,
@@ -28,7 +33,11 @@ const components = [
   IonMdRefresherComponent,
   SearchableDropdownComponent,
   DescriptionComponent,
-  WalletComponent
+  WalletComponent,
+  StartComponent,
+  SendComponent,
+  CompleteComponent,
+  HistoryComponent
 ];
 
 @NgModule({
@@ -38,9 +47,11 @@ const components = [
       FormsModule,
       ReactiveFormsModule,
       CommonModule,
-      PipesModule
+      PipesModule,
+      QRCodeModule
   ],
   entryComponents: [DescriptionComponent, WalletComponent],
+  providers: [KeyValuePipe],
   exports: components
 })
 export class ComponentsModule { }

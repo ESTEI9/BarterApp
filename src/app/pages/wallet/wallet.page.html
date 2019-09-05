@@ -12,7 +12,6 @@
         [options]="searchLocations"
         (updateOptions)="updateSearchLocations($event)"
         (selectValue)="setLocation($event)"
-        color="dark"
         [placeholder]="locPlaceholder"
     ></app-searchable-dropdown>
     <ion-spinner *ngIf="loading" color="highlight" class="comp-spinner"></ion-spinner>
@@ -28,11 +27,4 @@
             <ion-text>{{wallet.feathers}}</ion-text>
         </ion-item>
     </ion-list>
-
-    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-        <ion-button size="large" shape="round" color="highlight" (click)="startNewTrade()">
-            <ion-icon name="add" slot="start"></ion-icon>
-            <ion-label>New</ion-label>
-        </ion-button>
-    </ion-fab>
 </ion-content>
