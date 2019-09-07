@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, AfterViewInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-searchable-dropdown',
@@ -9,18 +10,21 @@ export class SearchableDropdownComponent implements OnInit, AfterViewInit {
 
   @Input() options: any;
   @Input() debounce = 300;
-  @Input() color: string;
+  @Input() color = 'light-alt';
   @Input() placeholder: string;
   @Input() disabled = false;
   @Input() loading = false;
+  @Input() modal = false;
+  @Input() value: string;
 
   @Output() updateOptions = new EventEmitter();
   @Output() selectValue = new EventEmitter();
 
   private loadingString = 'Loading...';
-  private value: string;
 
-  constructor() { }
+  constructor(
+    private modalCtrl: ModalController
+  ) { }
 
   ngOnInit() { }
 

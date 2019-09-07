@@ -9,6 +9,8 @@ export class VarsService {
 
     public login: string;
     public merchantData: any;
+    public locationData: any;
+    public defaultLocation: any;
     public loading = true;
     public locations: any;
     private dev = true;
@@ -19,8 +21,7 @@ export class VarsService {
     ) {
         this.getLocations();
         if (this.dev) {
-            this.login = 'support@freedomchoiceglobal.com'; // dev
-            // this.login = 'jedmondson848@yahoo.com' // live dev
+            this.login = 'vendor1@test.com'; // dev
         } else {
             this.storage.get('login').then(
                 data  => {

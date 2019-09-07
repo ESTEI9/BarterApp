@@ -42,7 +42,9 @@ export class LoginComponent implements OnInit {
                 if (this.rememberMe && this.account.email !== this.vars.login) {
                     this.vars.storage.set('login', this.account.email);
                 }
-                this.vars.merchantData = resp.data;
+                this.vars.merchantData = resp.data.meta;
+                this.vars.locationData = resp.data.locations;
+                this.vars.defaultLocation = resp.data.locations.filter((loc: any) => loc.main)[0];
                 this.message = null;
                 this.navCtrl.navigateRoot('/inbox');
             } else {

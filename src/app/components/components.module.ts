@@ -50,7 +50,7 @@ const components = [
       PipesModule,
       QRCodeModule
   ],
-  entryComponents: [DescriptionComponent, WalletComponent],
+  entryComponents: [DescriptionComponent, WalletComponent, SearchableDropdownComponent],
   providers: [KeyValuePipe],
   exports: components
 })
