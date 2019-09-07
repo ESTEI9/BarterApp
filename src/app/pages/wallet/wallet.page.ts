@@ -16,10 +16,10 @@ export class WalletPage implements OnInit {
     private locations: any;
     private location: any;
     private locationSearch: string;
-    private wallets: any;
+    private wallets: any = [];
     private tradeType: string;
     private searchLocations: any;
-    private locPlaceholder = 'Change Location';
+    private locPlaceholder = '';
 
     constructor(
         private http: HttpService,
@@ -27,13 +27,15 @@ export class WalletPage implements OnInit {
         private httpClient: HttpClient,
         private actionSheetCtrl: ActionSheetController,
         private modalCtrl: ModalController,
-        private navCtrl: NavController
+        private navCtrl: NavController,
+        private sheetCtrl: ActionSheetController
     ) { }
 
     ngOnInit() {
         this.vars.locations.filter((loc: any) => {
             if (loc.city === this.vars.merchantData.city && loc.state === this.vars.merchantData.state) {
                 this.location = loc;
+                this.locPlaceholder = `${loc.city}, ${loc.abbr}`;
                 this.loadWallets();
             }
         });
@@ -42,7 +44,7 @@ export class WalletPage implements OnInit {
     loadWallets() {
         this.loading = true;
         const body = {
-            action: 'getPrivateWallets',
+            action: 'getWallets',
             location: this.location,
             merchantId: this.vars.merchantData.merchant_id
         };
@@ -83,45 +85,14 @@ export class WalletPage implements OnInit {
 
     setLocation(loc: any) {
         this.locationSearch = `${loc.city}, ${loc.abbr}`;
+        this.locPlaceholder = this.locationSearch;
         this.location = loc;
         this.searchLocations = [];
         this.loadWallets();
     }
 
-    async startNewTrade() {
-        this.tradeType = '';
-        const sheet = await this.actionSheetCtrl.create({
-            header: 'Select Trade Type',
-            buttons: [{
-                text: 'Trade',
-                handler: () => {
-                    this.tradeType = 'Trade';
-                }
-            }, {
-                text: 'Invoice',
-                handler: () => {
-                    this.tradeType = 'Invoice';
-                }
-            }, {
-                text: 'Gift',
-                handler: () => {
-                    this.tradeType = 'Gift';
-                }
-            }, {
-                text: 'Cancel',
-                role: 'cancel'
-            }]
-        });
-        await sheet.present();
-        await sheet.onDidDismiss().then(async () => {
-            if (this.tradeType) {
-                const modal = await this.modalCtrl.create({
-                    component: NewTradeComponent,
-                    componentProps: { tradeType: this.tradeType }
-                });
-                await modal.present();
-            }
-        });
+    loadActions(wallet: any) {
+
     }
 
 }
