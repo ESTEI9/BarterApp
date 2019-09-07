@@ -7,3 +7,12 @@ ion-list {
     border-bottom-right-radius: 5px;
     left: 10px;
 }
+
+.mainBlock {
+    &.modal {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        padding: 16px;
+    }
+}

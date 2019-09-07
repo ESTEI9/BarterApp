@@ -1,15 +1,16 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit } from '@angular/core';
 import { ModalController, ToastController } from '@ionic/angular';
 import { HttpService } from 'src/app/services/http.service';
 import { VarsService } from 'src/app/services/vars.service';
 import { HttpClient } from '@angular/common/http';
+import { SearchableDropdownComponent } from '../searchable-dropdown/searchable-dropdown.component';
 
 @Component({
     selector: 'app-new-trade',
     templateUrl: './new-trade.component.html',
     styleUrls: ['./new-trade.component.scss'],
 })
-export class NewTradeComponent implements OnInit {
+export class NewTradeComponent implements OnInit, AfterViewInit {
 
     @Input() tradeType: string;
     private urlBody: any = null;
@@ -22,9 +23,15 @@ export class NewTradeComponent implements OnInit {
     private merchantSearch: string;
     private searchMerchants: any = [];
 
+    private showLocationSearch = false;
     private locationSearch: string;
     private searchLocations: any = [];
     private location: any;
+
+    private showMyLocationSearch = false;
+    private myLocationSearch: string;
+    private mySearchLocations: any = [];
+    private myLocation: any;
 
     private wallets: any;
     private wallet: any;
@@ -38,9 +45,18 @@ export class NewTradeComponent implements OnInit {
         private vars: VarsService,
         private modalCtrl: ModalController,
         private toastCtrl: ToastController
-    ) { }
+    ) {
+        this.location = this.vars.defaultLocation;
+        this.myLocation = this.vars.defaultLocation;
+    }
 
-    ngOnInit() { }
+    ngOnInit() {
+        this.loadWallets();
+        this.loadMerchants();
+    }
+
+    ngAfterViewInit() {
+    }
 
     /**
      * Location Functions
@@ -64,16 +80,18 @@ export class NewTradeComponent implements OnInit {
         return searchLocations[0].city + ', ' + searchLocations[0].abbr === search || !search ? [] : searchLocations;
     }
 
-    updateSearchLocations(event: any) {
+    updateSearchLocations(event: any, my?: any) {
         const searchLocations = this.filterLocations(event.detail.value);
-        this.searchLocations = searchLocations;
+        my ? this.mySearchLocations = searchLocations : this.searchLocations = searchLocations;
     }
 
-    setLocation(loc: any) {
-        this.locationSearch = `${loc.city}, ${loc.abbr}`;
-        this.location = loc;
-        this.searchLocations = [];
-        this.loadMerchants();
+    setLocation(loc: any, my?: string) {
+        my ? this.showMyLocationSearch = false : this.showLocationSearch = false;
+        my ? this.myLocationSearch = `${loc.city}, ${loc.abbr}` : this.locationSearch = `${loc.city}, ${loc.abbr}`;
+        my ? this.myLocation = loc : this.location = loc;
+        my ? this.mySearchLocations = [] : this.searchLocations = [];
+        my ? this.wallet = [] : this.merchant = [];
+        my ? this.loadWallets() : this.loadMerchants();
     }
 
     /**
@@ -120,6 +138,23 @@ export class NewTradeComponent implements OnInit {
     /**
      * Wallet Functions
      */
+
+    loadWallets() {
+        const body = {
+          action: 'getPrivateWallets',
+          location: this.myLocation,
+          merchantId: this.vars.merchantData.merchant_id
+        };
+        this.http.getData('wallet', body).subscribe((resp: any) => {
+          if (resp.status === 1) {
+            this.wallets = resp.data;
+          } else {
+            console.log(resp);
+          }
+        }, (err: any) => {
+          console.log(err);
+        });
+      }
 
     updateWallet(obj: any) {
         this.wallet = obj.wallet ? obj.wallet : this.wallet;
