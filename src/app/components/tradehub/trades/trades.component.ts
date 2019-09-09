@@ -1,15 +1,16 @@
-import { Component, OnInit, Input, AfterContentInit, Output, EventEmitter } from '@angular/core';
-import { NavController } from '@ionic/angular';
+import { Component, Input, AfterContentInit, Output, EventEmitter } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 import { VarsService } from 'src/app/services/vars.service';
 import { HttpService } from 'src/app/services/http.service';
 import { CommonService } from 'src/app/services/common.service';
+import { DetailsComponent } from '../../details/details/details.component';
 
 @Component({
     selector: 'seg-trades',
     templateUrl: './trades.component.html',
     styleUrls: ['./trades.component.scss'],
 })
-export class TradesComponent implements OnInit, AfterContentInit {
+export class TradesComponent implements AfterContentInit {
 
     @Input() segment: string;
     @Input() data: any = [];
@@ -20,13 +21,11 @@ export class TradesComponent implements OnInit, AfterContentInit {
     @Output() update = new EventEmitter();
 
     constructor(
-        private navCtrl: NavController,
         private vars: VarsService,
         private http: HttpService,
-        private common: CommonService
+        private common: CommonService,
+        private modalCtrl: ModalController
     ) { }
-
-    ngOnInit() { }
 
     ngAfterContentInit() {
         const loadingCheck = setInterval(() => {
@@ -37,14 +36,21 @@ export class TradesComponent implements OnInit, AfterContentInit {
         }, 100);
     }
 
-    viewTrade(id: any) {
-        this.navCtrl.navigateForward('/details/' + id);
+    async viewTrade(id: any) {
+        const modal = await this.modalCtrl.create({
+            component: DetailsComponent,
+            componentProps: {id}
+        });
+        await modal.present();
+        modal.onDidDismiss().then(() => {
+            this.loadData();
+        });
     }
 
     async loadData() {
         this.loading = true;
         const body = {
-            merchantID: this.vars.merchantData['merchant_id'],
+            merchantID: this.vars.merchantData.merchant_id,
             type: 'Trade',
             segment: this.segment
         };

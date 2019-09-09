@@ -1,0 +1,39 @@
+<ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>
+          <span *ngIf="!loading">{{tradeType}} Details</span>
+          <span *ngIf="loading">Loading...</span>
+      </ion-title>
+      <ion-buttons slot="start">
+          <ion-button (click)="modalCtrl.dismiss()"><ion-icon slot="icon-only" name="md-arrow-back"></ion-icon></ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+  <det-trade *ngIf="tradeType === 'Trade'"
+      [trade]="trade"
+      [myDetails]="myDetails"
+      [details]="details"
+      [loading]="loading"
+      [referrer]="referrer"
+      (doTrade)="doTrade($event)">
+  </det-trade>
+  <det-invoice *ngIf="tradeType === 'Invoice'"
+      [trade]="trade"
+      [myDetails]="myDetails"
+      [details]="details"
+      [loading]="loading"
+      [referrer]="referrer"
+      (doTrade)="doTrade($event)">
+  </det-invoice>
+  <det-gift *ngIf="tradeType === 'Gift'" 
+      [trade]="trade"
+      [myDetails]="myDetails"
+      [details]="details"
+      [loading]="loading" 
+      [referrer]="referrer"
+      (doTrade)="doTrade($event)"
+      >
+  </det-gift>
+  </ion-content>
+  

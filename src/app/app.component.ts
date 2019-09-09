@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { Platform, MenuController } from '@ionic/angular';
+import { Platform, MenuController, NavController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Router, NavigationStart, Event } from '@angular/router';
@@ -18,7 +18,8 @@ export class AppComponent {
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private menuCtrl: MenuController,
-    private router: Router
+    private router: Router,
+    private navCtrl: NavController
   ) {
     this.initializeApp();
     this.menuCtrl.enable(true, 'primary');
@@ -34,5 +35,9 @@ export class AppComponent {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
     });
+  }
+
+  logOut() {
+    this.navCtrl.navigateRoot(`login/${Math.random().toFixed(5)}`);
   }
 }

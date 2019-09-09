@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { NativeStorage } from '@ionic-native/native-storage/ngx';
-import { HttpService } from './http.service';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http'
+import { Storage } from '@ionic/storage';
 
 @Injectable({
     providedIn: 'root'
@@ -10,21 +9,27 @@ export class VarsService {
 
     public login: string;
     public merchantData: any;
+    public locationData: any;
+    public defaultLocation: any;
     public loading = true;
+    public onInitTrigger: number;
     public locations: any;
+    private dev = true;
 
     constructor(
-        public nStorage: NativeStorage,
+        public storage: Storage,
         public httpClient: HttpClient
     ) {
-        if (Object.keys(this.nStorage).length > 0) {
-            this.nStorage.getItem('login').then(data => { this.login = (data ? data : null); });
-        } else {
-            // Testing Only
-            // this.login = 'support@freedomchoiceglobal.com'; // dev
-            this.login = 'jedmondson848@yahoo.com'; // live dev
-        }
         this.getLocations();
+        if (this.dev) {
+            this.login = 'vendor1@test.com'; // dev
+        } else {
+            this.storage.get('login').then(
+                data  => {
+                    this.login = data ? data : null;
+                }
+            );
+        }
     }
 
     getLocations() {

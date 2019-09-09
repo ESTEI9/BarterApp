@@ -21,18 +21,21 @@ ion-item {
 
 }
 
-ion-input {
-    text-align: center;
-}
-
-ion-input.sc-ion-input-md-h, ion-input.sc-ion-input-ios-h, ion-select, ion-textarea {
-    border-bottom: 1px solid;
+ion-input.sc-ion-input-md-h, ion-input.sc-ion-input-ios-h {
     //--background: linear-gradient(#fafafa,#fff,#fafafa);
     font-size: 1.2em;
     padding: 0 1em;
+    text-align: center;
+    background: #fff;
+    border: 1px solid var(--ion-color-light-shade);
+    --padding-start: 16px;
 
     .text-input-ios {
         padding-left:0.5em;
         margin:0.8em 0;
     }
+}
+
+.input-clear-icon.sc-ion-input-md {
+    margin-right:10px !important;
 }

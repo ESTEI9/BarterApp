@@ -51,13 +51,16 @@ export class TradeComponent implements OnInit {
 
     async updateFields() {
         if (this.editTrade) {
-            let required: any = {
-                giving_valu: this.myTradeData.valu
-            };
+            let required: any;
+            if (this.referrer === 'outbox') {
+                required = {
+                    giving_valu: this.myTradeData.valu
+                };
+            }
             if (this.referrer === 'inbox') {
                 required = {
-                    ...required,
-                    receiving_valu_id: this.myTradeData.wallet_id
+                    receiving_valu_id: this.myTradeData.wallet_id,
+                    receiving_valu: this.myTradeData.valu
                 };
             }
             if (this.checkTrade(required)) {
@@ -102,6 +105,7 @@ export class TradeComponent implements OnInit {
                         this.myTradeData.wallet_dba = resp.data.wallet.dba;
                         this.myTradeData.wallet_cap = resp.data.wallet.feathers;
                         this.myTradeData.vendor_id = resp.data.wallet.vendor_id;
+                        this.updateFields();
                     }
                     this.editTrade = false;
                 });
@@ -114,7 +118,7 @@ export class TradeComponent implements OnInit {
         const keys = Object.keys(fields);
         keys.filter((key: any) => {
             passCheck = !!fields[key];
-            if (key.includes('_valu')
+            if (key.includes('_valu') && !key.includes('_valu_id')
             && (this.myTradeData.wallet_cap < fields[key])
             && this.myTradeData.merchant_id !== this.myTradeData.vendor_id) {
                 passCheck = false;

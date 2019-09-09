@@ -8,10 +8,28 @@
 body {
     background: var(--ion-color-light);
 }
-#main-menu {
-    background: var(--ion-color-light);
-    
-    ion-item {
-        --background: transparent;
+
+ion-content {
+    --background: var(--ion-color-light);
+}
+
+ion-menu {
+    ion-list.list {
+        background: transparent;
     }
 }
+
+ion-input .text-input-ios, ion-select .text-input-ios, ion-textarea .text-input-ios {
+    padding-left:0;
+}
+
+ion-item {
+    --ion-item-background-activated: transparent;
+    --highlight-background:transparent;
+}
+
+.searchbar-input {
+    &.sc-ion-searchbar-md, &.sc-ion-search-ios {
+         box-shadow:none;
+     }
+ }

@@ -13,14 +13,24 @@ import { LoginComponent } from './components/login/login.component';
 import { NativeStorage } from '@ionic-native/native-storage/ngx';
 import { HttpClientModule } from '@angular/common/http';
 import { NewTradeComponent } from './components/new-trade/new-trade.component';
+import { IonicStorageModule } from '@ionic/storage';
+import { EditWalletComponent } from './components/edit-wallet/edit-wallet.component';
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [
       LoginComponent,
-      NewTradeComponent
+      NewTradeComponent,
+      EditWalletComponent
   ],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, ComponentsModule, HttpClientModule],
+  imports: [
+    BrowserModule,
+    IonicModule.forRoot(),
+    AppRoutingModule,
+    ComponentsModule,
+    HttpClientModule,
+    IonicStorageModule.forRoot()
+  ],
   providers: [
     StatusBar,
     SplashScreen,

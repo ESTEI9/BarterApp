@@ -1,0 +1,27 @@
+ion-item {
+    --ion-item-background-activated: transparent;
+    --highlight-background: transparent;
+
+    &.item {
+        ion-spinner {
+            position: absolute;
+            left:50%;
+            transform: translateX(-50%);
+            z-index:2;
+        }
+    }
+}
+
+ion-grid.disabled {
+    color: var(--ion-color-medium);
+}
+
+ion-toolbar {
+    margin-top: 8px;
+    ion-buttons {
+        ion-button {
+            height: 40px;
+            flex-basis: 30%;
+        }
+    }
+}

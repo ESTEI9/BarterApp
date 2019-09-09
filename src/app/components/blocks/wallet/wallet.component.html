@@ -4,26 +4,17 @@
     </ion-toolbar>
 </ion-header>
 <div class="walletBlock" [class.modal]="modal">
-    <app-searchable-dropdown
-        [options]="searchLocations"
-        debounce="300"
-        color="light-alt"
-        placeholder="Your City"
-        (updateOptions)="updateSearchLocations($event)"
-        (selectValue)="setLocation($event)"
-    ></app-searchable-dropdown>
     <div class="flex-row" [class.walletSelected]="wallet">
-        <ion-spinner *ngIf="loading" color="primary" style="margin: 10px auto;"></ion-spinner>
+        <ion-spinner *ngIf="loading" color="highlight" style="margin: 10px auto;"></ion-spinner>
         <app-searchable-dropdown
             *ngIf="wallets && !loading"
             [disabled]="!wallets"
             [options]="options"
             placeholder="Select Wallet"
-            debounce="300"
-            color="light-alt"
             (updateOptions)="setOptions($event.detail.value)"
             (selectValue)="setWallet($event)"
             [loading]="loading"
+            [value]="value"
         ></app-searchable-dropdown>
         <ion-input
             [(ngModel)]="amount"
@@ -35,7 +26,7 @@
     </div>
 </div>
 <ion-footer *ngIf="modal">
-    <ion-toolbar color="primary">
+    <ion-toolbar color="highlight">
         <ion-buttons style="display: flex; justify-content: center">
             <ion-button (click)="updateWallet()">Update</ion-button>
         </ion-buttons>

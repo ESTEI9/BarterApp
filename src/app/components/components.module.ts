@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, KeyValuePipe } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './login/login.component';
@@ -15,6 +15,16 @@ import { IonMdRefresherComponent } from './ion-md-refresher/ion-md-refresher.com
 import { SearchableDropdownComponent } from './searchable-dropdown/searchable-dropdown.component';
 import { DescriptionComponent } from './blocks/description/description.component';
 import { WalletComponent } from './blocks/wallet/wallet.component';
+import { StartComponent } from './tipay/start/start.component';
+import { SendComponent } from './tipay/send/send.component';
+import { CompleteComponent } from './tipay/complete/complete.component';
+import { HistoryComponent } from './tipay/history/history.component';
+import { QRCodeModule } from 'angularx-qrcode';
+import { EditWalletComponent } from './edit-wallet/edit-wallet.component';
+import { DetailsComponent } from './details/details/details.component';
+import { InboxComponent } from './barter/inbox/inbox.component';
+import { OutboxComponent } from './barter/outbox/outbox.component';
+import { ArchivesComponent } from './barter/archives/archives.component';
 
 const components = [
   LoginComponent,
@@ -28,7 +38,16 @@ const components = [
   IonMdRefresherComponent,
   SearchableDropdownComponent,
   DescriptionComponent,
-  WalletComponent
+  WalletComponent,
+  StartComponent,
+  SendComponent,
+  CompleteComponent,
+  HistoryComponent,
+  EditWalletComponent,
+  DetailsComponent,
+  InboxComponent,
+  OutboxComponent,
+  ArchivesComponent
 ];
 
 @NgModule({
@@ -38,9 +57,19 @@ const components = [
       FormsModule,
       ReactiveFormsModule,
       CommonModule,
-      PipesModule
+      PipesModule,
+      QRCodeModule
   ],
-  entryComponents: [DescriptionComponent, WalletComponent],
+  entryComponents: [
+    DescriptionComponent,
+    WalletComponent,
+    SearchableDropdownComponent,
+    DetailsComponent,
+    InboxComponent,
+    OutboxComponent,
+    ArchivesComponent
+  ],
+  providers: [KeyValuePipe],
   exports: components
 })
 export class ComponentsModule { }

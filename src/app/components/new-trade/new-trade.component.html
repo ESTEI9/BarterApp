@@ -15,22 +15,30 @@
 </ion-header>
 <ion-content>
     <ion-card>
-        <ion-card-header color="secondary">
-            <ion-card-title>Select Your Partner</ion-card-title>
+        <ion-card-header no-padding>
+            <ion-toolbar color="secondary">
+                <ion-title>Partner</ion-title>
+                <ion-buttons slot="end">
+                    <ion-button color="light" (click)="showLocationSearch = !showLocationSearch">
+                        <ion-icon name="pin" slot="start"></ion-icon>{{location.city}}, {{location.abbr}}
+                    </ion-button>
+                </ion-buttons>
+            </ion-toolbar>
         </ion-card-header>
         <ion-card-content no-padding>
             <app-searchable-dropdown
-                *ngIf="vars.locations"
+                *ngIf="vars.locations && showLocationSearch"
                 [options]="searchLocations"
                 debounce="300"
                 color="light-alt"
-                placeholder="Partner City"
+                placeholder="Search Cities"
                 (updateOptions)="updateSearchLocations($event)"
                 (selectValue)="setLocation($event)"
             ></app-searchable-dropdown>
             <div text-center padding *ngIf="location && !merchants"><ion-spinner color="highlight"></ion-spinner></div>
             <app-searchable-dropdown
                 *ngIf="location && merchants"
+                [attr.value]="merchant ? merchant.dba : ''"
                 [options]="searchMerchants"
                 debounce="300"
                 color="light-alt"
@@ -41,11 +49,18 @@
         </ion-card-content>
     </ion-card>
     <ion-card>
-        <ion-card-header color="secondary">
-            <ion-card-title>
-                <span *ngIf="tradeType === 'Invoice'">Your Bill</span>
-                <span *ngIf="tradeType !== 'Invoice'">Your {{tradeType}}</span>
-            </ion-card-title>
+        <ion-card-header no-padding>
+            <ion-toolbar color="secondary">
+                <ion-title>
+                    <span *ngIf="tradeType === 'Invoice'">Your Bill</span>
+                    <span *ngIf="tradeType !== 'Invoice'">Your {{tradeType}}</span>
+                </ion-title>
+                <ion-buttons slot="end">
+                    <ion-button color="light" size="small" (click)="showMyLocationSearch = !showMyLocationSearch">
+                        <ion-icon name="pin" slot="start"></ion-icon>{{myLocation.city}}, {{myLocation.abbr}}
+                    </ion-button>
+                </ion-buttons>
+            </ion-toolbar>
         </ion-card-header>
         <ion-card-content no-padding>
             <ion-list *ngIf="tradeType === 'Invoice'" lines="none">
@@ -54,10 +69,22 @@
                     <ion-input [(ngModel)]="amount" type="tel" min="0" size="5"></ion-input>
                 </ion-item>
             </ion-list>
+            <app-searchable-dropdown
+                *ngIf="vars.locations && showMyLocationSearch"
+                [options]="mySearchLocations"
+                debounce="300"
+                color="light-alt"
+                placeholder="Search Cities"
+                (updateOptions)="updateSearchLocations($event, 'my')"
+                (selectValue)="setLocation($event, 'my')"
+            ></app-searchable-dropdown>
             <app-wallet
-                *ngIf="tradeType !== 'Invoice'"
-                (update)="updateWallet($event)"
+                *ngIf="tradeType !== 'Invoice' && wallets"
+                [attr.value]="wallet ? wallet.dba : ''"
+                [wallets]="wallets"
+                (update)="updateWallet($event, 'my')"
             ></app-wallet>
+            <div text-center padding *ngIf="!wallets"><ion-spinner color="highlight"></ion-spinner></div>
             <app-description
                 [title]="title"
                 [description]="description"
