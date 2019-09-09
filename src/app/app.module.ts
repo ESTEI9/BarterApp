@@ -14,12 +14,14 @@ import { NativeStorage } from '@ionic-native/native-storage/ngx';
 import { HttpClientModule } from '@angular/common/http';
 import { NewTradeComponent } from './components/new-trade/new-trade.component';
 import { IonicStorageModule } from '@ionic/storage';
+import { EditWalletComponent } from './components/edit-wallet/edit-wallet.component';
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [
       LoginComponent,
-      NewTradeComponent
+      NewTradeComponent,
+      EditWalletComponent
   ],
   imports: [
     BrowserModule,

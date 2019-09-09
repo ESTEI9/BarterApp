@@ -1,5 +1,5 @@
 {
-  "name": "Triuniti",
+  "name": "Triuniti DEMO",
   "version": "1.0",
   "author": "UniDevs",
   "homepage": "http://tryuniti.com",
@@ -34,6 +34,7 @@
     "cordova-plugin-secure-storage": "3.0.2",
     "cordova-sqlite-storage": "^3.3.0",
     "core-js": "^2.5.4",
+    "lodash": "^4.17.15",
     "rxjs": "~6.5.1",
     "tslib": "^1.10.0",
     "zone.js": "~0.8.29"

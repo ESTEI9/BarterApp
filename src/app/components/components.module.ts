@@ -20,6 +20,7 @@ import { SendComponent } from './tipay/send/send.component';
 import { CompleteComponent } from './tipay/complete/complete.component';
 import { HistoryComponent } from './tipay/history/history.component';
 import { QRCodeModule } from 'angularx-qrcode';
+import { EditWalletComponent } from './edit-wallet/edit-wallet.component';
 
 const components = [
   LoginComponent,
@@ -37,7 +38,8 @@ const components = [
   StartComponent,
   SendComponent,
   CompleteComponent,
-  HistoryComponent
+  HistoryComponent,
+  EditWalletComponent
 ];
 
 @NgModule({
