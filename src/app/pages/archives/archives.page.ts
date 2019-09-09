@@ -95,7 +95,7 @@ export class ArchivesPage implements OnInit {
                 text: 'Cancel',
                 role: 'cancel'
             }]
-        })
+        });
         await sheet.present();
         await sheet.onDidDismiss().then(async () => {
             if (this.tradeType) {
