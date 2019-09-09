@@ -1,4 +1,4 @@
-<form (submit)="doLogin()" text-center>
+
     <ion-list margin-top>
         <ion-item>
             <ion-input type="email" margin-bottom padding [(ngModel)]="account.email" name="email" placeholder="Email" clearInput>
@@ -10,7 +10,7 @@
         </ion-item>
         <ion-item>
             <ion-button color="secondary" margin-top margin-bottom fill="solid" shape="round" size="large" expand="block"
-                type="submit" [attr.disabled]="isLoading">
+                type="submit" [attr.disabled]="isLoading" (click)="doLogin()">
                 <span *ngIf="!isLoading">Login</span>
                 <ion-spinner color="highlight" *ngIf="isLoading"></ion-spinner>
             </ion-button>
@@ -25,4 +25,3 @@
             <ion-button size="large" margin-bottom (click)="forgotPassword()" expand="block" shape="round" color="dark" fill="solid" [attr.disabled]="isLoading">Reset Password</ion-button>
         </ion-item> -->
     <ion-text *ngIf="message" id="message" color="dark">{{message}}</ion-text>
-</form>

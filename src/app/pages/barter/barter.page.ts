@@ -21,6 +21,12 @@ export class BarterPage implements OnInit, OnDestroy {
     this.segment = newSegment;
   }
 
+  toggleMenu() {
+    this.menuCtrl.isOpen('barter').then((isOpen: boolean) => {
+      isOpen ? this.menuCtrl.close('barter') : this.menuCtrl.open('barter');
+    });
+  }
+
   ngOnDestroy() {
   }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, AfterViewChecked, AfterContentInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActionSheetController, ModalController } from '@ionic/angular';
 import { NewTradeComponent } from 'src/app/components/new-trade/new-trade.component';
 import { VarsService } from 'src/app/services/vars.service';

@@ -26,6 +26,7 @@ export class LoginComponent implements OnInit {
 
     ngOnInit() {
         this.account.email = this.vars.login;
+        this.account.password = null;
     }
 
     doLogin() {
@@ -46,7 +47,7 @@ export class LoginComponent implements OnInit {
                 this.vars.locationData = resp.data.locations;
                 this.vars.defaultLocation = resp.data.locations.filter((loc: any) => loc.main)[0];
                 this.message = null;
-                this.navCtrl.navigateRoot('/barter');
+                this.navCtrl.navigateForward(`/barter/${Math.random().toFixed(5)}`);
             } else {
                 this.account.password = '';
                 this.message = 'Username & password mismatch.';

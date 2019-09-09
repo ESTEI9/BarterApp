@@ -12,6 +12,7 @@ export class VarsService {
     public locationData: any;
     public defaultLocation: any;
     public loading = true;
+    public onInitTrigger: number;
     public locations: any;
     private dev = true;
 
