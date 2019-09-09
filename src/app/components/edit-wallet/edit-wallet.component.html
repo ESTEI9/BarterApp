@@ -1,0 +1,122 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Edit Wallet</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="modalCtrl.dismiss()">
+        <ion-icon name="md-arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-spinner *ngIf="loading" color="highlight" class="comp-spinner"></ion-spinner>
+  <ion-list *ngIf="!loading">
+    <ion-item lines="none" class="privateCount">
+        <ion-label><strong>Private Bank</strong></ion-label>
+        <ion-input 
+        *ngIf="vendorId === vars.merchantData.merchant_id"
+        slot="end"
+        [(ngModel)]="privateCount"
+        min="0"
+        (ionChange)="updateTotalCount()"
+        text-right
+        ></ion-input>
+        <ion-text *ngIf="vendorId !== vars.merchantData.merchant_id" slot="end"
+          [color]="privateCount < 0 ? 'danger' : 'dark'" text-right>{{privateCount}}
+        </ion-text>
+    </ion-item>
+  </ion-list>
+  <ion-card *ngIf="!loading" class="packages">
+    <ion-toolbar color="primary">
+      <ion-title>Packages</ion-title>
+      <ion-buttons slot="end">
+        <ion-button (click)="toggleEdit()" color="highlight">
+          <ion-icon name="md-create" *ngIf="!editable"></ion-icon>
+          <ion-icon name="md-checkmark" *ngIf="editable"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+    <ion-card-content no-padding>
+      <ion-list no-padding lines="none">
+        <ion-item color="secondary">
+          <ion-grid>
+            <ion-row>
+              <ion-col><strong>Total</strong></ion-col>
+              <ion-col><strong>Price</strong></ion-col>
+              <ion-col><strong>Sale Price</strong></ion-col>
+              <ion-col size="1" *ngIf="editable"></ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-item>
+      </ion-list>
+      <ion-list class="packageList" no-padding>
+        <ion-item *ngFor="let item of newWallet; let i = index;" [color]="i%2 && !editable ? 'light-alt' : null">
+          <ion-grid>
+            <ion-row>
+              <ion-col>
+                <ion-input [value]="item.units" (ionChange)="updatePublicCount($event.detail.value, i)" *ngIf="editable"></ion-input>
+                <ion-text *ngIf="!editable">{{item.units}}</ion-text>
+              </ion-col>
+              <ion-col>
+                <ion-input
+                  [value]="item._regular_price"
+                  (ionChange)="updatePrice($event.detail.value, i)"
+                  *ngIf="editable">
+                </ion-input>
+                <ion-text *ngIf="!editable">{{item._regular_price | currency}}</ion-text>
+              </ion-col>
+              <ion-col>
+                <ion-input
+                  [value]="item._sale_price"
+                  (ionChange)="updatePrice($event.detail.value, i, 'sale')"
+                  *ngIf="editable">
+                </ion-input>
+                <ion-text *ngIf="!editable">{{item._sale_price | currency}}</ion-text>
+              </ion-col>
+              <ion-col size="1" class="deleteIcon" *ngIf="editable">
+                <ion-icon name="close" color="danger" (click)="deleteItem(i)"></ion-icon>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+  <ion-card *ngIf="!loading" class="createPackage">
+    <ion-card-header color="primary">
+      <ion-card-title><ion-label>Create Package</ion-label></ion-card-title>
+    </ion-card-header>
+    <ion-card-content no-padding>
+      <ion-list class="new" *ngIf="!loading" no-padding>
+        <ion-item>
+          <ion-label>Amount</ion-label>
+          <ion-text text-right slot="end">
+            <ion-input [(ngModel)]="newAmount"></ion-input>
+          </ion-text>
+        </ion-item>
+        <ion-item>
+          <ion-label>Regular Price</ion-label>
+          <ion-text text-right slot="end">
+            <ion-input [(ngModel)]="newPrice"></ion-input>
+          </ion-text>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-label>Sale Price</ion-label>
+          <ion-text text-right slot="end">
+            <ion-input [(ngModel)]="newSalePrice"></ion-input>
+          </ion-text>
+        </ion-item>
+      </ion-list>
+      <ion-button expand="full" no-margin (click)="createPublicUnits()" color="highlight">
+        <ion-icon name="add" slot="start"></ion-icon>Create
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
+<ion-footer *ngIf="!loading">
+  <ion-toolbar color="secondary">
+    <ion-buttons class="ion-justify-content-center">
+      <ion-button size="large" expand="full" (click)="updateWallet()">Update</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>
