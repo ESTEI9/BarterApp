@@ -1,39 +1,22 @@
 <ion-app>
-    <ion-split-pane>
-        <ion-menu side="start" type="overlay" menuId="primary">
-            <ion-content color="light-alt">
-                <ion-menu-toggle auto-hide="false">
-                    <ion-list lines="none" id="main-menu" no-padding>
-                        <ion-item padding>
-                            <img src="assets/logo.svg" />
-                        </ion-item>
-                        <ion-item routerDirection="root" routerLink="/inbox">
-                            <ion-icon name="ios-mail" slot="start" [color]="currentRoute === '/inbox' ? 'highlight' : 'secondary'"></ion-icon>
-                            <ion-label>Received</ion-label>
-                        </ion-item>
-                        <ion-item routerDirection="root" routerLink="/outbox">
-                            <ion-icon name="md-paper" slot="start" [color]="currentRoute === '/outbox' ? 'highlight' : 'secondary'"></ion-icon>
-                            <ion-label>Sent</ion-label>
-                        </ion-item>
-                        <ion-item routerDirection="root" routerLink="/archives">
-                            <ion-icon name="md-filing" slot="start" [color]="currentRoute === '/archives' ? 'highlight' : 'secondary'"></ion-icon>
-                            <ion-label>Archives</ion-label>
-                        </ion-item>
-                        <ion-item routerDirection="root" routerLink="/tpay">
-                            <ion-icon name="md-business" slot="start" [color]="currentRoute === '/tpay' ? 'highlight' : 'secondary'"></ion-icon>
-                            <ion-label>Tpay</ion-label>
-                        </ion-item>
-                        <ion-item routerDirection="root" routerLink="/wallet" style="margin-bottom: 16px;">
-                            <ion-icon name="md-wallet" slot="start" [color]="currentRoute === '/wallet' ? 'highlight' : 'secondary'"></ion-icon>
-                            <ion-label>Wallet</ion-label>
-                        </ion-item>
-                        <ion-item routerDirection="root" routerLink="/">
-                            <ion-icon name="ios-log-out" slot="start"></ion-icon><ion-label>Logout</ion-label>
-                        </ion-item>
-                    </ion-list>
-                </ion-menu-toggle>
-            </ion-content>
-        </ion-menu>
-        <ion-router-outlet main></ion-router-outlet>
-    </ion-split-pane>
+    <ion-tabs>
+        <ion-tab-bar slot="bottom" *ngIf="currentRoute !== '/login' && currentRoute !== '/'" color="secondary">
+            <ion-tab-button tab="barter">
+                <ion-icon [color]="currentRoute === '/barter' ? 'highlight' : 'light'" name="swap"></ion-icon>
+                <ion-label>Barter</ion-label>
+            </ion-tab-button>
+            <ion-tab-button tab="tpay">
+                <ion-icon [color]="currentRoute === '/tpay' ? 'highlight' : 'light'" name="md-business"></ion-icon>
+                <ion-label>TPay</ion-label>
+            </ion-tab-button>
+            <ion-tab-button tab="wallet">
+                <ion-icon [color]="currentRoute === '/wallet' ? 'highlight' : 'light'" name="md-wallet"></ion-icon>
+                <ion-label>Wallet</ion-label>
+            </ion-tab-button>
+            <ion-tab-button tab="login">
+                <ion-icon name="ios-log-out"></ion-icon>
+                <ion-label>Logout</ion-label>
+            </ion-tab-button>
+        </ion-tab-bar>
+    </ion-tabs>
 </ion-app>

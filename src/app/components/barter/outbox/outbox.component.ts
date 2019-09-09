@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, ActionSheetController, ModalController } from '@ionic/angular';
+import { ActionSheetController, ModalController } from '@ionic/angular';
 import { NewTradeComponent } from 'src/app/components/new-trade/new-trade.component';
 import { VarsService } from 'src/app/services/vars.service';
 import { HttpService } from 'src/app/services/http.service';
 
 @Component({
-    selector: 'app-archives',
-    templateUrl: './archives.page.html',
-    styleUrls: ['./archives.page.scss'],
+    selector: 'app-outbox',
+    templateUrl: './outbox.component.html',
+    styleUrls: ['./outbox.component.scss'],
 })
-export class ArchivesPage implements OnInit {
+export class OutboxComponent implements OnInit {
 
     private segment = 'trades';
     private tradeType: string;
@@ -18,7 +18,6 @@ export class ArchivesPage implements OnInit {
     private gifts: any;
 
     constructor(
-        private navCtrl: NavController,
         private actionSheetCtrl: ActionSheetController,
         private modalCtrl: ModalController,
         private vars: VarsService,
@@ -27,7 +26,7 @@ export class ArchivesPage implements OnInit {
 
     ngOnInit() {
         this.vars.loading = true;
-        this.loadArchives().then(() => {
+        this.loadOutbox().then(() => {
             this.vars.loading = false;
         });
     }
@@ -36,10 +35,10 @@ export class ArchivesPage implements OnInit {
         this.segment = event.detail.value;
     }
 
-    loadArchives() {
+    loadOutbox() {
         return new Promise(resolve => {
             const body = {
-                segment: 'archives',
+                segment: 'outbox',
                 merchantID: this.vars.merchantData.merchant_id
             };
             this.http.getData('tradehub', body).subscribe((resp: any) => {
@@ -105,7 +104,7 @@ export class ArchivesPage implements OnInit {
                 });
                 await modal.present();
                 modal.onDidDismiss().then(() => {
-                    this.loadArchives();
+                    this.loadOutbox();
                 });
             }
         });

@@ -46,7 +46,7 @@ export class LoginComponent implements OnInit {
                 this.vars.locationData = resp.data.locations;
                 this.vars.defaultLocation = resp.data.locations.filter((loc: any) => loc.main)[0];
                 this.message = null;
-                this.navCtrl.navigateRoot('/inbox');
+                this.navCtrl.navigateRoot('/barter');
             } else {
                 this.account.password = '';
                 this.message = 'Username & password mismatch.';
