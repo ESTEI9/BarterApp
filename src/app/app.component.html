@@ -1,6 +1,6 @@
 <ion-app>
     <ion-tabs>
-        <ion-tab-bar slot="bottom" *ngIf="currentRoute !== '/login' && currentRoute !== '/'" color="secondary">
+        <ion-tab-bar slot="bottom" *ngIf="(currentRoute && !currentRoute.includes('login')) && currentRoute !== '/'" color="secondary">
             <ion-tab-button tab="barter">
                 <ion-icon [color]="currentRoute === '/barter' ? 'highlight' : 'light'" name="swap"></ion-icon>
                 <ion-label>Barter</ion-label>
@@ -13,7 +13,7 @@
                 <ion-icon [color]="currentRoute === '/wallet' ? 'highlight' : 'light'" name="md-wallet"></ion-icon>
                 <ion-label>Wallet</ion-label>
             </ion-tab-button>
-            <ion-tab-button tab="login">
+            <ion-tab-button (click)="logOut()">
                 <ion-icon name="ios-log-out"></ion-icon>
                 <ion-label>Logout</ion-label>
             </ion-tab-button>
