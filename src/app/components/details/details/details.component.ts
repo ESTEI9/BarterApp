@@ -1,15 +1,14 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { HttpService } from 'src/app/services/http.service';
 import { VarsService } from 'src/app/services/vars.service';
-import { ToastController, AlertController, ModalController } from '@ionic/angular';
+import { ToastController, AlertController, ModalController, NavParams } from '@ionic/angular';
 
 @Component({
     selector: 'app-details',
-    templateUrl: './details.page.html',
-    styleUrls: ['./details.page.scss'],
+    templateUrl: './details.component.html',
+    styleUrls: ['./details.component.scss'],
 })
-export class DetailsPage implements OnInit, AfterViewInit {
+export class DetailsComponent implements OnInit, AfterViewInit {
 
     private tradeId: number;
     private trade: any;
@@ -21,19 +20,17 @@ export class DetailsPage implements OnInit, AfterViewInit {
     private referrer: string;
 
     constructor(
-        private route: ActivatedRoute,
         private http: HttpService,
         private vars: VarsService,
         private toastCtrl: ToastController,
         private alertCtrl: AlertController,
-        private modalCtrl: ModalController
-    ) { }
-
-    ngOnInit() {
-        this.route.params.subscribe((params: any) => {
-            this.tradeId = params.id;
-        });
+        private modalCtrl: ModalController,
+        private navParams: NavParams
+    ) {
+        this.tradeId = this.navParams.get('id');
     }
+
+    ngOnInit() { }
 
     ngAfterViewInit() {
         this.getTrade().then(() => {

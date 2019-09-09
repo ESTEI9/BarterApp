@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { HttpService } from 'src/app/services/http.service';
 import { VarsService } from 'src/app/services/vars.service';
-import { HttpClient } from '@angular/common/http';
-import { ActionSheetController, ModalController, NavController, ToastController } from '@ionic/angular';
+import { ModalController, ToastController, IonSpinner } from '@ionic/angular';
 import { EditWalletComponent } from 'src/app/components/edit-wallet/edit-wallet.component';
 
 @Component({
@@ -13,6 +12,7 @@ import { EditWalletComponent } from 'src/app/components/edit-wallet/edit-wallet.
 export class WalletPage implements OnInit {
 
     private loading: boolean;
+    private updatingWallet: any;
     private locations: any;
     private location: any;
     private locationSearch: string;
@@ -20,16 +20,14 @@ export class WalletPage implements OnInit {
     private tradeType: string;
     private searchLocations: any;
     private locPlaceholder = '';
+    private message: string;
 
     constructor(
         private http: HttpService,
         private vars: VarsService,
-        private httpClient: HttpClient,
-        private actionSheetCtrl: ActionSheetController,
         private modalCtrl: ModalController,
-        private navCtrl: NavController,
-        private sheetCtrl: ActionSheetController,
-        private toastCtrl: ToastController
+        private toastCtrl: ToastController,
+        private renderer: Renderer2
     ) { }
 
     ngOnInit() {
@@ -37,13 +35,13 @@ export class WalletPage implements OnInit {
             if (loc.city === this.vars.merchantData.city && loc.state === this.vars.merchantData.state) {
                 this.location = loc;
                 this.locPlaceholder = `${loc.city}, ${loc.abbr}`;
+                this.loading = true;
                 this.loadWallets();
             }
         });
     }
 
     loadWallets() {
-        this.loading = true;
         const body = {
             action: 'getWalletCounts',
             location: this.location,
@@ -54,10 +52,13 @@ export class WalletPage implements OnInit {
                 this.wallets = resp.data;
             } else {
                 console.log(resp);
+                this.errorToast();
             }
             this.loading = false;
         }, (err: any) => {
             console.log(err);
+            this.errorToast();
+            this.loading = false;
         });
     }
 
@@ -89,10 +90,11 @@ export class WalletPage implements OnInit {
         this.locPlaceholder = this.locationSearch;
         this.location = loc;
         this.searchLocations = [];
+        this.loading = true;
         this.loadWallets();
     }
 
-    async editWalletModal(wallet: any) {
+    async editWalletModal(wallet: any, i: number, event: any) {
         const modal = await this.modalCtrl.create({
             component: EditWalletComponent,
             componentProps: {
@@ -104,46 +106,69 @@ export class WalletPage implements OnInit {
         });
         await modal.present();
         modal.onDidDismiss().then((resp: any) => {
-            if (resp.data) {this.editWallets(wallet, resp.data); }
-        });
-    }
-
-    editWallets(wallet: any, data: any) {
-        this.updatePrivate(wallet, data.private).then((resp: boolean) => {
-            if (resp) {
-                this.updateWallets(data.changes.mod);
-                this.addWallets(wallet, data.changes.new);
-                this.deleteWallets(data.changes.delete);
+            if (resp.data) {
+                this.updatingWallet = i;
+                this.renderer.addClass(event.target, 'disabled');
+                this.editWallets(wallet, resp.data).then(() => {
+                    this.loadWallets(); // without this.loading = true. Don't want to interrupt UX
+                    this.message = 'Update complete';
+                    this.renderer.removeClass(event.target, 'disabled');
+                    this.updatingWallet = null;
+                    setTimeout(() => {
+                        this.message = null;
+                    }, 1500);
+                });
             }
         });
     }
 
+    editWallets(wallet: any, data: any) {
+        return new Promise(resolve => {
+            this.message = 'Starting update...';
+            this.updatePrivate(wallet, data.private).then((resp: boolean) => {
+                if (resp) {
+                    this.updateWallets(data.changes.mod);
+                    this.addWallets(wallet, data.changes.new);
+                    this.deleteWallets(data.changes.delete).then(() => {
+                        resolve(true);
+                    });
+                } else {
+                    resolve(false);
+                }
+            });
+        });
+    }
+
     updatePrivate(wallet: any, units: any) {
+        this.message = 'Updating private entry...';
         const body = {
             action: 'updatePrivate',
             valu_id: wallet.private_wallet_id,
             units
         };
-        return new Promise(resolve => this.http.postData('wallet', {body: JSON.stringify(body)}).subscribe(async (resp: any) => {
-            if (resp.status !== 1) {
-                console.log(resp);
-                const toast = await this.toastCtrl.create({
-                    message: 'Unable to update private wallet',
-                    duration: 2000,
-                    color: 'dark'
-                });
-                await toast.present();
+        return new Promise(resolve =>
+            this.http.postData('wallet', {body: JSON.stringify(body)}).subscribe(async (resp: any) => {
+                if (resp.status !== 1) {
+                    console.log(resp);
+                    const toast = await this.toastCtrl.create({
+                        message: 'Unable to update private wallet',
+                        duration: 2000,
+                        color: 'dark'
+                    });
+                    await toast.present();
+                    resolve(false);
+                }
+                resolve(true);
+            }, err => {
+                console.log(err);
+                this.errorToast();
                 resolve(false);
-            }
-            resolve(true);
-        }, err => {
-            console.log(err);
-            this.errorToast();
-            resolve(false);
-        }));
+            })
+        );
     }
 
     updateWallets(modData: any) {
+        this.message = 'Updating current sale entries...';
         modData.map((data: any, i: number) => {
             const body = {
                 action: 'updateWallet',
@@ -170,6 +195,7 @@ export class WalletPage implements OnInit {
     }
 
     addWallets(wallet: any, addData: any) {
+        this.message = 'Adding new entries...';
         addData.map((data: any, i: number) => {
             const body = {
                 user_id: this.vars.merchantData.merchant_id,
@@ -198,23 +224,28 @@ export class WalletPage implements OnInit {
     }
 
     deleteWallets(delData: any) {
-        console.log(delData);
-        delData.map((data: any, i: number) => {
-            this.http.deleteWallet(data.valu_id).subscribe(async (resp: any) => {
-                if (!resp.success) {
-                    console.log(resp.message, {id: data.wallet_id});
-                    if (i + 1 === delData.length) {
-                        const toast = await this.toastCtrl.create({
-                            message: 'Unable to delete some entries',
-                            duration: 2000,
-                            color: 'dark'
-                        });
-                        await toast.present();
+        this.message = 'Deleting old entries...';
+        return new Promise(resolve => {
+            const promises = delData.map((data: any, i: number) => {
+                this.http.deleteWallet(data.valu_id).subscribe(async (resp: any) => {
+                    if (!resp.success) {
+                        console.log(resp.message, {id: data.wallet_id});
+                        if (i + 1 === delData.length) {
+                            const toast = await this.toastCtrl.create({
+                                message: 'Unable to delete some entries',
+                                duration: 2000,
+                                color: 'dark'
+                            });
+                            return await toast.present();
+                        }
                     }
-                }
-            }, err => {
-                console.log(err);
-                this.errorToast();
+                }, err => {
+                    console.log(err);
+                    this.errorToast();
+                });
+            });
+            Promise.all(promises).then(() => {
+                resolve();
             });
         });
     }
@@ -225,7 +256,7 @@ export class WalletPage implements OnInit {
             duration: 2000,
             color: 'dark'
         });
-        return await toast.present();
+        await toast.present();
     }
 
 }

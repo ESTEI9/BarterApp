@@ -8,3 +8,14 @@
     max-height: 70vh;
     overflow-y: scroll;
 }
+
+.disabled {
+    color: var(--ion-color-medium);
+    pointer-events: none;
+    
+    ion-spinner {
+        position: absolute;
+        left: 50%;
+        transform:translateX(-50%);
+    }
+}
