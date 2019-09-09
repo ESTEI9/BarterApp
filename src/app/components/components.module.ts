@@ -22,6 +22,9 @@ import { HistoryComponent } from './tipay/history/history.component';
 import { QRCodeModule } from 'angularx-qrcode';
 import { EditWalletComponent } from './edit-wallet/edit-wallet.component';
 import { DetailsComponent } from './details/details/details.component';
+import { InboxComponent } from './barter/inbox/inbox.component';
+import { OutboxComponent } from './barter/outbox/outbox.component';
+import { ArchivesComponent } from './barter/archives/archives.component';
 
 const components = [
   LoginComponent,
@@ -41,7 +44,10 @@ const components = [
   CompleteComponent,
   HistoryComponent,
   EditWalletComponent,
-  DetailsComponent
+  DetailsComponent,
+  InboxComponent,
+  OutboxComponent,
+  ArchivesComponent
 ];
 
 @NgModule({
@@ -54,7 +60,15 @@ const components = [
       PipesModule,
       QRCodeModule
   ],
-  entryComponents: [DescriptionComponent, WalletComponent, SearchableDropdownComponent, DetailsComponent],
+  entryComponents: [
+    DescriptionComponent,
+    WalletComponent,
+    SearchableDropdownComponent,
+    DetailsComponent,
+    InboxComponent,
+    OutboxComponent,
+    ArchivesComponent
+  ],
   providers: [KeyValuePipe],
   exports: components
 })

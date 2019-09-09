@@ -1,15 +1,15 @@
-import { Component, OnInit } from '@angular/core';
-import { NavController, MenuController, ActionSheetController, ModalController } from '@ionic/angular';
+import { Component, OnInit, AfterViewInit, AfterViewChecked, AfterContentInit } from '@angular/core';
+import { ActionSheetController, ModalController } from '@ionic/angular';
 import { NewTradeComponent } from 'src/app/components/new-trade/new-trade.component';
 import { VarsService } from 'src/app/services/vars.service';
 import { HttpService } from 'src/app/services/http.service';
 
 @Component({
     selector: 'app-inbox',
-    templateUrl: './inbox.page.html',
-    styleUrls: ['./inbox.page.scss'],
+    templateUrl: './inbox.component.html',
+    styleUrls: ['./inbox.component.scss'],
 })
-export class InboxPage implements OnInit {
+export class InboxComponent implements OnInit {
 
     private segment = 'trades';
     private tradeType: string;
@@ -18,15 +18,11 @@ export class InboxPage implements OnInit {
     private gifts: any;
 
     constructor(
-        private navCtrl: NavController,
-        private menuCtrl: MenuController,
         private actionSheetCtrl: ActionSheetController,
         private modalCtrl: ModalController,
         private vars: VarsService,
         private http: HttpService
-    ) {
-        this.menuCtrl.enable(true, 'primary');
-    }
+    ) {}
 
     ngOnInit() {
         this.vars.loading = true;
@@ -43,8 +39,7 @@ export class InboxPage implements OnInit {
         return new Promise(resolve => {
             const body = {
                 segment: 'inbox',
-                merchantID: this.vars.merchantData.merchant_id,
-                type: null
+                merchantID: this.vars.merchantData.merchant_id
             };
             this.http.getData('tradehub', body).subscribe((resp: any) => {
                 if (resp.status === 1) {

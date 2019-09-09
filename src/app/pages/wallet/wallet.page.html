@@ -1,12 +1,9 @@
 <ion-header>
     <ion-toolbar color="primary">
         <ion-title>Wallet</ion-title>
-        <ion-buttons slot="start">
-            <ion-menu-button slot="start" menu="primary"></ion-menu-button>
-        </ion-buttons>
     </ion-toolbar>
 </ion-header>
-
+<ion-md-refresher (doRefresh)="loadWallets()"></ion-md-refresher>
 <ion-content>
     <app-searchable-dropdown
         *ngIf="!loading"

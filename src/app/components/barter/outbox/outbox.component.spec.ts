@@ -1,22 +1,22 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ArchivesPage } from './archives.page';
+import { OutboxComponent } from './outbox.component';
 
-describe('ArchivesPage', () => {
-  let component: ArchivesPage;
-  let fixture: ComponentFixture<ArchivesPage>;
+describe('OutboxComponent', () => {
+  let component: OutboxComponent;
+  let fixture: ComponentFixture<OutboxComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ArchivesPage ],
+      declarations: [ OutboxComponent ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ArchivesPage);
+    fixture = TestBed.createComponent(OutboxComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

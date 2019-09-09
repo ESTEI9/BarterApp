@@ -5,11 +5,11 @@ import { VarsService } from 'src/app/services/vars.service';
 import { HttpService } from 'src/app/services/http.service';
 
 @Component({
-    selector: 'app-outbox',
-    templateUrl: './outbox.page.html',
-    styleUrls: ['./outbox.page.scss'],
+    selector: 'app-archives',
+    templateUrl: './archives.component.html',
+    styleUrls: ['./archives.component.scss'],
 })
-export class OutboxPage implements OnInit {
+export class ArchivesComponent implements OnInit {
 
     private segment = 'trades';
     private tradeType: string;
@@ -27,7 +27,7 @@ export class OutboxPage implements OnInit {
 
     ngOnInit() {
         this.vars.loading = true;
-        this.loadOutbox().then(() => {
+        this.loadArchives().then(() => {
             this.vars.loading = false;
         });
     }
@@ -36,10 +36,10 @@ export class OutboxPage implements OnInit {
         this.segment = event.detail.value;
     }
 
-    loadOutbox() {
+    loadArchives() {
         return new Promise(resolve => {
             const body = {
-                segment: 'outbox',
+                segment: 'archives',
                 merchantID: this.vars.merchantData.merchant_id
             };
             this.http.getData('tradehub', body).subscribe((resp: any) => {
@@ -105,7 +105,7 @@ export class OutboxPage implements OnInit {
                 });
                 await modal.present();
                 modal.onDidDismiss().then(() => {
-                    this.loadOutbox();
+                    this.loadArchives();
                 });
             }
         });

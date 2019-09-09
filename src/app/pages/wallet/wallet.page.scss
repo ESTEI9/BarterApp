@@ -19,3 +19,11 @@
         transform:translateX(-50%);
     }
 }
+
+ion-md-refresher {
+    position: fixed;
+    z-index: 99;
+    top: 114px;
+    width: 100%;
+    right: 0;
+}
