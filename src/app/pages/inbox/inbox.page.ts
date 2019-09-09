@@ -29,7 +29,10 @@ export class InboxPage implements OnInit {
     }
 
     ngOnInit() {
-        this.loadInbox();
+        this.vars.loading = true;
+        this.loadInbox().then(() => {
+            this.vars.loading = false;
+        });
     }
 
     switchSegment(event: any) {
@@ -37,24 +40,25 @@ export class InboxPage implements OnInit {
     }
 
     loadInbox() {
-        this.vars.loading = true;
-        const body = {
-            segment: 'inbox',
-            merchantID: this.vars.merchantData.merchant_id,
-            type: null
-        };
-        this.http.getData('tradehub', body).subscribe((resp: any) => {
-            if (resp.status === 1) {
-                this.trades = resp.data.trades || [];
-                this.invoices = resp.data.invoices || [];
-                this.gifts = resp.data.gifts || [];
-            } else {
-                console.log(resp);
-            }
-            this.vars.loading = false;
-        }, (err) => {
-            console.log(err);
-            this.vars.loading = false;
+        return new Promise(resolve => {
+            const body = {
+                segment: 'inbox',
+                merchantID: this.vars.merchantData.merchant_id,
+                type: null
+            };
+            this.http.getData('tradehub', body).subscribe((resp: any) => {
+                if (resp.status === 1) {
+                    this.trades = resp.data.trades || [];
+                    this.invoices = resp.data.invoices || [];
+                    this.gifts = resp.data.gifts || [];
+                } else {
+                    console.log(resp);
+                }
+                resolve();
+            }, (err) => {
+                console.log(err);
+                resolve();
+            });
         });
     }
 
@@ -101,9 +105,12 @@ export class InboxPage implements OnInit {
             if (this.tradeType) {
                 const modal = await this.modalCtrl.create({
                     component: NewTradeComponent,
-                    componentProps: {tradeType: this.tradeType}
+                    componentProps: { tradeType: this.tradeType }
                 });
                 await modal.present();
+                modal.onDidDismiss().then(() => {
+                    this.loadInbox();
+                });
             }
         });
     }

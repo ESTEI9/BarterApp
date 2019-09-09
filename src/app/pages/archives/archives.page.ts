@@ -26,7 +26,10 @@ export class ArchivesPage implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.loadArchives();
+        this.vars.loading = true;
+        this.loadArchives().then(() => {
+            this.vars.loading = false;
+        });
     }
 
     switchSegment(event: any) {
@@ -34,23 +37,24 @@ export class ArchivesPage implements OnInit {
     }
 
     loadArchives() {
-        this.vars.loading = true;
-        const body = {
-            segment: 'archives',
-            merchantID: this.vars.merchantData.merchant_id
-        };
-        this.http.getData('tradehub', body).subscribe((resp: any) => {
-            if (resp.status === 1) {
-                this.trades = resp.data.trades || [];
-                this.invoices = resp.data.invoices || [];
-                this.gifts = resp.data.gifts || [];
-            } else {
-                console.log(resp);
-            }
-            this.vars.loading = false;
-        }, (err) => {
-            console.log(err);
-            this.vars.loading = false;
+        return new Promise(resolve => {
+            const body = {
+                segment: 'archives',
+                merchantID: this.vars.merchantData.merchant_id
+            };
+            this.http.getData('tradehub', body).subscribe((resp: any) => {
+                if (resp.status === 1) {
+                    this.trades = resp.data.trades || [];
+                    this.invoices = resp.data.invoices || [];
+                    this.gifts = resp.data.gifts || [];
+                } else {
+                    console.log(resp);
+                }
+                resolve();
+            }, (err) => {
+                console.log(err);
+                resolve();
+            });
         });
     }
 
@@ -72,7 +76,7 @@ export class ArchivesPage implements OnInit {
         this.tradeType = '';
         const sheet = await this.actionSheetCtrl.create({
             header: 'Select Trade Type',
-            buttons:[{
+            buttons: [{
                 text: 'Trade',
                 handler: () => {
                     this.tradeType = 'Trade';
@@ -94,12 +98,15 @@ export class ArchivesPage implements OnInit {
         })
         await sheet.present();
         await sheet.onDidDismiss().then(async () => {
-            if(this.tradeType){
+            if (this.tradeType) {
                 const modal = await this.modalCtrl.create({
                     component: NewTradeComponent,
-                    componentProps: {tradeType: this.tradeType}
+                    componentProps: { tradeType: this.tradeType }
                 });
                 await modal.present();
+                modal.onDidDismiss().then(() => {
+                    this.loadArchives();
+                });
             }
         });
     }

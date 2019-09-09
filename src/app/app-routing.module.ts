@@ -7,7 +7,6 @@ const routes: Routes = [
   { path: 'inbox', loadChildren: './pages/inbox/inbox.module#InboxPageModule' },
   { path: 'outbox', loadChildren: './pages/outbox/outbox.module#OutboxPageModule' },
   { path: 'archives', loadChildren: './pages/archives/archives.module#ArchivesPageModule'},
-  { path: 'details/:id', loadChildren: './pages/details/details.module#DetailsPageModule', pathMatch: 'full'},
   { path: 'wallet', loadChildren: './pages/wallet/wallet.module#WalletPageModule' },
   { path: 'tpay', loadChildren: './pages/tipay/tipay.module#TipayPageModule' },
   { path: 'tpay/details', loadChildren: './pages/tpay-details/tpay-details.module#TpayDetailsPageModule', pathMatch: 'full'}
