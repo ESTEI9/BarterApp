@@ -25,6 +25,7 @@ export class EditWalletComponent implements OnInit {
   private totalValu: number;
   private loading = false;
   private editable = false;
+  private createPackage = false;
 
   private newItems: any = [];
 
@@ -115,6 +116,7 @@ export class EditWalletComponent implements OnInit {
       this.newAmount = null;
       this.newPrice = null;
       this.newSalePrice = null;
+      this.createPackage = false;
     } else {
       const toast = await this.toastCtrl.create({
         message: 'Fill all fields',

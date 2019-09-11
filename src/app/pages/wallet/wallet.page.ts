@@ -1,7 +1,7 @@
 import { Component, OnInit, Renderer2 } from '@angular/core';
 import { HttpService } from 'src/app/services/http.service';
 import { VarsService } from 'src/app/services/vars.service';
-import { ModalController, ToastController, IonSpinner } from '@ionic/angular';
+import { ModalController, ToastController } from '@ionic/angular';
 import { EditWalletComponent } from 'src/app/components/edit-wallet/edit-wallet.component';
 
 @Component({
@@ -31,7 +31,7 @@ export class WalletPage implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.vars.locations.filter((loc: any) => {
+        this.vars.locationData.filter((loc: any) => {
             if (loc.city === this.vars.merchantData.city && loc.state === this.vars.merchantData.state) {
                 this.location = loc;
                 this.locPlaceholder = `${loc.city}, ${loc.abbr}`;
@@ -106,19 +106,22 @@ export class WalletPage implements OnInit {
         });
         await modal.present();
         modal.onDidDismiss().then((resp: any) => {
-            if (resp.data) {
-                this.updatingWallet = i;
-                this.renderer.addClass(event.target, 'disabled');
-                this.editWallets(wallet, resp.data).then(() => {
-                    this.loadWallets(); // without this.loading = true. Don't want to interrupt UX
-                    this.message = 'Update complete';
-                    this.renderer.removeClass(event.target, 'disabled');
-                    this.updatingWallet = null;
-                    setTimeout(() => {
-                        this.message = null;
-                    }, 1500);
+            this.updatingWallet = i;
+            this.renderer.addClass(event.target, 'disabled');
+            this.editWallets(wallet, resp.data).then(async () => {
+                this.message = null;
+                this.renderer.removeClass(event.target, 'disabled');
+                this.updatingWallet = null;
+                const toast = await this.toastCtrl.create({
+                    message: 'Update complete',
+                    duration: 1500,
+                    color: 'dark'
                 });
-            }
+                await toast.present();
+                toast.onDidDismiss().then(() => {
+                    this.loadWallets();
+                });
+            });
         });
     }
 
@@ -128,10 +131,11 @@ export class WalletPage implements OnInit {
             this.updatePrivate(wallet, data.private).then((resp: boolean) => {
                 if (resp) {
                     this.updateWallets(data.changes.mod);
-                    this.addWallets(wallet, data.changes.new);
-                    this.deleteWallets(data.changes.delete).then(() => {
-                        resolve(true);
-                    });
+                    // this.addWallets(wallet, data.changes.new);
+                    // this.deleteWallets(data.changes.delete).then(() => {
+                    //     resolve(true);
+                    // });
+                    resolve(true);
                 } else {
                     resolve(false);
                 }
