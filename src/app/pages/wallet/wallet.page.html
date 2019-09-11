@@ -1,17 +1,23 @@
 <ion-header>
     <ion-toolbar color="primary">
         <ion-title>Wallet</ion-title>
+        <ion-buttons slot="end">
+            <ion-button (click)="updateLocation = !updateLocation" [color]="updateLocation ? 'highlight' : 'light'">
+                <ion-icon slot="icon-only" name="pin"></ion-icon>
+            </ion-button>
+        </ion-buttons>
     </ion-toolbar>
 </ion-header>
 <ion-md-refresher (doRefresh)="loadWallets()"></ion-md-refresher>
 <ion-content>
     <app-searchable-dropdown
-        *ngIf="!loading"
+        *ngIf="!loading && updateLocation"
         [options]="searchLocations"
         (updateOptions)="updateSearchLocations($event)"
         (selectValue)="setLocation($event)"
         [placeholder]="locPlaceholder"
     ></app-searchable-dropdown>
+    <ion-searchbar [(ngModel)]="searchDBA" (ionChange)="filterList(searchDBA)" placeholder="Search DBAs"></ion-searchbar>
     <ion-spinner *ngIf="loading" color="highlight" class="comp-spinner"></ion-spinner>
     <ion-text text-center padding color="medium" *ngIf="!wallets && !loading" class="no-data">No Wallet</ion-text>
 
@@ -26,7 +32,7 @@
                 <ion-row></ion-row>
             </ion-grid>
         </ion-item>
-        <ion-item *ngFor="let wallet of wallets; let i = index;" [class.oddItem]="i % 2" (click)="editWalletModal(wallet, i, $event)" [class.disabled]="updatingWallet === i">
+        <ion-item *ngFor="let wallet of walletList; let i = index;" [class.oddItem]="i % 2" (click)="editWalletModal(wallet, i, $event)" [class.disabled]="updatingWallet === i">
             <ion-spinner *ngIf="updatingWallet === i" color="highlight"></ion-spinner>
             <ion-grid no-padding>
                 <ion-row>
@@ -35,6 +41,9 @@
                     <ion-col size="3" text-right>{{wallet.public_units}}</ion-col>
                 </ion-row>
             </ion-grid>
+        </ion-item>
+        <ion-item *ngIf="walletList.length === 0">
+            <div text-center padding style="width:100%;">No matches</div>
         </ion-item>
     </ion-list>
     <div text-center padding style="width:100%" *ngIf="message">{{message}}</div>

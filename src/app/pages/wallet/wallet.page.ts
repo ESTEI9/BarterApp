@@ -3,6 +3,7 @@ import { HttpService } from 'src/app/services/http.service';
 import { VarsService } from 'src/app/services/vars.service';
 import { ModalController, ToastController } from '@ionic/angular';
 import { EditWalletComponent } from 'src/app/components/edit-wallet/edit-wallet.component';
+import { cloneDeep } from 'lodash';
 
 @Component({
     selector: 'app-wallet',
@@ -17,10 +18,12 @@ export class WalletPage implements OnInit {
     private location: any;
     private locationSearch: string;
     private wallets: any = [];
+    private walletList: any;
     private tradeType: string;
     private searchLocations: any;
     private locPlaceholder = '';
     private message: string;
+    private updateLocation = false;
 
     constructor(
         private http: HttpService,
@@ -50,6 +53,7 @@ export class WalletPage implements OnInit {
         this.http.getData('wallet', body).subscribe((resp: any) => {
             if (resp.status === 1) {
                 this.wallets = resp.data;
+                this.walletList = cloneDeep(this.wallets);
             } else {
                 console.log(resp);
                 this.errorToast();
@@ -60,6 +64,10 @@ export class WalletPage implements OnInit {
             this.errorToast();
             this.loading = false;
         });
+    }
+
+    filterList(search: string) {
+        this.walletList = this.wallets.filter((wallet: any) => wallet.dba.toLowerCase().includes(search.toLowerCase()));
     }
 
     filterLocations(search: string) {
@@ -91,6 +99,7 @@ export class WalletPage implements OnInit {
         this.location = loc;
         this.searchLocations = [];
         this.loading = true;
+        this.updateLocation = false;
         this.loadWallets();
     }
 
