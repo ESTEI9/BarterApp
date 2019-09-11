@@ -46,9 +46,9 @@ export class EditWalletComponent implements OnInit {
     this.location = this. navParams.data.location;
     this.private = +this.navParams.data.private;
     this.public = +this.navParams.data.public;
-    this.privateCount = this.private;
-    this.publicCount = this.public;
-    this.totalValu = this.privateCount + this.publicCount;
+    this.privateCount = +this.private;
+    this.publicCount = +this.public;
+    this.totalValu = +(+this.privateCount + +this.publicCount).toFixed(2);
   }
 
   ngOnInit() {
@@ -84,17 +84,17 @@ export class EditWalletComponent implements OnInit {
     if (!this.editable) {
       this.privateCount = this.vendorId === this.vars.merchantData.merchant_id && this.privateCount < 0
         ? 0
-        : this.totalValu - this.publicCount;
+        : +(this.totalValu - this.publicCount).toFixed(2);
     }
   }
 
   updateTotalCount() {
-      this.totalValu = +this.publicCount + +this.privateCount;
+      this.totalValu = +(+this.publicCount + +this.privateCount).toFixed(2);
   }
 
   updatePublicCount(units: number, i: number) {
     const diff = +this.newWallet[i].units - units;
-    this.publicCount = this.publicCount - diff;
+    this.publicCount = +(this.publicCount - diff).toFixed(2);
     this.newWallet[i].units = units;
   }
 
@@ -103,14 +103,14 @@ export class EditWalletComponent implements OnInit {
   }
 
   async createPublicUnits() {
-    if (this.newAmount && this.newPrice && this.newSalePrice) {
+    if (this.newAmount && this.newPrice) {
       this.newWallet.push({
         units: this.newAmount,
         _regular_price: this.newPrice,
-        _sale_price: this.newSalePrice
+        _sale_price: this.newSalePrice || null
       });
-      const sum = +this.privateCount - +this.newAmount;
-      const fakeSum = +this.toRemove - +this.newAmount;
+      const sum = +(+this.privateCount - +this.newAmount).toFixed(2);
+      const fakeSum = +(+this.toRemove - +this.newAmount).toFixed(2);
       this.privateCount = this.vendorId === this.vars.merchantData.merchant_id ? sum > 0 ? sum : 0 : sum;
       this.toRemove = this.vendorId === this.vars.merchantData.merchant_id ? fakeSum > 0 ? fakeSum : 0 : fakeSum;
       this.newAmount = null;
@@ -128,7 +128,7 @@ export class EditWalletComponent implements OnInit {
   }
 
   deleteItem(i: number) {
-    this.privateCount = +this.privateCount + +this.newWallet[i].units;
+    this.privateCount = +(+this.privateCount + +this.newWallet[i].units).toFixed(2);
     this.toRemove = +this.toRemove + +this.newWallet[i].units;
     this.updatePublicCount(0, i);
     this.newWallet = this.newWallet.filter((wallet: any, index: number) => i !== index);
@@ -140,7 +140,7 @@ export class EditWalletComponent implements OnInit {
     const deleteRows = this.wallet.filter((item: any) => walletIds.indexOf(item.valu_id) === -1);
     const modRows = this.newWallet.filter((item: any, i: number) => {if (item.valu_id) { return !isEqual(item, this.wallet[i]); }});
     this.modalCtrl.dismiss({
-      private: +this.privateCount - +this.toRemove,
+      private: +(+this.privateCount - +this.toRemove).toFixed(2),
       changes: {new: newRows, delete: deleteRows, mod: modRows}
     });
   }
