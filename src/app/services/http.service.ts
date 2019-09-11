@@ -42,4 +42,11 @@ export class HttpService {
             {headers: {'Content-Type': 'application/x-www-form-urlencoded'}, params}
         );
     }
+
+    createMyPublic(data: any) {
+        const params = new HttpParams({fromObject: data});
+        return this.http.get('https://www.cometothex.com/unitimarket/wp-json/wallet-update/v1/sell_my_value/',
+            {headers: {'Content-Type': 'application/x-www-form-urlencoded'}, params}
+        );
+    }
 }

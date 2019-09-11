@@ -39,8 +39,15 @@ export class WalletPage implements OnInit {
                 this.location = loc;
                 this.locPlaceholder = `${loc.city}, ${loc.abbr}`;
                 this.loading = true;
-                this.loadWallets();
+                this.makeWallets();
             }
+        });
+    }
+
+    makeWallets() {
+        this.loadWallets().then((resp: any) => {
+            this.wallets = resp;
+            this.walletList = cloneDeep(this.wallets);
         });
     }
 
@@ -50,10 +57,10 @@ export class WalletPage implements OnInit {
             location: this.location,
             merchantId: this.vars.merchantData.merchant_id
         };
-        this.http.getData('wallet', body).subscribe((resp: any) => {
+        return new Promise(resolve =>
+            this.http.getData('wallet', body).subscribe((resp: any) => {
             if (resp.status === 1) {
-                this.wallets = resp.data;
-                this.walletList = cloneDeep(this.wallets);
+                resolve(resp.data);
             } else {
                 console.log(resp);
                 this.errorToast();
@@ -63,7 +70,8 @@ export class WalletPage implements OnInit {
             console.log(err);
             this.errorToast();
             this.loading = false;
-        });
+            resolve(false);
+        }));
     }
 
     filterList(search: string) {
@@ -72,26 +80,26 @@ export class WalletPage implements OnInit {
 
     filterLocations(search: string) {
         const searchLocations = this.vars.locations.filter((loc: any) => {
-          const combos = [
-            loc.city,
-            `${loc.city}, ${loc.abbr}`,
-            `${loc.city}, ${loc.abbr}`
-          ];
-          for (const option of combos) {
-            if (option.toLowerCase().search(search.toLowerCase()) > -1) {
-              return loc;
+            const combos = [
+                loc.city,
+                `${loc.city}, ${loc.abbr}`,
+                `${loc.city}, ${loc.abbr}`
+            ];
+            for (const option of combos) {
+                if (option.toLowerCase().search(search.toLowerCase()) > -1) {
+                    return loc;
+                }
             }
-          }
         }).slice(0, 5);
 
         // removes odd bug showing last option after clicking
         return searchLocations[0].city + ', ' + searchLocations[0].abbr === search || !search ? [] : searchLocations;
-      }
+    }
 
-      updateSearchLocations(event: any) {
+    updateSearchLocations(event: any) {
         const searchLocations = this.filterLocations(event.detail.value);
         this.searchLocations = searchLocations;
-      }
+    }
 
     setLocation(loc: any) {
         this.locationSearch = `${loc.city}, ${loc.abbr}`;
@@ -100,7 +108,7 @@ export class WalletPage implements OnInit {
         this.searchLocations = [];
         this.loading = true;
         this.updateLocation = false;
-        this.loadWallets();
+        this.makeWallets();
     }
 
     async editWalletModal(wallet: any, i: number, event: any) {
@@ -117,19 +125,21 @@ export class WalletPage implements OnInit {
         modal.onDidDismiss().then((resp: any) => {
             this.updatingWallet = i;
             this.renderer.addClass(event.target, 'disabled');
-            this.editWallets(wallet, resp.data).then(async () => {
-                this.message = null;
-                this.renderer.removeClass(event.target, 'disabled');
-                this.updatingWallet = null;
-                const toast = await this.toastCtrl.create({
-                    message: 'Update complete',
-                    duration: 1500,
-                    color: 'dark'
-                });
-                await toast.present();
-                toast.onDidDismiss().then(() => {
-                    this.loadWallets();
-                });
+            this.editWallets(wallet, resp.data).then(async (updated: boolean) => {
+                if (updated) {
+                    this.message = null;
+                    this.renderer.removeClass(event.target, 'disabled');
+                    this.updatingWallet = null;
+                    const toast = await this.toastCtrl.create({
+                        message: 'Update complete',
+                        duration: 1500,
+                        color: 'highlight'
+                    });
+                    await toast.present();
+                    toast.onDidDismiss().then(() => {
+                        this.makeWallets();
+                    });
+                }
             });
         });
     }
@@ -138,12 +148,10 @@ export class WalletPage implements OnInit {
         return new Promise(resolve => {
             this.message = 'Starting update...';
             this.updatePrivate(wallet, data.private).then((resp: boolean) => {
-                if (resp) {
-                    this.updateWallets(data.changes.mod);
-                    // this.addWallets(wallet, data.changes.new);
-                    // this.deleteWallets(data.changes.delete).then(() => {
-                    //     resolve(true);
-                    // });
+                if (resp
+                    && this.updateWallets(data.changes.mod)
+                    && this.addWallets(wallet, data.changes.new)
+                    && this.deleteWallets(data.changes.delete)) {
                     resolve(true);
                 } else {
                     resolve(false);
@@ -160,8 +168,8 @@ export class WalletPage implements OnInit {
             units
         };
         return new Promise(resolve =>
-            this.http.postData('wallet', {body: JSON.stringify(body)}).subscribe(async (resp: any) => {
-                if (resp.status !== 1) {
+            this.http.postData('wallet', { body: JSON.stringify(body) }).subscribe(async (resp: any) => {
+                if (resp.status === 0) {
                     console.log(resp);
                     const toast = await this.toastCtrl.create({
                         message: 'Unable to update private wallet',
@@ -180,86 +188,123 @@ export class WalletPage implements OnInit {
         );
     }
 
-    updateWallets(modData: any) {
-        this.message = 'Updating current sale entries...';
-        modData.map((data: any, i: number) => {
-            const body = {
-                action: 'updateWallet',
-                valu_id: data.valu_id,
-                units: data.units
-            };
-            this.http.postData('wallet', {body: JSON.stringify(body)}).subscribe(async (resp: any) => {
-                if (resp.status === 0) {
-                    console.log(resp);
-                    if (i + 1 === modData.length) {
-                        const toast = await this.toastCtrl.create({
-                            message: 'Could not update some entries',
-                            duration: 2000,
-                            color: 'dark'
-                        });
-                        await toast.present();
+    async updateWallets(modData: any) {
+        this.message = 'Updating entries...';
+        const promises = modData.map((data: any, i: number) => {
+            return new Promise(resolve => {
+                const body = {
+                    action: 'updateWallet',
+                    valu_id: data.valu_id,
+                    units: data.units
+                };
+                this.http.postData('wallet', { body: JSON.stringify(body) }).subscribe(async (resp: any) => {
+                    if (resp.status === 0) {
+                        console.log(resp);
+                        if (i + 1 === modData.length) {
+                            const toast = await this.toastCtrl.create({
+                                message: 'Could not update some entries',
+                                duration: 2000,
+                                color: 'dark'
+                            });
+                            await toast.present();
+                            resolve(false);
+                        }
                     }
-                }
-            }, err => {
-                console.log(err);
-                this.errorToast();
+                }, err => {
+                    console.log(err);
+                    this.errorToast();
+                    resolve(false);
+                });
             });
+        });
+        return await Promise.all(promises).then(() => {
+            return true;
+        }).catch(err => {
+            console.log(err);
+            return false;
         });
     }
 
-    addWallets(wallet: any, addData: any) {
+    async addWallets(wallet: any, addData: any) {
         this.message = 'Adding new entries...';
-        addData.map((data: any, i: number) => {
-            const body = {
-                user_id: this.vars.merchantData.merchant_id,
-                vendor_id: wallet.vendor_id,
-                amt_to_be_remove: data.units,
-                regular_price: data._regular_price,
-                sale_price: data._sale_price
-            };
-            this.http.createWallet(body).subscribe(async (resp: any) => {
-                if (!resp.success) {
-                    console.log(resp.message, {data: body});
-                    if (i + 1 === addData.length) {
-                        const toast = await this.toastCtrl.create({
-                            message: 'Unable to create some entries',
-                            duration: 2000,
-                            color: 'dark'
-                        });
-                        await toast.present();
+        const promises = addData.map((data: any, i: number) => {
+            let body = {};
+            let subscription: any;
+            if (wallet.vendor_id !== this.vars.merchantData.merchant_id) {
+                body = {
+                    user_id: this.vars.merchantData.merchant_id,
+                    vendor_id: wallet.vendor_id,
+                    amt_to_be_remove: data.units,
+                    regular_price: data._regular_price,
+                    sale_price: data._sale_price
+                };
+
+                subscription = this.http.createWallet(body);
+            } else {
+                body = {
+                    self_user_id: wallet.vendor_id,
+                    self_value_price: data.units,
+                    self_regular_price: data._regular_price,
+                    self_sale_price: data._sale_price
+                };
+                subscription = this.http.createMyPublic(body);
+            }
+            return new Promise(resolve =>
+                subscription.subscribe(async (resp: any) => {
+                    if (resp.result !== true) {
+                        if (i + 1 === addData.length) {
+                            const toast = await this.toastCtrl.create({
+                                message: 'Unable to create some entries',
+                                duration: 2000,
+                                color: 'dark'
+                            });
+                            await toast.present();
+                            resolve(false);
+                        }
                     }
-                }
-            }, err => {
-                console.log(err);
-                this.errorToast();
-            });
+                }, (err: any) => {
+                    console.log(err);
+                    this.errorToast();
+                    resolve(false);
+                }));
+        });
+        return await Promise.all(promises).then(() => {
+            return true;
+        }).catch(err => {
+            console.log(err);
+            return false;
         });
     }
 
-    deleteWallets(delData: any) {
+    async deleteWallets(delData: any) {
         this.message = 'Deleting old entries...';
-        return new Promise(resolve => {
-            const promises = delData.map((data: any, i: number) => {
+        const promises = delData.map((data: any, i: number) => {
+            return new Promise(resolve => {
                 this.http.deleteWallet(data.valu_id).subscribe(async (resp: any) => {
-                    if (!resp.success) {
-                        console.log(resp.message, {id: data.wallet_id});
+                    if (resp.result !== true) {
+                        console.log(resp.message, { id: data.wallet_id });
                         if (i + 1 === delData.length) {
                             const toast = await this.toastCtrl.create({
                                 message: 'Unable to delete some entries',
                                 duration: 2000,
                                 color: 'dark'
                             });
-                            return await toast.present();
+                            await toast.present();
+                            resolve(false);
                         }
                     }
                 }, err => {
                     console.log(err);
                     this.errorToast();
+                    resolve(false);
                 });
             });
-            Promise.all(promises).then(() => {
-                resolve();
-            });
+        });
+        return await Promise.all(promises).then(() => {
+            return true;
+        }).catch(err => {
+            console.log(err);
+            return false;
         });
     }
 
