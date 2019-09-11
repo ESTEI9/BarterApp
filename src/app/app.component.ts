@@ -37,7 +37,7 @@ export class AppComponent {
     });
   }
 
-  logOut() {
-    this.navCtrl.navigateRoot(`login/${Math.random().toFixed(5)}`);
+  navTo(route: string) {
+    this.navCtrl.navigateRoot(`${route}/${Math.random().toFixed(5)}`);
   }
 }
