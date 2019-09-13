@@ -1,0 +1,47 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Profile</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-list lines="none">
+    <ion-item>
+      <ion-label position="stacked" class="label">Trade Alias (DBA)<sup>*</sup></ion-label>
+      <ion-input [(ngModel)]="dba"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked" class="label">Industry</ion-label>
+      <ion-list lines="full">
+        <ion-item *ngFor="let industry of vars.industries" (click)="updateIndustry(industry.industry_id)">
+          <ion-checkbox no-margin [checked]="industryId === industry.industry_id" slot="start"></ion-checkbox>
+          <ion-label>{{industry.name}}</ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-item>
+    <ion-item>
+        <ion-label position="stacked" class="label">Primary Location<sup>*</sup></ion-label>
+        <ion-list lines="locations.length <= 1 ? 'none' : 'full'">
+          <ion-item *ngFor="let loc of locations" (click)="updateLocation(loc)">
+            <ion-checkbox
+              [value]="loc.store_id"
+              [checked]="location.store_id === loc.store_id"
+              [disabled]="locations.length <= 1"
+              slot="start"
+              no-margin>
+            </ion-checkbox>
+            <ion-label>{{loc.address}} - {{loc.city}}, {{loc.abbr}}</ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked" class="label">Website</ion-label>
+        <ion-input [(ngModel)]="website"></ion-input>
+      </ion-item>
+  </ion-list>
+  <div text-center style="width:100%" margin-top margin-bottom>
+    <ion-button size="default" shape="round" color="secondary" (click)="updateData()" [disabled]="updating">
+      <span *ngIf="!updating">Update</span>
+      <ion-spinner color="highlight" *ngIf="updating"></ion-spinner>
+    </ion-button>
+  </div>
+</ion-content>

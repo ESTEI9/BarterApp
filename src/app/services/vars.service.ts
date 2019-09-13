@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http'
 import { Storage } from '@ionic/storage';
+import { Router, NavigationStart, Event } from '@angular/router';
+import { HttpService } from './http.service';
 
 @Injectable({
     providedIn: 'root'
@@ -14,22 +16,31 @@ export class VarsService {
     public loading = true;
     public onInitTrigger: number;
     public locations: any;
+    public currentRoute: string;
+    public industries: Array<object>;
+
     private dev = true;
 
     constructor(
         public storage: Storage,
-        public httpClient: HttpClient
+        private httpClient: HttpClient,
+        private http: HttpService,
+        public router: Router
     ) {
-        this.getLocations();
         if (this.dev) {
             this.login = 'vendor1@test.com'; // dev
         } else {
             this.storage.get('login').then(
-                data  => {
+                data => {
                     this.login = data ? data : null;
                 }
             );
         }
+        this.router.events.subscribe((event: Event) => {
+            if (event instanceof NavigationStart) {
+                this.currentRoute = event.url;
+            }
+        });
     }
 
     getLocations() {
@@ -57,4 +68,22 @@ export class VarsService {
     //         console.log(err);
     //     });
     // }
+
+    getIndustries() {
+        const body = {
+            action: 'getIndustries'
+        };
+        return new Promise(resolve =>
+            this.http.getData('details', body).subscribe((resp: any) => {
+                if (resp.status === 1) {
+                    this.industries = resp.industries;
+                } else {
+                    console.log(resp);
+                }
+                resolve();
+            }, err => {
+                console.log(err);
+            })
+        );
+    }
 }
