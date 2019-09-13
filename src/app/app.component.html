@@ -1,17 +1,21 @@
 <ion-app>
     <ion-tabs>
-        <ion-tab-bar slot="bottom" *ngIf="(currentRoute && !currentRoute.includes('login')) && currentRoute !== '/'">
+        <ion-tab-bar slot="bottom" *ngIf="(vars.currentRoute && !vars.currentRoute.includes('login')) && vars.currentRoute !== '/'">
             <ion-tab-button (click)="navTo('barter')">
-                <ion-icon [color]="currentRoute.includes('/barter') ? 'secondary' : null" name="swap"></ion-icon>
+                <ion-icon [color]="vars.currentRoute.includes('/barter') ? 'secondary' : null" name="swap"></ion-icon>
                 <ion-label>Barter</ion-label>
             </ion-tab-button>
             <ion-tab-button tab="tpay">
-                <ion-icon [color]="currentRoute === '/tpay' ? 'secondary' : null" name="md-business"></ion-icon>
+                <ion-icon [color]="vars.currentRoute === '/tpay' ? 'secondary' : null" name="md-business"></ion-icon>
                 <ion-label>TPay</ion-label>
             </ion-tab-button>
             <ion-tab-button (click)="navTo('wallet')">
-                <ion-icon [color]="currentRoute.includes('/wallet') ? 'secondary' : null" name="md-wallet"></ion-icon>
+                <ion-icon [color]="vars.currentRoute.includes('/wallet') ? 'secondary' : null" name="md-wallet"></ion-icon>
                 <ion-label>Wallet</ion-label>
+            </ion-tab-button>
+            <ion-tab-button tab="profile">
+                <ion-icon [color]="vars.currentRoute === '/profile' ? 'secondary' : null" name="md-contact"></ion-icon>
+                <ion-label>Profile</ion-label>
             </ion-tab-button>
             <ion-tab-button (click)="navTo('login')" color="medium-light">
                 <ion-icon name="ios-log-out"></ion-icon>
