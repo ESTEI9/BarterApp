@@ -37,3 +37,7 @@ ion-item {
         }
     }
 }
+
+span.required {
+    color: var(--ion-color-danger);
+}

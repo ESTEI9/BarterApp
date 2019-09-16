@@ -6,9 +6,17 @@
 <ion-content>
   <ion-list lines="none">
     <ion-item>
-      <ion-label position="stacked" class="label">Trade Alias (DBA)<sup>*</sup></ion-label>
+      <ion-label position="stacked" class="label">Trade Alias (DBA)<span class="required">*</span></ion-label>
       <ion-input [(ngModel)]="dba"></ion-input>
     </ion-item>
+    <ion-item>
+      <ion-label position="stacked" class="label">Account Phone</ion-label>
+      <ion-input type="tel" [(ngModel)]="accPhone"></ion-input>
+    </ion-item>
+    <ion-item>
+        <ion-label position="stacked" class="label">Website</ion-label>
+        <ion-input [(ngModel)]="website"></ion-input>
+      </ion-item>
     <ion-item>
       <ion-label position="stacked" class="label">Industry</ion-label>
       <ion-list lines="full">
@@ -19,7 +27,7 @@
       </ion-list>
     </ion-item>
     <ion-item>
-        <ion-label position="stacked" class="label">Primary Location<sup>*</sup></ion-label>
+        <ion-label position="stacked" class="label">Primary Location<span class="required">*</span></ion-label>
         <ion-list lines="locations.length <= 1 ? 'none' : 'full'">
           <ion-item *ngFor="let loc of locations" (click)="updateLocation(loc)">
             <ion-checkbox
@@ -32,10 +40,6 @@
             <ion-label>{{loc.address}} - {{loc.city}}, {{loc.abbr}}</ion-label>
           </ion-item>
         </ion-list>
-      </ion-item>
-      <ion-item>
-        <ion-label position="stacked" class="label">Website</ion-label>
-        <ion-input [(ngModel)]="website"></ion-input>
       </ion-item>
   </ion-list>
   <div text-center style="width:100%" margin-top margin-bottom>

@@ -11,14 +11,16 @@ import { cloneDeep } from 'lodash';
 })
 export class ProfilePage implements OnInit {
 
-  dba: string;
-  location: any;
   private locations: any;
   private updating = false;
   updated = false;
   private locationString: string;
+
+  dba: string;
+  location: any;
   private industryId: any;
   private website: string;
+  private accPhone: any;
 
   constructor(
     public vars: VarsService,
@@ -27,7 +29,8 @@ export class ProfilePage implements OnInit {
   ) {
     this.dba = this.vars.merchantData.dba;
     this.industryId = this.vars.merchantData.industry_id;
-    this.website = this.vars.merchantData.website || '';
+    this.website = this.vars.merchantData.website;
+    this.accPhone = this.vars.merchantData.phone;
     this.location = this.vars.locationData ? this.vars.locationData.filter((loc: any) => loc.main === '1')[0] : null;
     this.locationString = `${this.location.city}, ${this.location.abbr}`;
     this.locations = cloneDeep(this.vars.locationData);
@@ -83,7 +86,8 @@ export class ProfilePage implements OnInit {
           storeId: this.location.store_id,
           dba: this.dba,
           industryId: this.industryId,
-          website: this.website
+          website: this.website,
+          accPhone: this.accPhone
         })
       };
       this.http.postData('profile', body).subscribe(async (resp: any) => {
