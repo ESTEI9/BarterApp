@@ -121,7 +121,8 @@ export class EditWalletComponent implements OnInit {
       const toast = await this.toastCtrl.create({
         message: 'Fill all fields',
         duration: 1500,
-        color: 'dark'
+        color: 'dark',
+        position: 'top'
       });
       await toast.present();
     }
@@ -149,7 +150,8 @@ export class EditWalletComponent implements OnInit {
     const toast = await this.toastCtrl.create({
       message: 'There was an error',
       duration: 2000,
-      color: 'dark'
+      color: 'dark',
+      position: 'top'
     });
     return await toast.present();
   }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { VarsService } from 'src/app/services/vars.service';
 import { HttpService } from 'src/app/services/http.service';
-import { ToastController } from '@ionic/angular';
+import { ToastController, AlertController } from '@ionic/angular';
 import { cloneDeep } from 'lodash';
 
 @Component({
@@ -15,20 +15,23 @@ export class ProfilePage implements OnInit {
   private updating = false;
   updated = false;
   private locationString: string;
+  private changeLocation = false;
+  private changeIndustry = false;
 
   dba: string;
   location: any;
-  private industryId: any;
+  private industry: any;
   private website: string;
   private accPhone: any;
 
   constructor(
     public vars: VarsService,
     private http: HttpService,
-    private toastCtrl: ToastController
+    private toastCtrl: ToastController,
+    private alertCtrl: AlertController
   ) {
     this.dba = this.vars.merchantData.dba;
-    this.industryId = this.vars.merchantData.industry_id;
+    this.industry = {name: this.vars.merchantData.industry, industry_id: this.vars.merchantData.industry_id};
     this.website = this.vars.merchantData.website;
     this.accPhone = this.vars.merchantData.phone;
     this.location = this.vars.locationData ? this.vars.locationData.filter((loc: any) => loc.main === '1')[0] : null;
@@ -37,11 +40,23 @@ export class ProfilePage implements OnInit {
   }
 
   ngOnInit() {
-    if (this.dba && this.location.length) {
+    if (this.dba && this.location) {
       this.updated = true;
     } else {
-      this.message('Please fill all fields before proceeding');
+      this.updateAlert();
     }
+  }
+
+  async updateAlert() {
+    const alert = await this.alertCtrl.create({
+      header: 'Update Your Profile',
+      message: 'Some items are required (*) and must be updated before you can access the rest of the app.',
+      buttons: [{
+        text: 'OK'
+      }]
+    });
+
+    await alert.present();
   }
 
   searchLocations(search: string) {
@@ -65,12 +80,16 @@ export class ProfilePage implements OnInit {
     this.locations = searchLocations[0].city + ', ' + searchLocations[0].abbr === search || !search ? [] : searchLocations;
   }
 
+  searchIndustries(search: string) {
+    this.vars.industries.filter((industry: any) => industry.name.toLowerCase().includes(search.toLowerCase()));
+  }
+
   updateLocation(location: any) {
     this.location = location;
   }
 
   updateIndustry(id: any) {
-    this.industryId = id;
+    this.industry = this.vars.industries.find((industry: any) => industry.industry_id === id);
   }
 
   updateData() {
@@ -85,7 +104,7 @@ export class ProfilePage implements OnInit {
           userId: this.vars.merchantData.merchant_id,
           storeId: this.location.store_id,
           dba: this.dba,
-          industryId: this.industryId,
+          industryId: this.industry.industry_id,
           website: this.website,
           accPhone: this.accPhone
         })
@@ -96,7 +115,8 @@ export class ProfilePage implements OnInit {
           const toast = await this.toastCtrl.create({
             message: 'Profile updated',
             duration: 1500,
-            color: 'highlight'
+            color: 'highlight',
+            position: 'top'
           });
           await toast.present();
         } else {

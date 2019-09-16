@@ -218,7 +218,8 @@ export class DetailsComponent implements OnInit, AfterViewInit {
         const toast = await this.toastCtrl.create({
             message,
             duration,
-            color
+            color,
+            position: 'top'
         });
         if (prevAction) {
             toast.buttons = [{

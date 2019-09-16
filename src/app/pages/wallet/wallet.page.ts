@@ -133,7 +133,8 @@ export class WalletPage implements OnInit {
                     const toast = await this.toastCtrl.create({
                         message: 'Update complete',
                         duration: 1500,
-                        color: 'highlight'
+                        color: 'highlight',
+                        position: 'top'
                     });
                     await toast.present();
                     toast.onDidDismiss().then(() => {
@@ -174,7 +175,8 @@ export class WalletPage implements OnInit {
                     const toast = await this.toastCtrl.create({
                         message: 'Unable to update private wallet',
                         duration: 2000,
-                        color: 'dark'
+                        color: 'dark',
+                        position: 'top'
                     });
                     await toast.present();
                     resolve(false);
@@ -312,7 +314,8 @@ export class WalletPage implements OnInit {
         const toast = await this.toastCtrl.create({
             message: 'There was an error',
             duration: 2000,
-            color: 'dark'
+            color: 'dark',
+            position: 'top'
         });
         await toast.present();
     }
