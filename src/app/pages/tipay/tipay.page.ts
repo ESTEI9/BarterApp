@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { IonSlides } from '@ionic/angular';
 
 @Component({
@@ -6,16 +6,23 @@ import { IonSlides } from '@ionic/angular';
   templateUrl: './tipay.page.html',
   styleUrls: ['./tipay.page.scss'],
 })
-export class TipayPage implements OnInit {
+export class TipayPage implements OnInit, AfterViewInit {
 
   @ViewChild('tpaySlider') slider: IonSlides;
 
   private segment = 'new';
   private type: string;
+  sliderOptions = {
+    lockSwipes: true
+  };
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
+  ngOnInit() { }
+
+  ngAfterViewInit() {
+    this.slider.options = this.sliderOptions;
+    this.slider.update();
   }
 
   switchSegment(event: any) {

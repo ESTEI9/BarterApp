@@ -36,7 +36,7 @@ export class HistoryComponent implements OnInit {
       action: 'getHistory',
       merchantId: this.vars.merchantData.merchant_id
     };
-    this.http.getData('history', body).subscribe(async (resp: any) => {
+    this.http.getData('tpay', body).subscribe(async (resp: any) => {
       if (resp.status === 1) {
         this.history = resp.data;
         this.historyList = resp.data.received;
@@ -81,7 +81,7 @@ export class HistoryComponent implements OnInit {
       action: 'getDetails',
       tradeId: id
     };
-    this.http.getData('history', body).subscribe(async (resp: any) => {
+    this.http.getData('tpay', body).subscribe(async (resp: any) => {
       if (resp.status === 1) {
         const extras: NavigationExtras = {
           state: {

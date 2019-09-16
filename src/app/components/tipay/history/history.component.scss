@@ -25,3 +25,13 @@ ion-toolbar {
         }
     }
 }
+
+.splitBadge {
+    padding: 2px;
+    margin-left: 4px;
+
+    img {
+        width: 12px;
+        transform: rotate(-90deg);
+    }
+}

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController } from '@ionic/angular';
+import { NavController, ToastController } from '@ionic/angular';
 import { VarsService } from 'src/app/services/vars.service';
 import { HttpService } from 'src/app/services/http.service';
+import { Storage } from '@ionic/storage';
 
 @Component({
     selector: 'app-login',
@@ -21,15 +22,19 @@ export class LoginComponent implements OnInit {
     constructor(
         private vars: VarsService,
         private http: HttpService,
-        private navCtrl: NavController
+        private navCtrl: NavController,
+        private storage: Storage
     ) { }
 
     ngOnInit() {
-        this.account.email = this.vars.login;
+        this.storage.get('email').then((email: string) => {
+            this.account.email = email ? email : null;
+        });
         this.account.password = null;
     }
 
     doLogin() {
+        this.message = null;
         this.isLoading = true;
         const password = btoa(this.account.password);
         const body = {
@@ -37,17 +42,22 @@ export class LoginComponent implements OnInit {
             password,
             action: 'login'
         };
-        const payload = {body: JSON.stringify(body)};
+        const payload = { body: JSON.stringify(body) };
         this.http.postData('login', payload).subscribe(async (resp: any) => {
             if (resp.status === 1) {
-                if (this.rememberMe && this.account.email !== this.vars.login) {
-                    this.vars.storage.set('login', this.account.email);
-                }
                 this.vars.merchantData = resp.data.meta;
-                this.vars.locationData = resp.data.locations;
-                this.vars.defaultLocation = resp.data.locations.filter((loc: any) => loc.main)[0];
-                this.message = null;
-                this.navCtrl.navigateForward(`/barter/${Math.random().toFixed(5)}`);
+                if (this.rememberMe) { this.storage.set('email', this.account.email); }
+                this.vars.getLocations();
+                this.vars.getIndustries().then(() => {
+                    this.vars.locationData = resp.data.locations;
+                    this.vars.defaultLocation = resp.data.locations.filter((loc: any) => loc.main)[0];
+                    if (!resp.data.meta.dba || !resp.data.locations.length) {
+                        this.navCtrl.navigateForward('/profile');
+                    }
+                    if (resp.data.meta.dba && resp.data.locations.length) {
+                        this.navCtrl.navigateForward(`/barter/${Math.random().toFixed(5)}`);
+                    }
+                });
             } else {
                 this.account.password = '';
                 this.message = 'Username & password mismatch.';

@@ -1,0 +1,52 @@
+ion-input {
+    border: 1px solid var(--ion-color-light-shade);
+    --padding-start: 8px !important;
+    --padding-end: 8px;
+    --padding-top: 6px;
+    --padding-bottom: 6px;
+    border-radius: 4px;
+    background: var(--ion-color-light);
+    margin: 8px 0;
+}
+
+ion-label.label {
+    font-weight: bold;
+    margin-bottom: 0.5em;
+    font-size: 1.1em;
+}
+
+app-searchable-dropdown {
+    width: 100%;
+}
+
+ion-item {
+    & > div > ion-list {
+        max-height: 275px;
+        overflow: auto;
+        width:100%;
+
+        ion-item {
+            font-size:0.9em;
+
+            &:nth-child(even) {
+                --background: var(--ion-color-light);
+            }
+
+            ion-checkbox {
+                margin-right: 16px;
+            }
+        }
+    }
+}
+
+span.required {
+    color: var(--ion-color-danger);
+    margin-left: 4px;
+}
+
+.listToggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}

@@ -3,7 +3,8 @@ import { Component } from '@angular/core';
 import { Platform, MenuController, NavController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
-import { Router, NavigationStart, Event } from '@angular/router';
+import { VarsService } from './services/vars.service';
+import { Router, Event, NavigationStart } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -19,13 +20,14 @@ export class AppComponent {
     private statusBar: StatusBar,
     private menuCtrl: MenuController,
     private router: Router,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private vars: VarsService
   ) {
     this.initializeApp();
     this.menuCtrl.enable(true, 'primary');
     this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationStart) {
-        this.currentRoute = event.url;
+        this.vars.currentRoute = event.url;
       }
     });
   }
@@ -37,7 +39,7 @@ export class AppComponent {
     });
   }
 
-  logOut() {
-    this.navCtrl.navigateRoot(`login/${Math.random().toFixed(5)}`);
+  navTo(route: string) {
+    this.navCtrl.navigateRoot(`${route}/${Math.random().toFixed(5)}`);
   }
 }

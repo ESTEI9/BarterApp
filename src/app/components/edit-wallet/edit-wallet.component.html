@@ -2,7 +2,7 @@
   <ion-toolbar color="primary">
     <ion-title>Edit Wallet</ion-title>
     <ion-buttons slot="start">
-      <ion-button (click)="modalCtrl.dismiss()">
+      <ion-button (click)="updateWallet()">
         <ion-icon name="md-arrow-back"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -12,18 +12,12 @@
   <ion-spinner *ngIf="loading" color="highlight" class="comp-spinner"></ion-spinner>
   <ion-list *ngIf="!loading">
     <ion-item lines="none" class="privateCount">
-        <ion-label><strong>Private Bank</strong></ion-label>
-        <ion-input 
-        *ngIf="vendorId === vars.merchantData.merchant_id"
-        slot="end"
-        [(ngModel)]="privateCount"
-        min="0"
-        (ionChange)="updateTotalCount()"
-        text-right
-        ></ion-input>
-        <ion-text *ngIf="vendorId !== vars.merchantData.merchant_id" slot="end"
-          [color]="privateCount < 0 ? 'danger' : 'dark'" text-right>{{privateCount}}
-        </ion-text>
+      <ion-label><strong>Private Bank</strong></ion-label>
+      <ion-input *ngIf="vendorId === vars.merchantData.merchant_id" slot="end" [(ngModel)]="privateCount" min="0"
+        (ionChange)="updateTotalCount()" text-right></ion-input>
+      <ion-text *ngIf="vendorId !== vars.merchantData.merchant_id" slot="end"
+        [color]="privateCount < 0 ? 'danger' : 'dark'" text-right>{{privateCount}}
+      </ion-text>
     </ion-item>
   </ion-list>
   <ion-card *ngIf="!loading" class="packages">
@@ -54,40 +48,34 @@
           <ion-grid>
             <ion-row>
               <ion-col>
-                <ion-input [value]="item.units" (ionChange)="updatePublicCount($event.detail.value, i)" *ngIf="editable"></ion-input>
+                <ion-input [value]="item.units" (ionChange)="updatePublicCount($event.detail.value, i)"
+                  *ngIf="editable"></ion-input>
                 <ion-text *ngIf="!editable">{{item.units}}</ion-text>
               </ion-col>
               <ion-col>
-                <ion-input
-                  [value]="item._regular_price"
-                  (ionChange)="updatePrice($event.detail.value, i)"
+                <ion-input [value]="item._regular_price" (ionChange)="updatePrice($event.detail.value, i)"
                   *ngIf="editable">
                 </ion-input>
                 <ion-text *ngIf="!editable">{{item._regular_price | currency}}</ion-text>
               </ion-col>
               <ion-col>
-                <ion-input
-                  [value]="item._sale_price"
-                  (ionChange)="updatePrice($event.detail.value, i, 'sale')"
+                <ion-input [value]="item._sale_price" (ionChange)="updatePrice($event.detail.value, i, 'sale')"
                   *ngIf="editable">
                 </ion-input>
                 <ion-text *ngIf="!editable">{{item._sale_price | currency}}</ion-text>
               </ion-col>
               <ion-col size="1" class="deleteIcon" *ngIf="editable">
-                <ion-icon name="close" color="danger" (click)="deleteItem(i)"></ion-icon>
+                <ion-icon name="remove-circle" color="danger" (click)="deleteItem(i)"></ion-icon>
               </ion-col>
             </ion-row>
           </ion-grid>
         </ion-item>
       </ion-list>
-    </ion-card-content>
-  </ion-card>
-  <ion-card *ngIf="!loading" class="createPackage">
-    <ion-card-header color="primary">
-      <ion-card-title><ion-label>Create Package</ion-label></ion-card-title>
-    </ion-card-header>
-    <ion-card-content no-padding>
-      <ion-list class="new" *ngIf="!loading" no-padding>
+      <ion-list *ngIf="createPackage" class="new" class="createPackage">
+        <ion-item lines="none">
+          <ion-label><strong>Add a Deal</strong></ion-label>
+          <ion-icon name="close" slot="end" color="danger" (click)="createPackage = false"></ion-icon>
+        </ion-item>
         <ion-item>
           <ion-label>Amount</ion-label>
           <ion-text text-right slot="end">
@@ -106,17 +94,23 @@
             <ion-input [(ngModel)]="newSalePrice"></ion-input>
           </ion-text>
         </ion-item>
+        <ion-item lines="none">
+          <div text-right style="width:100%">
+            <ion-button (click)="createPublicUnits()" color="secondary" size="default">
+              <ion-icon name="add" slot="start"></ion-icon>Add
+            </ion-button>
+          </div>
+        </ion-item>
       </ion-list>
-      <ion-button expand="full" no-margin (click)="createPublicUnits()" color="highlight">
-        <ion-icon name="add" slot="start"></ion-icon>Create
-      </ion-button>
+      <ion-list lines="none">
+      <ion-item *ngIf="!createPackage">
+        <div text-right style="width: 100%">
+          <ion-button color="secondary" (click)="createPackage = true" class="createButton" size="default">
+            <ion-icon name="add" slot="start"></ion-icon>Add
+          </ion-button>
+        </div>
+      </ion-item>
+      </ion-list>
     </ion-card-content>
   </ion-card>
 </ion-content>
-<ion-footer *ngIf="!loading">
-  <ion-toolbar color="secondary">
-    <ion-buttons class="ion-justify-content-center">
-      <ion-button size="large" expand="full" (click)="updateWallet()">Update</ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-footer>

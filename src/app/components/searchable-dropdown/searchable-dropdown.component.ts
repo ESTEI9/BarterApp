@@ -10,7 +10,7 @@ export class SearchableDropdownComponent implements OnInit, AfterViewInit {
 
   @Input() options: any;
   @Input() debounce = 300;
-  @Input() color = 'light-alt';
+  @Input() color: string = null;
   @Input() placeholder: string;
   @Input() disabled = false;
   @Input() loading = false;
