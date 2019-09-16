@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { KeyValuePipe } from '@angular/common';
 
 @Injectable({
     providedIn: 'root'
@@ -13,8 +12,7 @@ export class HttpService {
 
 
     constructor(
-        private http: HttpClient,
-        private keyValue: KeyValuePipe
+        private http: HttpClient
     ) { }
 
     getData(route: string, body: object) {

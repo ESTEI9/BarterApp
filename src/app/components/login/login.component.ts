@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NavController, ToastController } from '@ionic/angular';
 import { VarsService } from 'src/app/services/vars.service';
 import { HttpService } from 'src/app/services/http.service';
+import { Storage } from '@ionic/storage';
 
 @Component({
     selector: 'app-login',
@@ -21,11 +22,14 @@ export class LoginComponent implements OnInit {
     constructor(
         private vars: VarsService,
         private http: HttpService,
-        private navCtrl: NavController
+        private navCtrl: NavController,
+        private storage: Storage
     ) { }
 
     ngOnInit() {
-        this.account.email = this.vars.login;
+        this.storage.get('email').then((email: string) => {
+            this.account.email = email ? email : null;
+        });
         this.account.password = null;
     }
 
@@ -42,9 +46,7 @@ export class LoginComponent implements OnInit {
         this.http.postData('login', payload).subscribe(async (resp: any) => {
             if (resp.status === 1) {
                 this.vars.merchantData = resp.data.meta;
-                if (this.rememberMe && this.account.email !== this.vars.login) {
-                    this.vars.storage.set('login', this.account.email);
-                }
+                if (this.rememberMe) { this.storage.set('email', this.account.email); }
                 this.vars.getLocations();
                 this.vars.getIndustries().then(() => {
                     this.vars.locationData = resp.data.locations;
