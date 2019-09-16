@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="com.tryuniti.triuniti" version="0.93" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>Triuniti DEMO</name>
+    <name>Triuniti</name>
     <description>The trading tool for Uniti merchants</description>
     <author email="info@tryuniti.com" href="http://tryuniti.com">UniDevs</author>
     <content src="index.html" />
