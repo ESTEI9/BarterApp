@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http'
-import { Storage } from '@ionic/storage';
 import { Router, NavigationStart, Event } from '@angular/router';
 import { HttpService } from './http.service';
 
@@ -9,7 +8,6 @@ import { HttpService } from './http.service';
 })
 export class VarsService {
 
-    public login: string;
     public merchantData: any;
     public locationData: any;
     public defaultLocation: any;
@@ -19,23 +17,11 @@ export class VarsService {
     public currentRoute: string;
     public industries: Array<object>;
 
-    private dev = true;
-
     constructor(
-        public storage: Storage,
         private httpClient: HttpClient,
         private http: HttpService,
         public router: Router
     ) {
-        if (this.dev) {
-            this.login = 'vendor1@test.com'; // dev
-        } else {
-            this.storage.get('login').then(
-                data => {
-                    this.login = data ? data : null;
-                }
-            );
-        }
         this.router.events.subscribe((event: Event) => {
             if (event instanceof NavigationStart) {
                 this.currentRoute = event.url;
