@@ -19,7 +19,7 @@ export class VarsService {
     public currentRoute: string;
     public industries: Array<object>;
 
-    private dev = true;
+    private dev = false;
 
     constructor(
         public storage: Storage,
@@ -28,6 +28,7 @@ export class VarsService {
         public router: Router
     ) {
         if (this.dev) {
+            console.log('test');
             this.login = 'vendor1@test.com'; // dev
         } else {
             this.storage.get('login').then(
