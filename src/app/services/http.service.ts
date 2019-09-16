@@ -6,7 +6,7 @@ import { KeyValuePipe } from '@angular/common';
     providedIn: 'root'
 })
 export class HttpService {
-    private base = 'http://tryuniti.com/unitimarket';
+    private base = 'https://tryuniti.com/unitimarket';
 
     // private url = 'https://www.cometothex.com/api/barter/demo/'; // sandbox
     private api = `${this.base}/barter/`; // live
@@ -41,7 +41,7 @@ export class HttpService {
 
     createWallet(data: any) {
         const params = new HttpParams({fromObject: data});
-        return this.http.get(`${this.base}/wp-json/wallet-update/v1/sell/1`,
+        return this.http.get(`${this.base}/wp-json/wallet-update/v1/sell/`,
             {headers: {'Content-Type': 'application/x-www-form-urlencoded'}, params}
         );
     }
