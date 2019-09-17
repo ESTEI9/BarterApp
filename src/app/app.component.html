@@ -13,8 +13,8 @@
                 <ion-icon [color]="vars.currentRoute.includes('/wallet') ? 'secondary' : null" name="md-wallet"></ion-icon>
                 <ion-label>Wallet</ion-label>
             </ion-tab-button>
-            <ion-tab-button tab="profile">
-                <ion-icon [color]="vars.currentRoute === '/profile' ? 'secondary' : null" name="md-contact"></ion-icon>
+            <ion-tab-button (click)="navTo('profile')">
+                <ion-icon [color]="vars.currentRoute.includes('/profile') ? 'secondary' : null" name="md-contact"></ion-icon>
                 <ion-label>Profile</ion-label>
             </ion-tab-button>
             <ion-tab-button (click)="navTo('login')" color="medium-light">
