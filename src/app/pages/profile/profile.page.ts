@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { VarsService } from 'src/app/services/vars.service';
 import { HttpService } from 'src/app/services/http.service';
-import { ToastController, AlertController } from '@ionic/angular';
+import { ToastController, AlertController, NavController } from '@ionic/angular';
 import { cloneDeep } from 'lodash';
 
 @Component({
@@ -20,23 +20,7 @@ export class ProfilePage implements OnInit {
   private addLocation = false;
 
   private searchLocations = [];
-  private newLocation: {
-    city: string,
-    state: string,
-    address: string,
-    zipcode: number,
-    phone: string,
-    main: number
-  } = {
-    city: null,
-    state: null,
-    address: null,
-    zipcode: null,
-    phone: null,
-    main: 1
-  };
 
-  private deleteLocations = [];
   dba: string;
   location: any;
   private industry: any;
@@ -47,7 +31,8 @@ export class ProfilePage implements OnInit {
     public vars: VarsService,
     private http: HttpService,
     private toastCtrl: ToastController,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private navCtrl: NavController
   ) {
     this.dba = this.vars.merchantData.dba;
     this.industry = { name: this.vars.merchantData.industry, industry_id: this.vars.merchantData.industry_id };
@@ -103,75 +88,12 @@ export class ProfilePage implements OnInit {
     this.vars.industries.filter((industry: any) => industry.name.toLowerCase().includes(search.toLowerCase()));
   }
 
-  filterLocations(search: string) {
-    const searchLocations = this.vars.locations.filter((loc: any) => {
-      const combos = [
-        loc.city,
-        `${loc.city}, ${loc.abbr}`,
-        `${loc.city}, ${loc.abbr}`
-      ];
-      for (const option of combos) {
-        if (option.toLowerCase().search(search.toLowerCase()) > -1) {
-          return loc;
-        }
-      }
-    }).slice(0, 5);
-
-    // removes odd bug showing last option after clicking
-    return searchLocations[0].city + ', ' + searchLocations[0].abbr === search || !search ? [] : searchLocations;
-  }
-
-  updateSearchLocations(event: any) {
-    const searchLocations = this.filterLocations(event.detail.value);
-    this.searchLocations = searchLocations;
-  }
-
-  setLocation(loc: any) {
-    this.newLocation.city = loc.city;
-    this.newLocation.state = loc.state;
-    this.searchLocations = [];
-  }
-
-  createLocation() {
-    this.updating = true;
-    const body = {
-      body: JSON.stringify({
-        ...this.newLocation,
-        action: 'createLocation',
-        userId: this.vars.merchantData.merchant_id
-      })
-    };
-    this.http.postData('profile', body).subscribe((resp: any) => {
-      this.updating = false;
-      if (resp.status === 1) {
-        this.message('Created a location');
-        this.locations.push({...this.newLocation, store_id: resp.store_id});
-        this.newLocation = {
-          city: null,
-          state: null,
-          address: null,
-          zipcode: null,
-          phone: null,
-          main: 1
-        };
-      }
-    });
-  }
-
-  updateLocation(location: any) {
+  changePrimary(location: any) {
     this.location = location;
   }
 
   updateIndustry(id: any) {
     this.industry = this.vars.industries.find((industry: any) => industry.industry_id === id);
-  }
-
-  deleteLocation(index: number) {
-    this.deleteLocations.push(this.locations[index].store_id);
-    this.locations = this.locations.filter((loc: any, i: number) => i !== index);
-    if (this.locations.length === 1) {
-      this.location = this.locations[0];
-    }
   }
 
   updateData() {
@@ -187,8 +109,7 @@ export class ProfilePage implements OnInit {
           industryId: this.industry.industry_id,
           website: this.website,
           accPhone: this.accPhone,
-          storeId: this.location.store_id,
-          deleteLocations: this.deleteLocations.join(', ')
+          main: this.location.store_id,
       };
 
       this.http.postData('profile', {body: JSON.stringify(body)}).subscribe(async (resp: any) => {
