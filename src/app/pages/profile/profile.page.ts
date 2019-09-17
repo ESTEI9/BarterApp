@@ -17,7 +17,26 @@ export class ProfilePage implements OnInit {
   private locationString: string;
   private changeLocation = false;
   private changeIndustry = false;
+  private addLocation = false;
 
+  private searchLocations = [];
+  private newLocation: {
+    city: string,
+    state: string,
+    address: string,
+    zipcode: number,
+    phone: string,
+    main: number
+  } = {
+    city: null,
+    state: null,
+    address: null,
+    zipcode: null,
+    phone: null,
+    main: 1
+  };
+
+  private deleteLocations = [];
   dba: string;
   location: any;
   private industry: any;
@@ -31,11 +50,11 @@ export class ProfilePage implements OnInit {
     private alertCtrl: AlertController
   ) {
     this.dba = this.vars.merchantData.dba;
-    this.industry = {name: this.vars.merchantData.industry, industry_id: this.vars.merchantData.industry_id};
+    this.industry = { name: this.vars.merchantData.industry, industry_id: this.vars.merchantData.industry_id };
     this.website = this.vars.merchantData.website;
     this.accPhone = this.vars.merchantData.phone;
     this.location = this.vars.locationData ? this.vars.locationData.filter((loc: any) => loc.main === '1')[0] : null;
-    this.locationString = `${this.location.city}, ${this.location.abbr}`;
+    this.locationString = this.location ? `${this.location.city}, ${this.location.abbr}` : null;
     this.locations = cloneDeep(this.vars.locationData);
   }
 
@@ -59,8 +78,8 @@ export class ProfilePage implements OnInit {
     await alert.present();
   }
 
-  searchLocations(search: string) {
-    const searchLocations = this.vars.locationData.filter((loc: any) => {
+  searchMyLocations(search: string) {
+    const locations = this.vars.locationData.filter((loc: any) => {
       const options = [
         loc.city,
         loc.state,
@@ -71,17 +90,72 @@ export class ProfilePage implements OnInit {
       ];
       for (const option of options) {
         if (option.toLowerCase().includes(search.toLowerCase())) {
-            return loc;
+          return loc;
         }
-    }
+      }
     }).slice(0, 5);
 
     // removes odd bug showing last option after clicking
-    this.locations = searchLocations[0].city + ', ' + searchLocations[0].abbr === search || !search ? [] : searchLocations;
+    this.locations = locations[0].city + ', ' + locations[0].abbr === search || !search ? [] : locations;
   }
 
   searchIndustries(search: string) {
     this.vars.industries.filter((industry: any) => industry.name.toLowerCase().includes(search.toLowerCase()));
+  }
+
+  filterLocations(search: string) {
+    const searchLocations = this.vars.locations.filter((loc: any) => {
+      const combos = [
+        loc.city,
+        `${loc.city}, ${loc.abbr}`,
+        `${loc.city}, ${loc.abbr}`
+      ];
+      for (const option of combos) {
+        if (option.toLowerCase().search(search.toLowerCase()) > -1) {
+          return loc;
+        }
+      }
+    }).slice(0, 5);
+
+    // removes odd bug showing last option after clicking
+    return searchLocations[0].city + ', ' + searchLocations[0].abbr === search || !search ? [] : searchLocations;
+  }
+
+  updateSearchLocations(event: any) {
+    const searchLocations = this.filterLocations(event.detail.value);
+    this.searchLocations = searchLocations;
+  }
+
+  setLocation(loc: any) {
+    this.newLocation.city = loc.city;
+    this.newLocation.state = loc.state;
+    this.searchLocations = [];
+  }
+
+  createLocation() {
+    this.updating = true;
+    const body = {
+      body: JSON.stringify({
+        ...this.newLocation,
+        action: 'createLocation',
+        userId: this.vars.merchantData.merchant_id
+      })
+    };
+    this.http.postData('profile', body).subscribe((resp: any) => {
+      this.updating = false;
+      if (resp.status === 1) {
+        this.message('Created a location');
+        this.locations.push({...this.newLocation, store_id: resp.store_id});
+        this.newLocation = {
+          city: null,
+          state: null,
+          address: null,
+          zipcode: null,
+          phone: null,
+          main: 1
+        };
+      }
+    });
   }
 
   updateLocation(location: any) {
@@ -92,6 +166,14 @@ export class ProfilePage implements OnInit {
     this.industry = this.vars.industries.find((industry: any) => industry.industry_id === id);
   }
 
+  deleteLocation(index: number) {
+    this.deleteLocations.push(this.locations[index].store_id);
+    this.locations = this.locations.filter((loc: any, i: number) => i !== index);
+    if (this.locations.length === 1) {
+      this.location = this.locations[0];
+    }
+  }
+
   updateData() {
     this.updating = true;
     if (!this.location && !this.dba) {
@@ -99,17 +181,17 @@ export class ProfilePage implements OnInit {
       this.updating = false;
     } else {
       const body = {
-        body: JSON.stringify({
           action: 'update',
           userId: this.vars.merchantData.merchant_id,
-          storeId: this.location.store_id,
           dba: this.dba,
           industryId: this.industry.industry_id,
           website: this.website,
-          accPhone: this.accPhone
-        })
+          accPhone: this.accPhone,
+          storeId: this.location.store_id,
+          deleteLocations: this.deleteLocations.join(', ')
       };
-      this.http.postData('profile', body).subscribe(async (resp: any) => {
+
+      this.http.postData('profile', {body: JSON.stringify(body)}).subscribe(async (resp: any) => {
         if (resp.status === 1) {
           this.updated = true;
           const toast = await this.toastCtrl.create({
