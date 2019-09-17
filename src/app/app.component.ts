@@ -24,7 +24,7 @@ export class AppComponent {
     private vars: VarsService
   ) {
     this.initializeApp();
-    this.menuCtrl.enable(true, 'primary');
+    this.menuCtrl.enable(true, 'more');
     this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationStart) {
         this.vars.currentRoute = event.url;
@@ -41,5 +41,13 @@ export class AppComponent {
 
   navTo(route: string) {
     this.navCtrl.navigateRoot(`${route}/${Math.random().toFixed(5)}`);
+  }
+
+  openMore() {
+    this.menuCtrl.open('more');
+  }
+
+  closeMore() {
+    this.menuCtrl.close('more');
   }
 }

@@ -8,7 +8,9 @@ const routes: Routes = [
   { path: 'tpay', loadChildren: './pages/tipay/tipay.module#TipayPageModule' },
   { path: 'tpay/details', loadChildren: './pages/tpay-details/tpay-details.module#TpayDetailsPageModule', pathMatch: 'full'},
   { path: `barter/:trigger`, loadChildren: './pages/barter/barter.module#BarterPageModule' },
-  { path: 'profile/:trigger', loadChildren: './pages/profile/profile.module#ProfilePageModule' }
+  { path: 'profile/:trigger', loadChildren: './pages/profile/profile.module#ProfilePageModule' },
+  { path: 'locations/:trigger', loadChildren: './pages/locations/locations.module#LocationsPageModule' }
+
 ];
 
 // Trigger present for triggering OnInit. Ionic bug https://github.com/ionic-team/ionic/issues/17853
