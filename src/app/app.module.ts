@@ -15,6 +15,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NewTradeComponent } from './components/new-trade/new-trade.component';
 import { IonicStorageModule } from '@ionic/storage';
 import { EditWalletComponent } from './components/edit-wallet/edit-wallet.component';
+import { IntroService } from './services/intro.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -35,6 +36,7 @@ import { EditWalletComponent } from './components/edit-wallet/edit-wallet.compon
     StatusBar,
     SplashScreen,
     NativeStorage,
+    IntroService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

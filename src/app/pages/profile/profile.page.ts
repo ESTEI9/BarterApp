@@ -3,6 +3,7 @@ import { VarsService } from 'src/app/services/vars.service';
 import { HttpService } from 'src/app/services/http.service';
 import { ToastController, AlertController, NavController } from '@ionic/angular';
 import { cloneDeep } from 'lodash';
+import { IntroService } from 'src/app/services/intro.service';
 
 @Component({
   selector: 'app-profile',
@@ -32,35 +33,27 @@ export class ProfilePage implements OnInit {
     private http: HttpService,
     private toastCtrl: ToastController,
     private alertCtrl: AlertController,
-    private navCtrl: NavController
-  ) {
-    this.dba = this.vars.merchantData.dba;
-    this.industry = { name: this.vars.merchantData.industry, industry_id: this.vars.merchantData.industry_id };
-    this.website = this.vars.merchantData.website;
-    this.accPhone = this.vars.merchantData.phone;
-    this.location = this.vars.locationData ? this.vars.locationData.filter((loc: any) => loc.main === '1')[0] : null;
-    this.locationString = this.location ? `${this.location.city}, ${this.location.abbr}` : null;
-    this.locations = cloneDeep(this.vars.locationData);
-  }
+    private navCtrl: NavController,
+    private intro: IntroService
+  ) {}
 
   ngOnInit() {
-    if (this.dba && this.location) {
-      this.updated = true;
-    } else {
-      this.updateAlert();
-    }
+    this.checkMerchantData();
   }
 
-  async updateAlert() {
-    const alert = await this.alertCtrl.create({
-      header: 'Update Your Profile',
-      message: 'Some items are required (*) and must be updated before you can access the rest of the app.',
-      buttons: [{
-        text: 'OK'
-      }]
-    });
-
-    await alert.present();
+  checkMerchantData() {
+    if (this.vars.merchantData) {
+      this.dba = this.vars.merchantData.dba;
+      this.industry = { name: this.vars.merchantData.industry, industry_id: this.vars.merchantData.industry_id };
+      this.website = this.vars.merchantData.website;
+      this.accPhone = this.vars.merchantData.phone;
+      this.location = this.vars.locationData.filter((loc: any) => loc.main === '1')[0];
+      this.locationString = `${this.location.city}, ${this.location.abbr}`;
+      this.locations = cloneDeep(this.vars.locationData);
+      if (this.dba && this.location) {
+        this.updated = true;
+      }
+    }
   }
 
   searchMyLocations(search: string) {
@@ -98,7 +91,7 @@ export class ProfilePage implements OnInit {
 
   updateData() {
     this.updating = true;
-    if (!this.location && !this.dba) {
+    if (!this.dba || !this.industry.industry_id) {
       this.message('Please fill out all required fields');
       this.updating = false;
     } else {
@@ -111,17 +104,24 @@ export class ProfilePage implements OnInit {
           accPhone: this.accPhone,
           main: this.location.store_id,
       };
-
       this.http.postData('profile', {body: JSON.stringify(body)}).subscribe(async (resp: any) => {
         if (resp.status === 1) {
           this.updated = true;
-          const toast = await this.toastCtrl.create({
-            message: 'Profile updated',
-            duration: 1500,
-            color: 'highlight',
-            position: 'top'
-          });
-          await toast.present();
+          this.vars.merchantData.dba = this.dba;
+          this.vars.merchantData.website = this.website;
+          this.vars.merchantData.industry = this.industry.name;
+          this.vars.merchantData.industry_id = this.industry.industry_id;
+          if (this.intro.newUser) {
+            this.intro.profileFinish();
+          } else {
+            const toast = await this.toastCtrl.create({
+              message: 'Profile updated',
+              duration: 1500,
+              color: 'highlight',
+              position: 'top'
+            });
+            await toast.present();
+          }
         } else {
           this.errorToast();
         }

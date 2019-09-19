@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http'
 import { Router, NavigationStart, Event } from '@angular/router';
 import { HttpService } from './http.service';
+import { IntroService } from './intro.service';
 
 @Injectable({
     providedIn: 'root'

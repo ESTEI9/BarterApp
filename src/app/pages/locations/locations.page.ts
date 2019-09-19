@@ -3,6 +3,7 @@ import { VarsService } from 'src/app/services/vars.service';
 import { HttpService } from 'src/app/services/http.service';
 import { ToastController, NavController, AlertController } from '@ionic/angular';
 import { cloneDeep } from 'lodash';
+import { IntroService } from 'src/app/services/intro.service';
 
 @Component({
   selector: 'app-locations',
@@ -13,7 +14,7 @@ export class LocationsPage implements OnInit {
 
   private loading = false;
   private updating = false;
-  private locations: any;
+  locations: any;
   private searchLocations: any;
   private deletes = [];
   private newLocation: {
@@ -33,18 +34,18 @@ export class LocationsPage implements OnInit {
   };
 
   constructor(
-    private vars: VarsService,
+    public vars: VarsService,
     private http: HttpService,
     private toastCtrl: ToastController,
     private navCtrl: NavController,
     private alertCtrl: AlertController,
-    private changeDetector: ChangeDetectorRef
+    private changeDetector: ChangeDetectorRef,
+    private intro: IntroService
   ) {
     this.locations = cloneDeep(this.vars.locationData);
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   filterLocations(search: string) {
     const searchLocations = this.vars.locations.filter((loc: any) => {
@@ -67,23 +68,6 @@ export class LocationsPage implements OnInit {
   updateSearchLocations(event: any) {
     const searchLocations = this.filterLocations(event.detail.value);
     this.searchLocations = searchLocations;
-  }
-
-  async deletePrompt(index: number) {
-    const alert = await this.alertCtrl.create({
-      header: 'Delete Confirmation',
-      message: 'Are you sure you want to delete this location?',
-      buttons: [{
-        text: 'No',
-        role: 'cancel'
-      }, {
-        text: 'Yes',
-        handler: () => {
-          this.deleteLocation(index);
-        }
-      }]
-    });
-    await alert.present();
   }
 
   deleteLocation(index: number) {
@@ -118,7 +102,6 @@ export class LocationsPage implements OnInit {
     this.http.postData('locations', body).subscribe((resp: any) => {
       this.updating = false;
       if (resp.status === 1) {
-        this.toast('Created a location');
         this.locations.push({...this.newLocation, store_id: resp.store_id});
         this.newLocation = {
           city: null,
@@ -128,6 +111,11 @@ export class LocationsPage implements OnInit {
           zipcode: null,
           phone: null
         };
+        if (this.intro.newUser) {
+          this.intro.createdLocation();
+        } else {
+          this.toast('Created a location');
+        }
       } else {
         this.toast('Unable to create a location');
         console.log(resp);
@@ -142,6 +130,23 @@ export class LocationsPage implements OnInit {
   setLocation(loc: any) {
     this.newLocation = loc;
     this.searchLocations = [];
+  }
+
+  async deletePrompt(index: number) {
+    const alert = await this.alertCtrl.create({
+      header: 'Delete Confirmation',
+      message: 'Are you sure you want to delete this location?',
+      buttons: [{
+        text: 'No',
+        role: 'cancel'
+      }, {
+        text: 'Yes',
+        handler: () => {
+          this.deleteLocation(index);
+        }
+      }]
+    });
+    await alert.present();
   }
 
   async toast(message: string) {

@@ -1,21 +1,23 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { MenuController } from '@ionic/angular';
+import { Component, OnInit} from '@angular/core';
+import { MenuController, AlertController } from '@ionic/angular';
+import { VarsService } from 'src/app/services/vars.service';
 
 @Component({
   selector: 'app-barter',
   templateUrl: './barter.page.html',
   styleUrls: ['./barter.page.scss'],
 })
-export class BarterPage implements OnInit, OnDestroy {
+export class BarterPage implements OnInit {
 
   private segment = 'inbox';
 
   constructor(
-    private menuCtrl: MenuController
+    private menuCtrl: MenuController,
+    private vars: VarsService,
+    private alertCtrl: AlertController
   ) { }
 
-  ngOnInit() {
-  }
+  ngOnInit() { }
 
   switchSegment(newSegment: string) {
     this.segment = newSegment;
@@ -37,8 +39,4 @@ export class BarterPage implements OnInit, OnDestroy {
       }
     });
   }
-
-  ngOnDestroy() {
-  }
-
 }
