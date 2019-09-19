@@ -18,24 +18,12 @@
       <ion-input [(ngModel)]="website"></ion-input>
     </ion-item>
     <ion-item>
-      <ion-label position="stacked" class="label">Industry</ion-label>
-      <ion-text *ngIf="industry" class="listToggle">
-        <span>{{industry.name}}</span>
-        <ion-buttons>
-          <ion-button color="secondary" *ngIf="!changeIndustry" (click)="changeIndustry = true">Change</ion-button>
-          <ion-button color="secondary" *ngIf="changeIndustry" (click)="changeIndustry = false">Close</ion-button>
-        </ion-buttons>
-      </ion-text>
-      <div *ngIf="changeIndustry" style="width:100%;">
-        <ion-searchbar (ionChange)="searchIndustries($event.detail.value)" color="light-alt"></ion-searchbar>
-        <ion-list lines="full">
-          <ion-item *ngFor="let industry of vars.industries" (click)="updateIndustry(industry.industry_id)">
-            <ion-radio [checked]="vars.merchantData.industry_id === industry.industry_id" slot="start">
-            </ion-radio>
-            <ion-label>{{industry.name}}</ion-label>
-          </ion-item>
-        </ion-list>
-      </div>
+      <ion-label position="stacked" class="label">Industry<span class="required">*</span></ion-label>
+      <ion-select [value]="industry.industry_id" (ionChange)="updateIndustry(industry.industry_id)" interface="popover">
+        <ion-select-option *ngFor="let ind of vars.industries" [value]="ind.industry_id">
+          {{ind.name}}
+        </ion-select-option>
+      </ion-select>
     </ion-item>
     <ion-item *ngIf="!changeLocation">
       <ion-toolbar color="clear">

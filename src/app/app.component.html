@@ -39,8 +39,8 @@
                 <ion-icon [color]="vars.currentRoute.includes('/barter') ? 'secondary' : null" name="swap"></ion-icon>
                 <ion-label>Barter</ion-label>
             </ion-tab-button>
-            <ion-tab-button tab="tpay">
-                <ion-icon [color]="vars.currentRoute === '/tpay' ? 'secondary' : null" name="md-business"></ion-icon>
+            <ion-tab-button (click)="navTo('tpay')">
+                <ion-icon [color]="vars.currentRoute.includes('/tpay') ? 'secondary' : null" name="md-business"></ion-icon>
                 <ion-label>TPay</ion-label>
             </ion-tab-button>
             <ion-tab-button (click)="navTo('wallet')">

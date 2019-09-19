@@ -1,5 +1,6 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { IonSlides } from '@ionic/angular';
+import { VarsService } from 'src/app/services/vars.service';
 
 @Component({
   selector: 'app-tipay',
@@ -16,9 +17,16 @@ export class TipayPage implements OnInit, AfterViewInit {
     lockSwipes: true
   };
 
-  constructor() {}
+  constructor(
+    private vars: VarsService
+  ) {}
 
-  ngOnInit() { }
+  ngOnInit() {
+    if (this.vars.newUser && !this.vars.newUserPagesVisited.includes('tpay')) {
+      this.vars.newUserPagesVisited.push('tpay');
+      this.tpayPrompt();
+    }
+  }
 
   ngAfterViewInit() {
     this.slider.options = this.sliderOptions;

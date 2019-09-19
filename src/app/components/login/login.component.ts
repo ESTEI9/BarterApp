@@ -51,11 +51,17 @@ export class LoginComponent implements OnInit {
                 this.vars.getIndustries().then(() => {
                     this.vars.locationData = resp.data.locations;
                     this.vars.defaultLocation = resp.data.locations.filter((loc: any) => loc.main)[0];
-                    if (!resp.data.meta.dba || !resp.data.locations.length) {
-                        this.navCtrl.navigateForward('/profile');
-                    }
-                    if (resp.data.meta.dba && resp.data.locations.length) {
-                        this.navCtrl.navigateForward(`/barter/${Math.random().toFixed(5)}`);
+                    if (!resp.data.locations.length) {
+                        this.vars.newUser = true;
+                        this.navCtrl.navigateForward(`/locations/${Math.random().toFixed(5)}`);
+                    } else {
+                        if (!resp.data.meta.dba ) {
+                            this.vars.newUser = true;
+                            this.navCtrl.navigateForward(`/profile/${Math.random().toFixed(5)}`);
+                        }
+                        if (resp.data.meta.dba && resp.data.locations.length) {
+                            this.navCtrl.navigateForward(`/barter/${Math.random().toFixed(5)}`);
+                        }
                     }
                 });
             } else {

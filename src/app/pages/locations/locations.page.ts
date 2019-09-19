@@ -13,7 +13,7 @@ export class LocationsPage implements OnInit {
 
   private loading = false;
   private updating = false;
-  private locations: any;
+  locations: any;
   private searchLocations: any;
   private deletes = [];
   private newLocation: {
@@ -33,7 +33,7 @@ export class LocationsPage implements OnInit {
   };
 
   constructor(
-    private vars: VarsService,
+    public vars: VarsService,
     private http: HttpService,
     private toastCtrl: ToastController,
     private navCtrl: NavController,
@@ -44,6 +44,10 @@ export class LocationsPage implements OnInit {
   }
 
   ngOnInit() {
+    if (!this.locations || !this.locations.length) {
+      this.vars.newUserPagesVisited.push('locations');
+      this.initPrompt();
+    }
   }
 
   filterLocations(search: string) {
@@ -67,23 +71,6 @@ export class LocationsPage implements OnInit {
   updateSearchLocations(event: any) {
     const searchLocations = this.filterLocations(event.detail.value);
     this.searchLocations = searchLocations;
-  }
-
-  async deletePrompt(index: number) {
-    const alert = await this.alertCtrl.create({
-      header: 'Delete Confirmation',
-      message: 'Are you sure you want to delete this location?',
-      buttons: [{
-        text: 'No',
-        role: 'cancel'
-      }, {
-        text: 'Yes',
-        handler: () => {
-          this.deleteLocation(index);
-        }
-      }]
-    });
-    await alert.present();
   }
 
   deleteLocation(index: number) {
@@ -142,6 +129,62 @@ export class LocationsPage implements OnInit {
   setLocation(loc: any) {
     this.newLocation = loc;
     this.searchLocations = [];
+  }
+
+  async initPrompt() {
+    const alert = await this.alertCtrl.create({
+      header: 'Setup Bot',
+      message: `Hi! I'm a guide to help you get started. Before we begin, there are some things we need to do.`,
+      buttons: [{
+        text: 'Sure',
+        handler: () => {
+          this.requiredPrompt();
+        }
+      }]
+    });
+    await alert.present();
+  }
+
+  async requiredPrompt() {
+    const alert = await this.alertCtrl.create({
+      header: 'Setup Bot',
+      message: `Our system relies upon you having at least one location.<br/><br/>Please create one, after that, I'll reach back out.`,
+      buttons: [{
+        text: 'Got it'
+      }]
+    });
+    await alert.present();
+  }
+
+  async step2Prompt() {
+    const alert = await this.alertCtrl.create({
+      header: 'Setup Bot',
+      message: `Awesome! Remember, you must always have at least one location. Let's finish your profile.`,
+      buttons: [{
+        text: 'OK',
+        handler: () => {
+          this.navCtrl.navigateForward(`/profile/${Math.random().toFixed(5)}`);
+        }
+      }]
+    });
+    await alert.present();
+  }
+
+  async deletePrompt(index: number) {
+    const alert = await this.alertCtrl.create({
+      header: 'Delete Confirmation',
+      message: 'Are you sure you want to delete this location?',
+      buttons: [{
+        text: 'No',
+        role: 'cancel'
+      }, {
+        text: 'Yes',
+        handler: () => {
+          this.deleteLocation(index);
+        }
+      }]
+    });
+    await alert.present();
   }
 
   async toast(message: string) {

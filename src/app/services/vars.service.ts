@@ -17,16 +17,17 @@ export class VarsService {
     public currentRoute: string;
     public industries: Array<object>;
 
+    public newUser = false;
+    public newUserPagesVisited = [];
+    private newUserPages = ['barter', 'tpay', 'locations', 'profile', 'wallet'];
+
     constructor(
         private httpClient: HttpClient,
         private http: HttpService,
         public router: Router
     ) {
-        this.router.events.subscribe((event: Event) => {
-            if (event instanceof NavigationStart) {
-                this.currentRoute = event.url;
-            }
-        });
+        this.newUserPages = this.newUserPages.sort();
+        this.newUserPagesVisited = this.newUserPagesVisited.sort();
     }
 
     getLocations() {
