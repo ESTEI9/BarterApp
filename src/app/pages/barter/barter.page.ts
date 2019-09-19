@@ -17,11 +17,7 @@ export class BarterPage implements OnInit {
     private alertCtrl: AlertController
   ) { }
 
-  ngOnInit() {
-    if (this.vars.newUser && !this.vars.newUserPagesVisited.includes('barter')) {
-      this.intro();
-    }
-  }
+  ngOnInit() { }
 
   switchSegment(newSegment: string) {
     this.segment = newSegment;
@@ -43,29 +39,4 @@ export class BarterPage implements OnInit {
       }
     });
   }
-
-  async intro() {
-    this.vars.newUserPagesVisited.push('barter');
-    const alert = await this.alertCtrl.create({
-      header: 'Setup Bot',
-      message: 'Welcome to the barter page! Here, you can manage all your trades, gifts, and invoices.',
-      buttons: [{
-        text: 'OK',
-        handler: () => {
-          this.playAlert();
-        }
-      }]
-    });
-    await alert.present();
-  }
-
-  async playAlert() {
-    const alert = await this.alertCtrl.create({
-      header: 'Setup Bot',
-      message: `Go ahead and look around! When you move on to another page, I'll reach out.`,
-      buttons: [{text: 'Great'}]
-    });
-    await alert.present();
-  }
-
 }

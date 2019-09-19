@@ -21,12 +21,7 @@ export class TipayPage implements OnInit, AfterViewInit {
     private vars: VarsService
   ) {}
 
-  ngOnInit() {
-    if (this.vars.newUser && !this.vars.newUserPagesVisited.includes('tpay')) {
-      this.vars.newUserPagesVisited.push('tpay');
-      this.tpayPrompt();
-    }
-  }
+  ngOnInit() { }
 
   ngAfterViewInit() {
     this.slider.options = this.sliderOptions;

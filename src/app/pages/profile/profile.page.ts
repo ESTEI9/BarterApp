@@ -3,6 +3,7 @@ import { VarsService } from 'src/app/services/vars.service';
 import { HttpService } from 'src/app/services/http.service';
 import { ToastController, AlertController, NavController } from '@ionic/angular';
 import { cloneDeep } from 'lodash';
+import { IntroService } from 'src/app/services/intro.service';
 
 @Component({
   selector: 'app-profile',
@@ -32,51 +33,27 @@ export class ProfilePage implements OnInit {
     private http: HttpService,
     private toastCtrl: ToastController,
     private alertCtrl: AlertController,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private intro: IntroService
   ) {}
 
   ngOnInit() {
-    this.dba = this.vars.merchantData.dba;
-    this.industry = { name: this.vars.merchantData.industry, industry_id: this.vars.merchantData.industry_id };
-    this.website = this.vars.merchantData.website;
-    this.accPhone = this.vars.merchantData.phone;
-    this.location = this.vars.locationData.filter((loc: any) => loc.main === '1')[0];
-    this.locationString = `${this.location.city}, ${this.location.abbr}`;
-    this.locations = cloneDeep(this.vars.locationData);
-    if (this.dba && this.location) {
-      this.updated = true;
-    }
-    if (this.vars.newUser) {
-      this.vars.newUserPagesVisited.push('profile');
-      this.updateAlert();
-    }
+    this.checkMerchantData();
   }
 
-  async updateAlert() {
-    const alert = await this.alertCtrl.create({
-      header: 'Setup Bot',
-      message: `Some items are required (*) to be found in the cooperative. Please fill them out before we move on.`,
-      buttons: [{
-        text: 'OK'
-      }]
-    });
-
-    await alert.present();
-  }
-
-  async finishAlert() {
-    const alert = await this.alertCtrl.create({
-      header: 'Setup Bot',
-      message: `You can always come back and update this stuff later or add more locations.`,
-      buttons: [{
-        text: 'OK',
-        handler: () => {
-          this.navCtrl.navigateRoot(`barter/${Math.random().toFixed(5)}`);
-        }
-      }]
-    });
-
-    await alert.present();
+  checkMerchantData() {
+    if (this.vars.merchantData) {
+      this.dba = this.vars.merchantData.dba;
+      this.industry = { name: this.vars.merchantData.industry, industry_id: this.vars.merchantData.industry_id };
+      this.website = this.vars.merchantData.website;
+      this.accPhone = this.vars.merchantData.phone;
+      this.location = this.vars.locationData.filter((loc: any) => loc.main === '1')[0];
+      this.locationString = `${this.location.city}, ${this.location.abbr}`;
+      this.locations = cloneDeep(this.vars.locationData);
+      if (this.dba && this.location) {
+        this.updated = true;
+      }
+    }
   }
 
   searchMyLocations(search: string) {
@@ -134,8 +111,8 @@ export class ProfilePage implements OnInit {
           this.vars.merchantData.website = this.website;
           this.vars.merchantData.industry = this.industry.name;
           this.vars.merchantData.industry_id = this.industry.industry_id;
-          if (this.vars.newUser) {
-            this.finishAlert();
+          if (this.intro.newUser) {
+            this.intro.profileFinish();
           } else {
             const toast = await this.toastCtrl.create({
               message: 'Profile updated',

@@ -13,13 +13,13 @@
                 <ion-list>
                     <ion-item (click)="navTo('profile')">
                         <ion-icon
-                            [color]="vars.currentRoute && vars.currentRoute.includes('/profile') ? 'secondary' : null"
+                            [color]="vars.currentRoute && vars.currentRoute.includes('profile') ? 'secondary' : null"
                             name="md-contact" slot="start"></ion-icon>
                         <ion-label>Profile</ion-label>
                     </ion-item>
                     <ion-item (click)="navTo('locations')">
                         <ion-icon
-                            [color]="vars.currentRoute && vars.currentRoute.includes('/locations') ? 'secondary' : null"
+                            [color]="vars.currentRoute && vars.currentRoute.includes('locations') ? 'secondary' : null"
                             name="md-map" slot="start"></ion-icon>
                         <ion-label>Store Locations</ion-label>
                     </ion-item>
@@ -36,15 +36,15 @@
         <ion-tab-bar slot="bottom"
             *ngIf="(vars.currentRoute && !vars.currentRoute.includes('login')) && vars.currentRoute !== '/'">
             <ion-tab-button (click)="navTo('barter')">
-                <ion-icon [color]="vars.currentRoute.includes('/barter') ? 'secondary' : null" name="swap"></ion-icon>
+                <ion-icon [color]="vars.currentRoute.includes('barter') ? 'secondary' : null" name="swap"></ion-icon>
                 <ion-label>Barter</ion-label>
             </ion-tab-button>
             <ion-tab-button (click)="navTo('tpay')">
-                <ion-icon [color]="vars.currentRoute.includes('/tpay') ? 'secondary' : null" name="md-business"></ion-icon>
+                <ion-icon [color]="vars.currentRoute.includes('tpay') ? 'secondary' : null" name="md-business"></ion-icon>
                 <ion-label>TPay</ion-label>
             </ion-tab-button>
             <ion-tab-button (click)="navTo('wallet')">
-                <ion-icon [color]="vars.currentRoute.includes('/wallet') ? 'secondary' : null" name="md-wallet">
+                <ion-icon [color]="vars.currentRoute.includes('wallet') ? 'secondary' : null" name="md-wallet">
                 </ion-icon>
                 <ion-label>Wallet</ion-label>
             </ion-tab-button>

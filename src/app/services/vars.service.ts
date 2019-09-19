@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http'
 import { Router, NavigationStart, Event } from '@angular/router';
 import { HttpService } from './http.service';
+import { IntroService } from './intro.service';
 
 @Injectable({
     providedIn: 'root'
@@ -17,17 +18,16 @@ export class VarsService {
     public currentRoute: string;
     public industries: Array<object>;
 
-    public newUser = false;
-    public newUserPagesVisited = [];
-    private newUserPages = ['barter', 'tpay', 'locations', 'profile', 'wallet'];
-
     constructor(
         private httpClient: HttpClient,
         private http: HttpService,
         public router: Router
     ) {
-        this.newUserPages = this.newUserPages.sort();
-        this.newUserPagesVisited = this.newUserPagesVisited.sort();
+        this.router.events.subscribe((event: Event) => {
+            if (event instanceof NavigationStart) {
+                this.currentRoute = event.url;
+            }
+        });
     }
 
     getLocations() {

@@ -3,6 +3,7 @@ import { VarsService } from 'src/app/services/vars.service';
 import { HttpService } from 'src/app/services/http.service';
 import { ToastController, NavController, AlertController } from '@ionic/angular';
 import { cloneDeep } from 'lodash';
+import { IntroService } from 'src/app/services/intro.service';
 
 @Component({
   selector: 'app-locations',
@@ -38,17 +39,13 @@ export class LocationsPage implements OnInit {
     private toastCtrl: ToastController,
     private navCtrl: NavController,
     private alertCtrl: AlertController,
-    private changeDetector: ChangeDetectorRef
+    private changeDetector: ChangeDetectorRef,
+    private intro: IntroService
   ) {
     this.locations = cloneDeep(this.vars.locationData);
   }
 
-  ngOnInit() {
-    if (!this.locations || !this.locations.length) {
-      this.vars.newUserPagesVisited.push('locations');
-      this.initPrompt();
-    }
-  }
+  ngOnInit() {}
 
   filterLocations(search: string) {
     const searchLocations = this.vars.locations.filter((loc: any) => {
@@ -105,7 +102,6 @@ export class LocationsPage implements OnInit {
     this.http.postData('locations', body).subscribe((resp: any) => {
       this.updating = false;
       if (resp.status === 1) {
-        this.toast('Created a location');
         this.locations.push({...this.newLocation, store_id: resp.store_id});
         this.newLocation = {
           city: null,
@@ -115,6 +111,11 @@ export class LocationsPage implements OnInit {
           zipcode: null,
           phone: null
         };
+        if (this.intro.newUser) {
+          this.intro.createdLocation();
+        } else {
+          this.toast('Created a location');
+        }
       } else {
         this.toast('Unable to create a location');
         console.log(resp);
@@ -129,45 +130,6 @@ export class LocationsPage implements OnInit {
   setLocation(loc: any) {
     this.newLocation = loc;
     this.searchLocations = [];
-  }
-
-  async initPrompt() {
-    const alert = await this.alertCtrl.create({
-      header: 'Setup Bot',
-      message: `Hi! I'm a guide to help you get started. Before we begin, there are some things we need to do.`,
-      buttons: [{
-        text: 'Sure',
-        handler: () => {
-          this.requiredPrompt();
-        }
-      }]
-    });
-    await alert.present();
-  }
-
-  async requiredPrompt() {
-    const alert = await this.alertCtrl.create({
-      header: 'Setup Bot',
-      message: `Our system relies upon you having at least one location.<br/><br/>Please create one, after that, I'll reach back out.`,
-      buttons: [{
-        text: 'Got it'
-      }]
-    });
-    await alert.present();
-  }
-
-  async step2Prompt() {
-    const alert = await this.alertCtrl.create({
-      header: 'Setup Bot',
-      message: `Awesome! Remember, you must always have at least one location. Let's finish your profile.`,
-      buttons: [{
-        text: 'OK',
-        handler: () => {
-          this.navCtrl.navigateForward(`/profile/${Math.random().toFixed(5)}`);
-        }
-      }]
-    });
-    await alert.present();
   }
 
   async deletePrompt(index: number) {

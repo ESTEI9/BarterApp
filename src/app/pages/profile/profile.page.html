@@ -19,7 +19,7 @@
     </ion-item>
     <ion-item>
       <ion-label position="stacked" class="label">Industry<span class="required">*</span></ion-label>
-      <ion-select [value]="industry.industry_id" (ionChange)="updateIndustry(industry.industry_id)" interface="popover">
+      <ion-select [value]="industry.industry_id" (ionChange)="updateIndustry($event.detail.value)" placeholder="Select Industry">
         <ion-select-option *ngFor="let ind of vars.industries" [value]="ind.industry_id">
           {{ind.name}}
         </ion-select-option>
