@@ -24,7 +24,7 @@ export class AppComponent {
     private vars: VarsService
   ) {
     this.initializeApp();
-    this.menuCtrl.enable(true, 'more');
+    this.menuCtrl.enable(false, 'barter');
     this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationStart) {
         this.vars.currentRoute = event.url;
@@ -44,7 +44,9 @@ export class AppComponent {
   }
 
   openMore() {
-    this.menuCtrl.open('more');
+    this.menuCtrl.enable(true, 'more').then(() => {
+      this.menuCtrl.open('more');
+    });
   }
 
   closeMore() {
