@@ -11,7 +11,7 @@
     </ion-toolbar>
 </ion-header>
 <ion-content>
-    <ion-menu side="start" type="overlay" contentId="menu-content" menuId="barter">
+    <ion-menu side="start" type="overlay" contentId="main-content" menuId="barter">
         <ion-content color="light-alt">
             <ion-menu-toggle auto-hide="false">
                 <ion-list lines="none" id="main-menu" no-padding>
@@ -37,7 +37,6 @@
             </ion-menu-toggle>
         </ion-content>
     </ion-menu>
-    <ion-router-outlet main id="menu-content"></ion-router-outlet>
     <app-inbox *ngIf="segment === 'inbox'"></app-inbox>
     <app-outbox *ngIf="segment === 'outbox'"></app-outbox>
     <app-archives *ngIf="segment === 'archives'"></app-archives>
