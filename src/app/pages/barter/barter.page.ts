@@ -15,6 +15,7 @@ export class BarterPage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    this.menuCtrl.enable(true, 'barter');
   }
 
   switchSegment(newSegment: string) {
@@ -23,7 +24,15 @@ export class BarterPage implements OnInit, OnDestroy {
 
   toggleMenu() {
     this.menuCtrl.isOpen('barter').then((isOpen: boolean) => {
-      isOpen ? this.menuCtrl.close('barter') : this.menuCtrl.open('barter');
+      if (isOpen) {
+        this.menuCtrl.close('barter').then(() => {
+          this.menuCtrl.enable(true, 'more');
+        });
+      } else {
+        this.menuCtrl.open('barter').then(() => {
+          this.menuCtrl.enable(false, 'more');
+        });
+      }
     });
   }
 
