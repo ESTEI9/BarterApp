@@ -105,6 +105,8 @@ export class LoginComponent implements OnInit {
                     console.log(error);
                     resolve(false);
                 });
+            } else {
+                resolve(true);
             }
         });
     }
