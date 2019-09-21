@@ -13,9 +13,9 @@
   <ion-list *ngIf="!loading">
     <ion-item lines="none" class="privateCount">
       <ion-label><strong>Private Bank</strong></ion-label>
-      <ion-input *ngIf="vendorId === vars.merchantData.merchant_id" slot="end" [(ngModel)]="privateCount" min="0"
+      <ion-input *ngIf="vendorId === vars.userMeta.user_id" slot="end" [(ngModel)]="privateCount" min="0"
         (ionChange)="updateTotalCount()" text-right></ion-input>
-      <ion-text *ngIf="vendorId !== vars.merchantData.merchant_id" slot="end"
+      <ion-text *ngIf="vendorId !== vars.userMeta.user_id" slot="end"
         [color]="privateCount < 0 ? 'danger' : 'dark'" text-right>{{privateCount}}
       </ion-text>
     </ion-item>
@@ -25,7 +25,7 @@
       <ion-title>Packages</ion-title>
       <ion-buttons slot="end">
         <ion-button (click)="toggleEdit()" color="highlight">
-          <ion-icon name="md-create" *ngIf="!editable && newWallet.length > 0"></ion-icon>
+          <ion-icon name="md-create" *ngIf="!editable && newWallet && newWallet.length > 0"></ion-icon>
           <ion-icon name="md-checkmark" *ngIf="editable"></ion-icon>
         </ion-button>
       </ion-buttons>
@@ -43,7 +43,7 @@
           </ion-grid>
         </ion-item>
       </ion-list>
-      <ion-list class="packageList" no-padding>
+      <ion-list class="packageList" no-padding *ngIf="newWallet">
         <ion-item *ngFor="let item of newWallet; let i = index;" [color]="i%2 && !editable ? 'light-alt' : null">
           <ion-grid>
             <ion-row>

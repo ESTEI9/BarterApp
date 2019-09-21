@@ -120,7 +120,7 @@ export class TradeComponent implements OnInit {
             passCheck = !!fields[key];
             if (key.includes('_valu') && !key.includes('_valu_id')
             && (this.myTradeData.wallet_cap < fields[key])
-            && this.myTradeData.merchant_id !== this.myTradeData.vendor_id) {
+            && this.myTradeData.user_id !== this.myTradeData.vendor_id) {
                 passCheck = false;
             }
         });

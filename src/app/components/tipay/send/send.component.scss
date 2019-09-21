@@ -4,11 +4,15 @@ ion-list {
     flex-direction: column;
     align-items: center;
 
+    &.buttons {
+        flex-direction: row;
+        justify-content: space-around;
+        flex-wrap: wrap;
+    }
+
     ion-item {
         --background: transparent;
         margin: 16px auto;
-        width: 80%;
-        max-width: 400px;
         --ion-item-background-activated: transparent;
         --highlight-background:transparent;
 
@@ -59,4 +63,9 @@ ion-list {
         height: 100px;
         width:100px;
     }
+}
+
+.spinner {
+    height: 4em;
+    width: 4em;
 }

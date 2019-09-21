@@ -34,7 +34,7 @@ export class HistoryComponent implements OnInit {
     this.loading = true;
     const body = {
       action: 'getHistory',
-      merchantId: this.vars.merchantData.merchant_id
+      userId: this.vars.userMeta.user_id
     };
     this.http.getData('tpay', body).subscribe(async (resp: any) => {
       if (resp.status === 1) {

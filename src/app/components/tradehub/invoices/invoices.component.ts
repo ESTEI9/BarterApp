@@ -50,7 +50,7 @@ export class InvoicesComponent implements AfterContentInit {
     async loadData() {
         this.loading = true;
         const body = {
-            merchantID: this.vars.merchantData.merchant_id,
+            userId: this.vars.userMeta.user_id,
             type: 'Invoice',
             segment: this.segment
         };

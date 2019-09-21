@@ -47,7 +47,7 @@ export class DetailsComponent implements OnInit, AfterViewInit {
             if (resp.status === 1) {
                 this.trade = resp.data;
                 this.tradeType = this.trade.tradeData.type;
-                if (+this.trade.initData.merchant_id === +this.vars.merchantData.merchant_id) { // this merchant started trade
+                if (+this.trade.initData.user_id === +this.vars.userMeta.user_id) { // this merchant started trade
                     this.referrer = this.trade.tradeData.trade_completed ? 'archive' : 'outbox';
                     this.details = this.trade.recData;
                     this.myDetails = this.trade.initData;
@@ -82,7 +82,7 @@ export class DetailsComponent implements OnInit, AfterViewInit {
 
     async runChecks() {
         if (+this.myDetails.valu > +this.myDetails.wallet_cap
-            && this.myDetails.merchant_id !== this.myDetails.vendor_id
+            && this.myDetails.user_id !== this.myDetails.vendor_id
             && this.tradeType === 'Trade'
         ) {
             const alert = await this.alertCtrl.create({
@@ -102,7 +102,7 @@ export class DetailsComponent implements OnInit, AfterViewInit {
             return false;
         }
         if (+this.details.valu > +this.details.wallet_cap
-            && this.details.merchant_id !== this.details.vendor_id
+            && this.details.user_id !== this.details.vendor_id
             && this.tradeType === 'Trade'
         ) {
             const alert = await this.alertCtrl.create({

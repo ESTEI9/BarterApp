@@ -17,7 +17,7 @@
                             name="md-contact" slot="start"></ion-icon>
                         <ion-label>Profile</ion-label>
                     </ion-item>
-                    <ion-item (click)="navTo('locations')">
+                    <ion-item (click)="navTo('locations')" *ngIf="vars.userMeta && vars.userMeta.is_merchant">
                         <ion-icon
                             [color]="vars.currentRoute && vars.currentRoute.includes('locations') ? 'secondary' : null"
                             name="md-map" slot="start"></ion-icon>

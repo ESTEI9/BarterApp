@@ -39,7 +39,7 @@ export class OutboxComponent implements OnInit {
         return new Promise(resolve => {
             const body = {
                 segment: 'outbox',
-                merchantID: this.vars.merchantData.merchant_id
+                userId: this.vars.userMeta.user_id
             };
             this.http.getData('tradehub', body).subscribe((resp: any) => {
                 if (resp.status === 1) {

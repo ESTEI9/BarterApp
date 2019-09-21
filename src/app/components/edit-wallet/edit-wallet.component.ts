@@ -59,7 +59,7 @@ export class EditWalletComponent implements OnInit {
     this.loading = true;
     const body = {
       action: 'getWallets',
-      merchantId: this.vars.merchantData.merchant_id,
+      userId: this.vars.userMeta.user_id,
       vendorId: this.vendorId,
       location: this.location
     };
@@ -82,7 +82,7 @@ export class EditWalletComponent implements OnInit {
   toggleEdit() {
     this.editable = !this.editable;
     if (!this.editable) {
-      this.privateCount = this.vendorId === this.vars.merchantData.merchant_id && this.privateCount < 0
+      this.privateCount = this.vendorId === this.vars.userMeta.user_id && this.privateCount < 0
         ? 0
         : +(this.totalValu - this.publicCount).toFixed(2);
     }
@@ -111,8 +111,8 @@ export class EditWalletComponent implements OnInit {
       });
       const sum = +(+this.privateCount - +this.newAmount).toFixed(2);
       const fakeSum = +(+this.toRemove - +this.newAmount).toFixed(2);
-      this.privateCount = this.vendorId === this.vars.merchantData.merchant_id ? sum > 0 ? sum : 0 : sum;
-      this.toRemove = this.vendorId === this.vars.merchantData.merchant_id ? fakeSum > 0 ? fakeSum : 0 : fakeSum;
+      this.privateCount = this.vendorId === this.vars.userMeta.user_id ? sum > 0 ? sum : 0 : sum;
+      this.toRemove = this.vendorId === this.vars.userMeta.user_id ? fakeSum > 0 ? fakeSum : 0 : fakeSum;
       this.newAmount = null;
       this.newPrice = null;
       this.newSalePrice = null;
