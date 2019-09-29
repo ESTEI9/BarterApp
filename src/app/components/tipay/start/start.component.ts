@@ -1,4 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { VarsService } from 'src/app/services/vars.service';
 
 @Component({
   selector: 'tpay-start',
@@ -9,7 +10,9 @@ export class StartComponent implements OnInit {
 
   @Output() setType = new EventEmitter();
 
-  constructor() { }
+  constructor(
+    private vars: VarsService
+  ) { }
 
   ngOnInit() {}
 

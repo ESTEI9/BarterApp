@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { HttpService } from 'src/app/services/http.service';
-import { ToastController } from '@ionic/angular';
+import { ToastController, AlertController } from '@ionic/angular';
 import { VarsService } from 'src/app/services/vars.service';
 
 @Component({
@@ -12,6 +12,7 @@ export class CompleteComponent implements OnInit {
 
   private code: any;
   private amount: any;
+  private amountDue: any;
   private merchant: any = {
     id: null,
     dba: null
@@ -20,6 +21,7 @@ export class CompleteComponent implements OnInit {
   private tid: any;
 
   private completed = false;
+  private stillDue = false;
   private loading = false;
   private running = false;
 
@@ -28,7 +30,8 @@ export class CompleteComponent implements OnInit {
   constructor(
     private http: HttpService,
     private toastCtrl: ToastController,
-    private vars: VarsService
+    private vars: VarsService,
+    private alertCtrl: AlertController
   ) { }
 
   ngOnInit() {}
@@ -73,14 +76,26 @@ export class CompleteComponent implements OnInit {
     this.running = true;
     const body = {
       action: 'complete',
-      userId: this.vars.merchantData.merchant_id,
+      userId: this.vars.userMeta.user_id,
       tradeId: this.tid,
-      merchantId: this.merchant.id
+      merchantId: this.merchant.id,
+      recIsMerchant: this.vars.userMeta.is_merchant
     };
     const payload = {body: JSON.stringify(body)};
     this.http.postData('tpay', payload).subscribe((resp: any) => {
       if (resp.status === 1) {
-        this.completed = true;
+        if (resp.data.amountDue) {
+          this.amountDue = +resp.data.amountDue.toFixed(2);
+          if (+this.amount === +resp.data.amountDue.toFixed(2)) {
+            this.stillDue = true;
+            this.altPaymentPrompt();
+          } else {
+            this.dueToast();
+          }
+          this.stillDue = true;
+        } else {
+          this.completed = true;
+        }
       } else {
         console.log(resp);
         this.errorToast();
@@ -93,15 +108,75 @@ export class CompleteComponent implements OnInit {
     });
   }
 
+  check() {
+    this.running = true;
+    const body = {
+      action: 'check',
+      tradeId: this.tid
+    };
+    this.http.postData('tpay', {body: JSON.stringify(body)}).subscribe((resp: any) => {
+      if (resp.status === 1) {
+        switch (resp.data.status) {
+          case 'Completed':
+            this.stillDue = false;
+            this.completed = true;
+            break;
+          case 'Canceled':
+            this.cancelToast();
+            this.cancel();
+            break;
+          default:
+            this.dueToast();
+        }
+      } else {
+        console.log(resp);
+        this.errorToast();
+      }
+      this.running = false;
+    }, error => {
+      this.running = false;
+      console.log(error);
+      this.errorToast();
+    });
+  }
+
+  cancelTransaction() {
+    const body = {
+      action: 'cancel',
+      tradeId: this.tid
+    };
+    return new Promise(resolve => {
+      this.http.postData('tpay', {body: JSON.stringify(body)}).subscribe((resp: any) => {
+        if (resp.status === 1) {
+          resolve(true);
+        } else {
+          console.log(resp);
+          resolve(false);
+        }
+      }, error => {
+        console.log(error);
+        resolve(false);
+      });
+    });
+  }
+
   cancel() {
     this.clearData();
-    this.goBack.emit();
+    this.cancelTransaction().then((canCancel: boolean) => {
+      if (canCancel) {
+        this.goBack.emit();
+      } else {
+        this.errorToast();
+      }
+    });
   }
 
   clearData() {
+    this.stillDue = false;
     this.completed = false;
     this.code = null;
     this.amount = null;
+    this.amountDue = false;
     this.merchant = {
       dba: null,
       id: null
@@ -116,6 +191,36 @@ export class CompleteComponent implements OnInit {
       color: 'dark'
     });
     return await toast.present();
+  }
+
+  async dueToast() {
+    const toast = await this.toastCtrl.create({
+      message: 'Please pay the remainder.',
+      duration: 2000,
+      color: 'highlight',
+      position: 'bottom'
+    });
+    await toast.present();
+  }
+
+  async cancelToast() {
+    const toast = await this.toastCtrl.create({
+      message: 'Transaction canceled',
+      duration: 1500,
+      color: 'dark',
+      position: 'bottom'
+    });
+    await toast.present();
+  }
+
+  async altPaymentPrompt() {
+    const alert = await this.alertCtrl.create({
+      header: 'No Units',
+      message: `You have no units in your wallet for this merchant.<br/><br/>
+      Please provide another form of payment.`,
+      buttons: [{text: 'OK'}]
+    });
+    await alert.present();
   }
 
 }

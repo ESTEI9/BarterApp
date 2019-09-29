@@ -143,7 +143,7 @@ export class NewTradeComponent implements OnInit, AfterViewInit {
         const body = {
           action: 'getPrivateWallets',
           location: this.myLocation,
-          merchantId: this.vars.merchantData.merchant_id
+          userId: this.vars.userMeta.user_id
         };
         this.http.getData('wallet', body).subscribe((resp: any) => {
           if (resp.status === 1) {
@@ -181,7 +181,7 @@ export class NewTradeComponent implements OnInit, AfterViewInit {
             return await toast.present();
         }
         this.urlBody = {
-            myMerchant: this.vars.merchantData.merchant_id,
+            myMerchant: this.vars.userMeta.merchant_id,
             myWallet: this.wallet.wallet_id,
             myAmount: this.myAmount,
             merchant: this.merchant.merchant_id,
@@ -207,7 +207,7 @@ export class NewTradeComponent implements OnInit, AfterViewInit {
         } else {
             this.urlBody = {
                 merchant: this.merchant.merchant_id,
-                myMerchant: this.vars.merchantData.merchant_id,
+                myMerchant: this.vars.userMeta.merchant_id,
                 myWallet: this.wallet.wallet_id,
                 myAmount: this.myAmount,
                 title: this.title,
@@ -233,7 +233,7 @@ export class NewTradeComponent implements OnInit, AfterViewInit {
         } else {
             this.urlBody = {
                 merchant: this.merchant.merchant_id,
-                myMerchant: this.vars.merchantData.merchant_id,
+                myMerchant: this.vars.userMeta.merchant_id,
                 amount: this.amount,
                 title: this.title,
                 description: this.description,

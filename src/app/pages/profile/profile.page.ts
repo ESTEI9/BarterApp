@@ -38,15 +38,15 @@ export class ProfilePage implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.checkMerchantData();
+    this.checkuserMeta();
   }
 
-  checkMerchantData() {
-    if (this.vars.merchantData) {
-      this.dba = this.vars.merchantData.dba;
-      this.industry = { name: this.vars.merchantData.industry, industry_id: this.vars.merchantData.industry_id };
-      this.website = this.vars.merchantData.website;
-      this.accPhone = this.vars.merchantData.phone;
+  checkuserMeta() {
+    if (this.vars.userMeta) {
+      this.dba = this.vars.userMeta.dba;
+      this.industry = { name: this.vars.userMeta.industry, industry_id: this.vars.userMeta.industry_id };
+      this.website = this.vars.userMeta.website;
+      this.accPhone = this.vars.userMeta.phone;
       this.location = this.vars.locationData.filter((loc: any) => loc.main === '1')[0];
       this.locationString = `${this.location.city}, ${this.location.abbr}`;
       this.locations = cloneDeep(this.vars.locationData);
@@ -97,7 +97,7 @@ export class ProfilePage implements OnInit {
     } else {
       const body = {
           action: 'update',
-          userId: this.vars.merchantData.merchant_id,
+          userId: this.vars.userMeta.user_id,
           dba: this.dba,
           industryId: this.industry.industry_id,
           website: this.website,
@@ -107,10 +107,10 @@ export class ProfilePage implements OnInit {
       this.http.postData('profile', {body: JSON.stringify(body)}).subscribe(async (resp: any) => {
         if (resp.status === 1) {
           this.updated = true;
-          this.vars.merchantData.dba = this.dba;
-          this.vars.merchantData.website = this.website;
-          this.vars.merchantData.industry = this.industry.name;
-          this.vars.merchantData.industry_id = this.industry.industry_id;
+          this.vars.userMeta.dba = this.dba;
+          this.vars.userMeta.website = this.website;
+          this.vars.userMeta.industry = this.industry.name;
+          this.vars.userMeta.industry_id = this.industry.industry_id;
           if (this.intro.newUser) {
             this.intro.profileFinish();
           } else {

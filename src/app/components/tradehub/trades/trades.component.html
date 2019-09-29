@@ -24,8 +24,8 @@
             <ion-row class="ion-align-items-center">
                 <ion-col size="6">
                     <span *ngIf="segment !== 'archives'">{{in.dba}}</span>
-                    <span *ngIf="segment === 'archives' && in.init_dba !== vars.merchantData.dba">{{in.init_dba}}</span>
-                    <span *ngIf="segment === 'archives' && in.init_dba === vars.merchantData.dba">{{in.rec_dba}}</span>
+                    <span *ngIf="segment === 'archives' && in.init_dba !== vars.userMeta.dba">{{in.init_dba}}</span>
+                    <span *ngIf="segment === 'archives' && in.init_dba === vars.userMeta.dba">{{in.rec_dba}}</span>
                 </ion-col>
                 <ion-col *ngIf="segment !== 'archives'" size="3" class="ion-justify-content-evenly ion-align-items-center" style="display:flex;">
                     {{in.rec_valu}}<ion-icon *ngIf="in.rec_valu && in.init_valu" name="repeat" size="small"></ion-icon>{{in.init_valu}}

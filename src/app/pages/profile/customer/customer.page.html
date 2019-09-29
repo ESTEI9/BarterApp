@@ -1,0 +1,44 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Profile</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div class="background">
+    <ion-list lines="none">
+      <ion-item>
+        <ion-label position="stacked" class="label">Name<span class="required">*</span></ion-label>
+        <ion-input [(ngModel)]="name"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked" class="label">Email<span class="required">*</span></ion-label>
+        <ion-input [(ngModel)]="email" type="email"></ion-input>
+      </ion-item>
+      <ion-label position="stacked" class="label small">Default Location<span class="required">*</span></ion-label>
+      <ion-item *ngIf="location">
+        <ion-label>{{location.city}}, {{location.abbr}}</ion-label>
+        <ion-buttons>
+          <ion-button (click)="changeLocation = !changeLocation">
+            <ion-icon name="list" slot="icon-only" *ngIf="!changeLocation"></ion-icon>
+            <ion-icon name="checkmark" color="secondary" slot="icon-only" *ngIf="changeLocation"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-item>
+    </ion-list>
+    <app-searchable-dropdown
+      *ngIf="changeLocation || !location"
+      [options]="searchLocations"
+      placeholder="Select City"
+      color="light-alt"
+      [value]="locationString"
+      (updateOptions)="updateSearchLocations($event)"
+      (selectValue)="updateLocation($event)">
+    </app-searchable-dropdown>
+  </div>
+  <div text-center style="width:100%" margin-top margin-bottom>
+    <ion-button size="default" shape="round" color="secondary" (click)="updateProfile()" [disabled]="updating">
+      <span *ngIf="!updating">Update</span>
+      <ion-spinner color="highlight" *ngIf="updating"></ion-spinner>
+    </ion-button>
+  </div>
+</ion-content>

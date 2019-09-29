@@ -96,7 +96,7 @@ export class LocationsPage implements OnInit {
       body: JSON.stringify({
         ...this.newLocation,
         action: 'create',
-        userId: this.vars.merchantData.merchant_id
+        userId: this.vars.userMeta.user_id
       })
     };
     this.http.postData('locations', body).subscribe((resp: any) => {

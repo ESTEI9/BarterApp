@@ -40,6 +40,11 @@ export class AppComponent {
   }
 
   navTo(route: string) {
+    switch (route) {
+      case 'profile':
+        route = this.vars.userMeta.is_merchant ? route : 'customer-profile';
+        break;
+    }
     this.navCtrl.navigateRoot(`${route}/${Math.random().toFixed(5)}`);
   }
 

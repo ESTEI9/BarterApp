@@ -9,7 +9,7 @@ import { IntroService } from './intro.service';
 })
 export class VarsService {
 
-    public merchantData: any;
+    public userMeta: any;
     public locationData: any;
     public defaultLocation: any;
     public loading = true;
@@ -32,7 +32,9 @@ export class VarsService {
 
     getLocations() {
         this.httpClient.get('./assets/cities.json').subscribe((resp: any) => {
-            this.locations = this.locations = resp;
+            this.locations = resp.map((loc: any, i: number) => {
+                return {location_id: i, ...loc};
+            });
         });
     }
 

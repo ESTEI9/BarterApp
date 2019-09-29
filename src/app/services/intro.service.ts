@@ -30,7 +30,15 @@ export class IntroService {
   }
 
   newPageCtrl(page: string) {
-    if (!this.newUserPagesVisited.includes(page)) { this.newUserPagesVisited.push(page); }
+    if (!this.newUserPagesVisited.includes(page)) {
+      switch (page) {
+        case 'customer-profile':
+          this.newUserPagesVisited.push('profile');
+          break;
+        default:
+          this.newUserPagesVisited.push(page);
+      }
+    }
     this.newUserPagesVisited = this.newUserPagesVisited.sort();
 
     switch (page) {
@@ -38,6 +46,7 @@ export class IntroService {
         this.vars.locationData ? this.locIntro() : this.locInit();
         break;
       case 'profile':
+      case 'customer-profile':
         this.profileInit();
         break;
       case 'barter':
@@ -128,6 +137,7 @@ export class IntroService {
   async profileInit() {
     let message = !this.newUserPagesVisited.includes('locations') ? `Hi! I'm a guide to help you get started.<br/><br/>` : '';
     message += `Some items are required (*) to be found in the cooperative. Please fill them out before we move on.`;
+    if (!this.vars.userMeta.is_merchant) { this.newUserPagesVisited.push('locations'); }
 
     const alert = await this.alertCtrl.create({
       header: 'Setup Bot',
