@@ -11,12 +11,12 @@
     </ion-segment>
   </ion-toolbar>
   <div *ngIf="segment === 'new'">
-    <ion-slides #tpaySlider>
-      <ion-slide>
+    <ion-slides #tpaySlider [options]="sliderOptions">
+      <ion-slide *ngIf="vars.userMeta.is_merchant">
         <tpay-start (setType)="setType($event)"></tpay-start>
       </ion-slide>
       <ion-slide>
-        <tpay-send *ngIf="type === 'send'" (goBack)="slider.slidePrev()"></tpay-send>
+        <tpay-send *ngIf="type === 'send' && vars.userMeta.is_merchant" (goBack)="slider.slidePrev()"></tpay-send>
         <tpay-complete *ngIf="type === 'complete'" (goBack)="slider.slidePrev()"></tpay-complete>
       </ion-slide>
     </ion-slides>

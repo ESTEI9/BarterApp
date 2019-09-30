@@ -25,6 +25,7 @@ import { DetailsComponent } from './details/details/details.component';
 import { InboxComponent } from './barter/inbox/inbox.component';
 import { OutboxComponent } from './barter/outbox/outbox.component';
 import { ArchivesComponent } from './barter/archives/archives.component';
+import { QRScanner } from '@ionic-native/qr-scanner/ngx';
 
 const components = [
   LoginComponent,
@@ -69,7 +70,7 @@ const components = [
     OutboxComponent,
     ArchivesComponent
   ],
-  providers: [KeyValuePipe],
+  providers: [KeyValuePipe, QRScanner],
   exports: components
 })
 export class ComponentsModule { }

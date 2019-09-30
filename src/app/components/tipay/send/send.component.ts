@@ -16,6 +16,7 @@ export class SendComponent implements OnInit {
   private loading = false;
   private running = false;
   private completed = false;
+  private showCode = false;
   private amount: any;
   private id: number;
 

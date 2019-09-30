@@ -1,34 +1,38 @@
-<ion-toolbar color="clear" padding>
-  <ion-buttons *ngIf="!completed" slot="start">
+<div id="scanner-ui" text-center>
+  <ion-button (click)="toggleScanner('close')" color="highlight">Close Scanner</ion-button>
+</div>
+<ion-toolbar *ngIf="!completed && vars.userMeta.is_merchant">
+  <ion-buttons slot="start">
     <ion-button (click)="cancel()" color="danger">
-      <ion-icon name="ios-arrow-round-back" slot="start"></ion-icon> Cancel
+        <ion-icon name="ios-arrow-round-back" slot="start"></ion-icon>Back
     </ion-button>
   </ion-buttons>
 </ion-toolbar>
-<ion-list *ngIf="!completed && !amountDue" lines="none">
-  <ion-item>
-    <ion-input class="code" text-center type="text" [(ngModel)]="precode" placeholder="Enter Code" [disabled]="code">
-    </ion-input>
-  </ion-item>
-  <ion-item *ngIf="!code">
-    <ion-button size="large" fill="outline" shape="round" color="secondary" (click)="lookup()" [disabled]="loading">
-      <span *ngIf="!loading">
-        <ion-icon name="search" slot="start"></ion-icon> Search
-      </span>
-      <ion-spinner *ngIf="loading" color="highlight"></ion-spinner>
-    </ion-button>
-  </ion-item>
-  <ion-item *ngIf="code" class="details" text-center>
-    <ion-label>
-      <div class="amount">{{amount | currency}}</div>
-      <ion-text class="dba" color="medium">{{merchant.dba}}</ion-text>
-    </ion-label>
-  </ion-item>
-  <ion-item *ngIf="code" text-center>
-    <ion-button size="large" shape="round" color="secondary" (click)="complete()" [disabled]="running">
-      <span *ngIf="!running">
-        <ion-icon name="checkmark" slot="start"></ion-icon> Complete
-      </span>
+<section class="info" *ngIf="!completed" padding-bottom>
+  <ion-list lines="none">
+    <ion-item *ngIf="!amountDue && !code" text-center>
+      <ion-input class="code" text-center type="text" [(ngModel)]="precode" (ionChange)="lookup()" placeholder="Enter Code" [disabled]="loading"></ion-input>
+      <ion-buttons color="clear">
+        <ion-button (click)="qrLookup()" [disabled]="loading" class="qricon" *ngIf="!completed && !code">
+          <img *ngIf="!loading" src="assets/qr.png">
+          <ion-spinner *ngIf="loading" color="highlight"></ion-spinner>
+        </ion-button>
+      </ion-buttons>
+    </ion-item>
+    <ion-item class="details" *ngIf="code">
+      <ion-label [class.amountDue]="amountDue">
+        <div class="amount">{{amount | currency}}</div>
+        <ion-text class="dba" color="medium">{{merchant.dba}}</ion-text>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</section>
+<ion-list *ngIf="code && !completed" lines="none">
+  <ion-item text-center>
+    <ion-button shape="round" color="secondary" fill="solid" (click)="amountDue ? check() : complete()" size="default" [disabled]="running">
+      <ion-icon *ngIf="!running" name="checkmark" slot="start"></ion-icon>
+      <span *ngIf="!amountDue && !running">Complete</span>
+      <span *ngIf="amountDue && !running">Check</span>
       <ion-spinner *ngIf="running" color="hghlight"></ion-spinner>
     </ion-button>
   </ion-item>
@@ -40,25 +44,9 @@
       Complete
     </ion-label>
   </ion-item>
-  <ion-item text-center>
-    <ion-button (click)="cancel()" size="large" fill="outline" color="secondary" shape="round">
+  <ion-item text-center margin-top>
+    <ion-button (click)="cancel()" size="default" fill="outline" color="secondary" shape="round">
       <ion-icon name="checkmark" slot="start"></ion-icon> Run Another
-    </ion-button>
-  </ion-item>
-</ion-list>
-<ion-list *ngIf="amountDue" lines="none">
-  <ion-item text-center class="details">
-    <ion-label class="amountDue" color="dark">
-      <ion-text class="dba" color="medium">Amount Due</ion-text>
-      <div class="amount">{{amount | currency}}</div>
-    </ion-label>
-  </ion-item>
-  <ion-item>
-    <ion-button size="large" shape="round" color="secondary" (click)="check()" [disabled]="running">
-      <span *ngIf="!running">
-        <ion-icon name="md-refresh" slot="start"></ion-icon> Check
-      </span>
-      <ion-spinner *ngIf="running" color="highlight"></ion-spinner>
     </ion-button>
   </ion-item>
 </ion-list>
