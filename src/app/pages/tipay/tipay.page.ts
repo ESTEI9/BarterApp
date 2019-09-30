@@ -19,7 +19,9 @@ export class TipayPage implements OnInit, AfterViewInit {
 
   constructor(
     private vars: VarsService
-  ) {}
+  ) {
+    if (!this.vars.userMeta.is_merchant) { this.type = 'complete'; }
+  }
 
   ngOnInit() { }
 
