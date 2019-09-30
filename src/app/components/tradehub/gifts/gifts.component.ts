@@ -51,7 +51,7 @@ export class GiftsComponent implements AfterContentInit {
     async loadData() {
         this.loading = true;
         const body = {
-            merchantID: this.vars.merchantData.merchant_id,
+            userId: this.vars.userMeta.user_id,
             type: 'Gift',
             segment: this.segment
         };

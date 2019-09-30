@@ -18,39 +18,39 @@
       <ion-input [(ngModel)]="website"></ion-input>
     </ion-item>
     <ion-item>
-      <ion-label position="stacked" class="label">Industry</ion-label>
-      <ion-text *ngIf="industry" class="listToggle">
-        <span>{{industry.name}}</span>
-        <ion-buttons>
-          <ion-button color="secondary" *ngIf="!changeIndustry" (click)="changeIndustry = true">Change</ion-button>
-          <ion-button color="secondary" *ngIf="changeIndustry" (click)="changeIndustry = false">Close</ion-button>
-        </ion-buttons>
-      </ion-text>
-      <div *ngIf="changeIndustry" style="width:100%;">
-        <ion-searchbar (ionChange)="searchIndustries($event.detail.value)" color="light-alt"></ion-searchbar>
-        <ion-list lines="full">
-          <ion-item *ngFor="let industry of vars.industries" (click)="updateIndustry(industry.industry_id)">
-            <ion-checkbox no-margin [checked]="vars.merchantData.industry_id === industry.industry_id" slot="start"></ion-checkbox>
-            <ion-label>{{industry.name}}</ion-label>
-          </ion-item>
-        </ion-list>
-      </div>
+      <ion-label position="stacked" class="label">Industry<span class="required">*</span></ion-label>
+      <ion-select [value]="industry.industry_id" (ionChange)="updateIndustry($event.detail.value)" placeholder="Select Industry">
+        <ion-select-option *ngFor="let ind of vars.industries" [value]="ind.industry_id">
+          {{ind.name}}
+        </ion-select-option>
+      </ion-select>
     </ion-item>
-    <ion-item margin-bottom>
-      <ion-label position="stacked" class="label">Primary Location<span class="required">*</span></ion-label>
-        <ion-text *ngIf="industry" class="listToggle">
-          <span>{{location.address}} {{location.city}}, {{location.abbr}}</span>
-          <ion-buttons *ngIf="locations.length > 1">
-            <ion-button color="secondary" *ngIf="!changeLocation" (click)="changeLocation = true">Change</ion-button>
-            <ion-button color="secondary" *ngIf="changeLocation" (click)="changeLocation = false">Close</ion-button>
+    <ion-item *ngIf="!changeLocation">
+      <ion-toolbar color="clear">
+        <ion-label position="stacked" class="label">Primary Location<span class="required">*</span></ion-label>
+      </ion-toolbar>
+    </ion-item>
+    <ion-item *ngIf="location" class="listToggle">
+      <ion-label *ngIf="!changeLocation">{{location.address}} {{location.city}}, {{location.abbr}}</ion-label>
+      <ion-buttons slot="end" *ngIf="locations.length > 1 && !changeLocation">
+        <ion-button (click)="changeLocation = true">
+          <ion-icon name="list" slot="icon-only"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+      <div *ngIf="changeLocation" style="width:100%;">
+        <ion-toolbar>
+          <ion-label class="label">Change Location</ion-label>
+          <ion-buttons slot="end">
+            <ion-button color="clear" (click)="changeLocation = false">
+              <ion-icon name="md-close" color="danger" slot="icon-only"></ion-icon>
+            </ion-button>
           </ion-buttons>
-        </ion-text>
-      <div *ngIf="changeLocation">
-        <ion-searchbar (ionChange)="searchLocations($event.detail.value)" color="light-alt"></ion-searchbar>
+        </ion-toolbar>
         <ion-list lines="full">
-          <ion-item *ngFor="let loc of locations" (click)="updateLocation(loc)">
-            <ion-checkbox [value]="loc.store_id" [checked]="location.store_id === loc.store_id" slot="start" no-margin>
-            </ion-checkbox>
+          <ion-item *ngFor="let loc of locations; let i = index;" style="--padding-start: 0; --inner-padding-end: 0;">
+            <ion-radio [value]="loc.store_id" [checked]="location.store_id === loc.store_id" slot="start"
+              (click)="changePrimary(loc)">
+            </ion-radio>
             <ion-label>{{loc.address}} {{loc.city}}, {{loc.abbr}}</ion-label>
           </ion-item>
         </ion-list>

@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http'
 import { Router, NavigationStart, Event } from '@angular/router';
 import { HttpService } from './http.service';
+import { IntroService } from './intro.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class VarsService {
 
-    public merchantData: any;
+    public userMeta: any;
     public locationData: any;
     public defaultLocation: any;
     public loading = true;
@@ -31,7 +32,9 @@ export class VarsService {
 
     getLocations() {
         this.httpClient.get('./assets/cities.json').subscribe((resp: any) => {
-            this.locations = this.locations = resp;
+            this.locations = resp.map((loc: any, i: number) => {
+                return {location_id: i, ...loc};
+            });
         });
     }
 

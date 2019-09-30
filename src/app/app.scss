@@ -33,3 +33,30 @@ ion-item {
          box-shadow:none;
      }
  }
+
+ #scanner-ui {
+     display: none;
+ }
+
+ html.scanner-open {
+    ion-app, ion-content {
+        height: 70px !important;
+    }
+
+    ion-content {
+        --background: transparent;
+    }
+
+    ion-header,
+    ion-footer,
+    ion-tab-bar,
+    ion-toolbar,
+    section.info,
+    tpay-complete > *:not(#scanner-ui) {
+        display: none;
+    }
+
+    #scanner-ui {
+        display: block;
+    }
+ }

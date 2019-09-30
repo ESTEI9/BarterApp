@@ -1,6 +1,6 @@
 {
-  "name": "Triuniti",
-  "version": "0.93",
+  "name": "triuniti",
+  "version": "0.94",
   "author": "UniDevs",
   "homepage": "http://tryuniti.com",
   "scripts": {
@@ -22,6 +22,7 @@
     "@angular/router": "^7.2.2",
     "@ionic-native/core": "^5.0.0",
     "@ionic-native/native-storage": "^5.8.0",
+    "@ionic-native/qr-scanner": "^5.14.0",
     "@ionic-native/secure-storage": "^5.8.0",
     "@ionic-native/splash-screen": "^5.0.0",
     "@ionic-native/status-bar": "^5.0.0",
@@ -30,7 +31,9 @@
     "angularx-qrcode": "^1.6.4",
     "cordova-android": "8.0.0",
     "cordova-ios": "^5.0.1",
+    "cordova-plugin-add-swift-support": "^2.0.2",
     "cordova-plugin-nativestorage": "2.3.2",
+    "cordova-plugin-qrscanner": "^3.0.1",
     "cordova-plugin-secure-storage": "3.0.2",
     "cordova-sqlite-storage": "^3.3.0",
     "core-js": "^2.5.4",
@@ -84,7 +87,8 @@
         "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
       },
       "cordova-plugin-ionic-keyboard": {},
-      "cordova-sqlite-storage": {}
+      "cordova-sqlite-storage": {},
+      "cordova-plugin-qrscanner": {}
     },
     "platforms": [
       "android",

@@ -4,6 +4,7 @@ import { VarsService } from 'src/app/services/vars.service';
 import { ModalController, ToastController } from '@ionic/angular';
 import { EditWalletComponent } from 'src/app/components/edit-wallet/edit-wallet.component';
 import { cloneDeep } from 'lodash';
+import { Storage } from '@ionic/storage';
 
 @Component({
     selector: 'app-wallet',
@@ -18,7 +19,7 @@ export class WalletPage implements OnInit {
     private location: any;
     private locationSearch: string;
     private wallets: any = [];
-    private walletList: any;
+    private walletList: any = [];
     private tradeType: string;
     private searchLocations: any;
     private locPlaceholder = '';
@@ -30,18 +31,32 @@ export class WalletPage implements OnInit {
         private vars: VarsService,
         private modalCtrl: ModalController,
         private toastCtrl: ToastController,
-        private renderer: Renderer2
+        private renderer: Renderer2,
+        private storage: Storage
     ) { }
 
     ngOnInit() {
-        this.vars.locationData.filter((loc: any) => {
-            if (loc.city === this.vars.merchantData.city && loc.state === this.vars.merchantData.state) {
+        this.initWallets();
+    }
+
+    initWallets() {
+        if (this.vars.userMeta.is_merchant) {
+            this.vars.locationData.filter((loc: any) => {
+                if (loc.city === this.vars.userMeta.city && loc.state === this.vars.userMeta.state) {
+                    this.location = loc;
+                    this.locPlaceholder = `${loc.city}, ${loc.abbr}`;
+                    this.loading = true;
+                    this.makeWallets();
+                }
+            });
+        } else {
+            this.storage.get('defaultLocation').then((loc) => {
                 this.location = loc;
                 this.locPlaceholder = `${loc.city}, ${loc.abbr}`;
                 this.loading = true;
                 this.makeWallets();
-            }
-        });
+            });
+        }
     }
 
     makeWallets() {
@@ -53,9 +68,9 @@ export class WalletPage implements OnInit {
 
     loadWallets() {
         const body = {
-            action: 'getWalletCounts',
+            action: this.vars.userMeta.is_merchant ? 'getWalletCounts' : 'getPrivateWallets',
             location: this.location,
-            merchantId: this.vars.merchantData.merchant_id
+            userId: this.vars.userMeta.user_id
         };
         return new Promise(resolve =>
             this.http.getData('wallet', body).subscribe((resp: any) => {
@@ -112,6 +127,9 @@ export class WalletPage implements OnInit {
     }
 
     async editWalletModal(wallet: any, i: number, event: any) {
+        if (!this.vars.userMeta.is_merchant) {
+          return;
+        }
         const modal = await this.modalCtrl.create({
             component: EditWalletComponent,
             componentProps: {
@@ -232,9 +250,9 @@ export class WalletPage implements OnInit {
         const promises = addData.map((data: any, i: number) => {
             let body = {};
             let subscription: any;
-            if (wallet.vendor_id !== this.vars.merchantData.merchant_id) {
+            if (wallet.vendor_id !== this.vars.userMeta.user_id) {
                 body = {
-                    user_id: this.vars.merchantData.merchant_id,
+                    user_id: this.vars.userMeta.user_id,
                     vendor_id: wallet.vendor_id,
                     amt_to_be_remove: data.units,
                     regular_price: data._regular_price,

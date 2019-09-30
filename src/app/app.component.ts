@@ -24,7 +24,7 @@ export class AppComponent {
     private vars: VarsService
   ) {
     this.initializeApp();
-    this.menuCtrl.enable(true, 'primary');
+    this.menuCtrl.enable(false, 'barter');
     this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationStart) {
         this.vars.currentRoute = event.url;
@@ -40,6 +40,21 @@ export class AppComponent {
   }
 
   navTo(route: string) {
+    switch (route) {
+      case 'profile':
+        route = this.vars.userMeta.is_merchant ? route : 'customer-profile';
+        break;
+    }
     this.navCtrl.navigateRoot(`${route}/${Math.random().toFixed(5)}`);
+  }
+
+  openMore() {
+    this.menuCtrl.enable(true, 'more').then(() => {
+      this.menuCtrl.open('more');
+    });
+  }
+
+  closeMore() {
+    this.menuCtrl.close('more');
   }
 }

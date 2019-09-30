@@ -1,0 +1,15 @@
+ion-list.addresses {
+    max-height: 500px;
+    overflow: auto;
+
+    ion-item {
+        &:nth-child(even) {
+            --background: var(--ion-color-light);
+        }
+    }
+}
+
+ion-card.addLocation {
+    background: #fff;
+    overflow: visible;
+}

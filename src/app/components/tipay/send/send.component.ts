@@ -1,6 +1,6 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { HttpService } from 'src/app/services/http.service';
-import { ToastController } from '@ionic/angular';
+import { ToastController, AlertController } from '@ionic/angular';
 import { VarsService } from 'src/app/services/vars.service';
 
 @Component({
@@ -16,28 +16,26 @@ export class SendComponent implements OnInit {
   private loading = false;
   private running = false;
   private completed = false;
+  private showCode = false;
   private amount: any;
   private id: number;
 
   constructor(
     private http: HttpService,
     private toastCtrl: ToastController,
-    private vars: VarsService
+    private vars: VarsService,
+    private alertCtrl: AlertController,
+    private changeDetector: ChangeDetectorRef
   ) { }
 
   ngOnInit() {}
-
-  cancel() {
-    this.clearData();
-    this.goBack.emit();
-  }
 
   create() {
     this.code = null;
     this.loading = true;
     const body = {
       action: 'create',
-      merchantId: this.vars.merchantData.merchant_id,
+      userId: this.vars.userMeta.user_id,
       amount: this.amount
     };
     const payload = {body: JSON.stringify(body)};
@@ -87,6 +85,47 @@ export class SendComponent implements OnInit {
     });
   }
 
+  async askComplete() {
+    const alert = await this.alertCtrl.create({
+      header: 'Mark Complete',
+      message: 'Are you sure you want to mark this complete?',
+      buttons: [{
+        text: 'No',
+        role: 'cancel'
+      }, {
+        text: 'Yes',
+        handler: () => {
+          this.markComplete();
+        }
+      }]
+    });
+    return await alert.present();
+  }
+
+  markComplete() {
+    this.running = true;
+    const body = {
+      action: 'markComplete',
+      tradeId: this.id,
+      status: 'Completed'
+    };
+    this.http.postData('tpay', {body: JSON.stringify(body)}).subscribe((resp: any) => {
+      if (resp.status === 1) {
+        this.completed = true;
+      } else {
+        console.log(resp);
+        this.errorToast();
+      }
+      this.running = false;
+      this.changeDetector.detectChanges();
+    }, error => {
+      this.running = false;
+      this.changeDetector.detectChanges();
+      console.log(error);
+      this.errorToast();
+    });
+  }
+
   clearData() {
     this.code = null;
     this.loading = false;
@@ -102,6 +141,41 @@ export class SendComponent implements OnInit {
       color: 'dark'
     });
     return await toast.present();
+  }
+
+  cancelTransaction() {
+    return new Promise(resolve => {
+      if (this.id) {
+        const body = {
+          action: 'cancel',
+          tradeId: this.id
+        };
+        this.http.postData('tpay', {body: JSON.stringify(body)}).subscribe((resp: any) => {
+          if (resp.status === 1) {
+            resolve(true);
+          } else {
+            console.log(resp);
+            resolve(false);
+          }
+        }, error => {
+          console.log(error);
+          resolve(false);
+        });
+      } else {
+        resolve(true);
+      }
+    });
+  }
+
+  cancel() {
+    this.clearData();
+    this.cancelTransaction().then((canCancel: boolean) => {
+      if (canCancel) {
+        this.goBack.emit();
+      } else {
+        this.errorToast();
+      }
+    });
   }
 
 }

@@ -82,7 +82,7 @@ export class GiftComponent implements OnInit {
             if (key.includes('_valu') && this.referrer === 'outbox') {
                 if (
                     this.myDetails.wallet_cap < fields[key]
-                    && this.myDetails.merchant_id !== this.myDetails.vendor_id
+                    && this.myDetails.user_id !== this.myDetails.vendor_id
                 ) {
                     passCheck = false;
                 }

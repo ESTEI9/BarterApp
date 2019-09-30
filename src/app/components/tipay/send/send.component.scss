@@ -4,11 +4,14 @@ ion-list {
     flex-direction: column;
     align-items: center;
 
+    &.buttons {
+        flex-direction: row;
+        justify-content: space-around;
+        flex-wrap: wrap;
+    }
+
     ion-item {
         --background: transparent;
-        margin: 16px auto;
-        width: 80%;
-        max-width: 400px;
         --ion-item-background-activated: transparent;
         --highlight-background:transparent;
 
@@ -59,4 +62,18 @@ ion-list {
         height: 100px;
         width:100px;
     }
+}
+
+.spinner {
+    height: 4em;
+    width: 4em;
+}
+
+section.info {
+    background: #fff;
+    border-bottom: 1px solid var(--ion-tab-bar-border-color,var(--ion-border-color,var(--ion-color-step-150,rgba(0,0,0,0.07))));
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
 }

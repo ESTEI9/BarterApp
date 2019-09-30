@@ -40,7 +40,7 @@ export class ArchivesComponent implements OnInit {
         return new Promise(resolve => {
             const body = {
                 segment: 'archives',
-                merchantID: this.vars.merchantData.merchant_id
+                userId: this.vars.userMeta.user_id
             };
             this.http.getData('tradehub', body).subscribe((resp: any) => {
                 if (resp.status === 1) {

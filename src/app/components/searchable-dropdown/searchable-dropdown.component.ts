@@ -51,7 +51,7 @@ export class SearchableDropdownComponent implements OnInit, AfterViewInit {
     if (keys.includes('feathers') && keys.includes('dba')) { // Wallet Type
       return `${object.dba}${+object.feathers ? ' - ' + object.feathers : ''}`;
     }
-    if (keys.includes('merchant_id') && keys.includes('email')) { // Merchant type
+    if (keys.includes('user_id') && keys.includes('email')) { // Merchant type
       return object.dba;
     }
   }

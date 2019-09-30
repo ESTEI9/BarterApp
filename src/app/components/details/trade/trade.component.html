@@ -26,7 +26,7 @@
                         <ion-input
                             *ngIf="editTrade"
                             [(ngModel)]="myTradeData.valu"
-                            [placeholder]="myTradeData.vendor_id && myTradeData.merchant_id !== myTradeData.vendor_id ? 'Max: '+myTradeData.wallet_cap : 'Amount'">
+                            [placeholder]="myTradeData.vendor_id && myTradeData.user_id !== myTradeData.vendor_id ? 'Max: '+myTradeData.wallet_cap : 'Amount'">
                         </ion-input>
                         <div *ngIf="!myTradeData.valu && !editTrade" class="valuType">No trade yet</div>
                         <div *ngIf="myTradeData.wallet_dba" class="valuType">{{myTradeData.wallet_dba}}</div>

@@ -2,7 +2,7 @@
   <ion-item>
     <ion-text class="header">TPay by Triuniti</ion-text>
   </ion-item>
-  <ion-item>
+  <ion-item *ngIf="vars.userMeta.is_merchant">
     <ion-button (click)="nextSlide('send')" size="large" expand="block" fill="outline" color="secondary" shape="round">
       <ion-icon name="ios-send" slot="start"></ion-icon>Begin
     </ion-button>
