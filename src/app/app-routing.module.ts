@@ -10,7 +10,8 @@ const routes: Routes = [
   { path: `barter/:trigger`, loadChildren: './pages/barter/barter.module#BarterPageModule' },
   { path: 'profile/:trigger', loadChildren: './pages/profile/profile.module#ProfilePageModule' },
   { path: 'locations/:trigger', loadChildren: './pages/locations/locations.module#LocationsPageModule' },
-  { path: 'customer-profile/:trigger', loadChildren: './pages/profile/customer/customer.module#CustomerProfilePageModule' }
+  { path: 'customer-profile/:trigger', loadChildren: './pages/profile/customer/customer.module#CustomerProfilePageModule' },  { path: 'market', loadChildren: './pages/market/market.module#MarketPageModule' }
+
 
 
 ];

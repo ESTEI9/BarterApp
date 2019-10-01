@@ -86,6 +86,7 @@ export class LoginComponent implements OnInit {
 
     createuserMeta(data: any) {
         this.vars.userMeta = data;
+        this.vars.userMeta.pwd = this.account.password;
         return new Promise(resolve => {
             if (!data.name && this.vars.userMeta.is_merchant) {
                 const body = {
