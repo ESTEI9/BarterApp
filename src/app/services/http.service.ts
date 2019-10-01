@@ -50,4 +50,11 @@ export class HttpService {
             {headers: {'Content-Type': 'application/x-www-form-urlencoded'}, params}
         );
     }
+
+    wpMarketLogin(info: any) {
+        const params = new HttpParams({fromObject: info});
+        return this.http.post(`${this.base}/login`,
+            {headers: {'Content-Type': 'application/x-www-form-urlencoded'}, params}
+        );
+    }
 }

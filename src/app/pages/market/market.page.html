@@ -1,0 +1,7 @@
+<ion-content padding>
+  <ion-spinner *ngIf="loading" class="comp-spinner" color="highlight"></ion-spinner>
+  <div style="width:100%;" text-center>
+      <ion-text *ngIf="loading">Loading Shop...</ion-text>
+      <ion-button *ngIf="!loading" (click)="wpLogin()" color="highlight" size="large" shape="round">Relaunch</ion-button>
+  </div>
+</ion-content>
