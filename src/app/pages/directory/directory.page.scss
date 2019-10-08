@@ -1,0 +1,33 @@
+.avatar {
+    background: var(--ion-color-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--ion-color-medium-light);
+
+    ion-icon {
+        height: 1.4em;
+        width: 1.4em;
+    }
+}
+
+ion-list {
+    background: transparent;
+}
+
+ion-item {
+    --border-style: dashed;
+}
+
+.fullWidth {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    font-style: italic;
+
+    ion-spinner {
+        margin-bottom: 8px;
+    }
+}
