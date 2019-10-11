@@ -33,7 +33,7 @@ export class VarsService {
     getLocations() {
         this.httpClient.get('./assets/cities.json').subscribe((resp: any) => {
             this.locations = resp.map((loc: any, i: number) => {
-                return {location_id: i, ...loc};
+                return {location_id: i + 1, ...loc};
             });
         });
     }

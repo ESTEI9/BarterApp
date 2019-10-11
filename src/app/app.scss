@@ -60,3 +60,14 @@ ion-item {
         display: block;
     }
  }
+
+ .tabSelected {
+     ion-icon { color: var(--ion-color-highlight); }
+     ion-label { color: var(--ion-color-primary); }
+ }
+
+ .mainLoading {
+    position: absolute;
+    top: 56px;
+    width: 100%;
+ }

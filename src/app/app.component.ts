@@ -30,6 +30,9 @@ export class AppComponent {
         this.vars.currentRoute = event.url;
       }
     });
+    if (!this.vars.userMeta) {
+      this.navCtrl.navigateRoot('/');
+    }
   }
 
   initializeApp() {

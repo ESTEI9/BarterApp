@@ -1,26 +1,19 @@
 <ion-app>
     <ion-menu side="end" type="overlay" contentId="main-content" menuId="more">
         <ion-content color="light-alt">
-            <ion-toolbar color="primary">
-                <ion-title>More</ion-title>
-                <ion-buttons slot="start">
-                    <ion-button (click)="closeMore()">
-                        <ion-icon slot="icon-only" name="arrow-forward"></ion-icon>
-                    </ion-button>
-                </ion-buttons>
-            </ion-toolbar>
+            <ion-toolbar color="primary"></ion-toolbar>
             <ion-menu-toggle auto-hide="false">
                 <ion-list>
-                    <ion-item (click)="navTo('profile')">
-                        <ion-icon
-                            [color]="vars.currentRoute && vars.currentRoute.includes('profile') ? 'secondary' : null"
-                            name="md-contact" slot="start"></ion-icon>
+                    <ion-item (click)="navTo('wallet')" [class.tabSelected]="vars.currentRoute && vars.currentRoute.includes('wallet') ? 'secondary' : null">
+                        <ion-icon name="md-wallet" slot="start"></ion-icon>
+                        <ion-label>Wallet</ion-label>
+                    </ion-item>
+                    <ion-item (click)="navTo('profile')" [class.tabSelected]="vars.currentRoute && vars.currentRoute.includes('profile') ? 'secondary' : null">
+                        <ion-icon name="md-contact" slot="start"></ion-icon>
                         <ion-label>Profile</ion-label>
                     </ion-item>
-                    <ion-item (click)="navTo('locations')" *ngIf="vars.userMeta && vars.userMeta.is_merchant">
-                        <ion-icon
-                            [color]="vars.currentRoute && vars.currentRoute.includes('locations') ? 'secondary' : null"
-                            name="md-map" slot="start"></ion-icon>
+                    <ion-item (click)="navTo('locations')" *ngIf="vars.userMeta && vars.userMeta.is_merchant" [class.tabSelected]="vars.currentRoute && vars.currentRoute.includes('locations') ? 'secondary' : null">
+                        <ion-icon name="md-map" slot="start"></ion-icon>
                         <ion-label>Store Locations</ion-label>
                     </ion-item>
                     <ion-item (click)="navTo('login')" lines="none">
@@ -35,18 +28,22 @@
     <ion-tabs>
         <ion-tab-bar slot="bottom"
             *ngIf="(vars.currentRoute && !vars.currentRoute.includes('login')) && vars.currentRoute !== '/'">
-            <ion-tab-button (click)="navTo('barter')">
-                <ion-icon [color]="vars.currentRoute.includes('barter') ? 'secondary' : null" name="swap"></ion-icon>
+            <ion-tab-button (click)="navTo('barter')" [class.tabSelected]="vars.currentRoute.includes('barter') ? 'secondary' : null">
+                <ion-icon name="swap"></ion-icon>
                 <ion-label>Barter</ion-label>
             </ion-tab-button>
-            <ion-tab-button (click)="navTo('tpay')">
-                <ion-icon [color]="vars.currentRoute.includes('tpay') ? 'secondary' : null" name="md-business"></ion-icon>
-                <ion-label>TPay</ion-label>
+            <ion-tab-button tab="market" [class.tabSelected]="vars.currentRoute === 'market' ? 'secondary' : null">
+                <ion-icon name="md-basket"></ion-icon>
+                <ion-label>Market</ion-label>
             </ion-tab-button>
-            <ion-tab-button (click)="navTo('wallet')">
-                <ion-icon [color]="vars.currentRoute.includes('wallet') ? 'secondary' : null" name="md-wallet">
+            <ion-tab-button (click)="navTo('directory')" [class.tabSelected]="vars.currentRoute.includes('directory') ? 'secondary' : null">
+                <ion-icon name="ios-list">
                 </ion-icon>
-                <ion-label>Wallet</ion-label>
+                <ion-label>Directory</ion-label>
+            </ion-tab-button>
+            <ion-tab-button (click)="navTo('tpay')" [class.tabSelected]="vars.currentRoute.includes('tpay') ? 'secondary' : null">
+                <ion-icon name="md-cash"></ion-icon>
+                <ion-label>TPay</ion-label>
             </ion-tab-button>
             <ion-tab-button (click)="openMore()">
                 <ion-icon name="ios-more"></ion-icon>

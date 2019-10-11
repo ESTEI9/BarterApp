@@ -10,9 +10,10 @@ const routes: Routes = [
   { path: `barter/:trigger`, loadChildren: './pages/barter/barter.module#BarterPageModule' },
   { path: 'profile/:trigger', loadChildren: './pages/profile/profile.module#ProfilePageModule' },
   { path: 'locations/:trigger', loadChildren: './pages/locations/locations.module#LocationsPageModule' },
-  { path: 'customer-profile/:trigger', loadChildren: './pages/profile/customer/customer.module#CustomerProfilePageModule' }
-
-
+  { path: 'customer-profile/:trigger', loadChildren: './pages/profile/customer/customer.module#CustomerProfilePageModule' },
+  { path: 'market', loadChildren: './pages/market/market.module#MarketPageModule' },
+  { path: 'directory/:trigger', loadChildren: './pages/directory/directory.module#DirectoryPageModule' },
+  { path: 'directory-details/:trigger', loadChildren: './pages/directory/details/details.module#DetailsPageModule' }
 ];
 
 // Trigger present for triggering OnInit. Ionic bug https://github.com/ionic-team/ionic/issues/17853
