@@ -12,8 +12,8 @@ import { IntroService } from 'src/app/services/intro.service';
 })
 export class LoginComponent implements OnInit {
 
-    private account: { email: string, password: string } = {
-        email: null,
+    private account: { username: string, password: string } = {
+        username: null,
         password: null
     };
     private message: string;
@@ -29,8 +29,8 @@ export class LoginComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.storage.get('email').then((email: string) => {
-            this.account.email = email ? email : null;
+        this.storage.get('username').then((username: string) => {
+            this.account.username = username ? username : null;
         });
         this.account.password = null;
     }
@@ -40,7 +40,7 @@ export class LoginComponent implements OnInit {
         this.isLoading = true;
         const password = btoa(this.account.password);
         const body = {
-            email: this.account.email,
+            username: this.account.username,
             password,
             action: 'login'
         };
@@ -49,7 +49,7 @@ export class LoginComponent implements OnInit {
             if (resp.status === 1) {
                 this.createuserMeta(resp.data.meta).then((canProceed: boolean) => {
                     if (canProceed) {
-                        if (this.rememberMe) { this.storage.set('email', this.account.email); }
+                        if (this.rememberMe) { this.storage.set('username', this.account.username); }
                         this.vars.getLocations();
                         if (this.vars.userMeta.is_merchant) {
                             this.vars.getIndustries().then(() => {
