@@ -40,7 +40,8 @@
               },
               {
                 "input": "src/app/app.scss"
-              }
+              },
+              "node_modules/leaflet/dist/leaflet.css"
             ],
             "scripts": [],
             "es5BrowserSupport": true

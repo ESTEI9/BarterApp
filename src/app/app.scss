@@ -62,10 +62,8 @@ ion-item {
  }
 
  .tabSelected {
-     ion-icon, ion-label {
-         color: var(--ion-color-secondary);
-         --color: var(--ion-color-secondary) !important;
-     }
+     ion-icon { color: var(--ion-color-highlight); }
+     ion-label { color: var(--ion-color-primary); }
  }
 
  .mainLoading {
