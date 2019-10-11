@@ -17,6 +17,15 @@ ion-list {
 
 ion-item {
     --border-style: dashed;
+
+    &.loadingStore {
+        pointer-events: none;
+        color: var(--ion-color-medium);
+
+        p {
+            color: var(--ion-color-medium);
+        }
+    }
 }
 
 .fullWidth {

@@ -1,7 +1,8 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { VarsService } from 'src/app/services/vars.service';
 import { HttpService } from 'src/app/services/http.service';
-import { ToastController, Platform } from '@ionic/angular';
+import { ToastController, Platform, NavController } from '@ionic/angular';
+import { NavigationExtras } from '@angular/router';
 
 @Component({
   selector: 'app-directory',
@@ -18,13 +19,15 @@ export class DirectoryPage implements OnInit {
   private loading = true;
   private chunk: number;
   private itemHeight = 66;
+  private storeLoading: number;
 
   constructor(
     private vars: VarsService,
     private http: HttpService,
     private toastCtrl: ToastController,
     private changeDetector: ChangeDetectorRef,
-    private platform: Platform
+    private platform: Platform,
+    private navCtrl: NavController
   ) {
     this.platform.ready().then(() => {
       this.chunk = Math.ceil((this.platform.height() - 56 - 57) / this.itemHeight); // 56 & 57 are bar height and tabs height
@@ -99,21 +102,30 @@ export class DirectoryPage implements OnInit {
     });
 }
 
-loadStore(store: any) {
+loadStore(user: any) {
+  this.storeLoading = user.vendor_id;
   const body = {
     action: 'getStores',
     locationId: this.location.location_id,
-    vendorId: store.vendor_id
+    vendorId: user.vendor_id
   };
 
   this.http.getData('directory', body).subscribe((resp: any) => {
+    this.storeLoading = null;
     if (resp.status === 1) {
-      console.log(resp.data);
+      const params: NavigationExtras = {
+        state: {
+          merchant: {meta: user, locations: resp.data},
+          url: window.location.pathname
+        }
+      };
+      this.navCtrl.navigateForward(`directory-details/${Math.random().toFixed(5)}`, params);
     } else {
       console.log(resp);
       this.errorToast();
     }
   }, error => {
+    this.storeLoading = null;
     console.log(error);
     this.errorToast();
   });

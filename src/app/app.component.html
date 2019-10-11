@@ -1,14 +1,7 @@
 <ion-app>
     <ion-menu side="end" type="overlay" contentId="main-content" menuId="more">
         <ion-content color="light-alt">
-            <ion-toolbar color="primary">
-                <ion-title>More</ion-title>
-                <ion-buttons slot="start">
-                    <ion-button (click)="closeMore()">
-                        <ion-icon slot="icon-only" name="arrow-forward"></ion-icon>
-                    </ion-button>
-                </ion-buttons>
-            </ion-toolbar>
+            <ion-toolbar color="primary"></ion-toolbar>
             <ion-menu-toggle auto-hide="false">
                 <ion-list>
                     <ion-item (click)="navTo('wallet')" [class.tabSelected]="vars.currentRoute && vars.currentRoute.includes('wallet') ? 'secondary' : null">

@@ -26,9 +26,10 @@
     clearInput
   ></ion-searchbar>
   <ion-list no-padding>
-    <ion-item *ngFor="let store of items; let i = index" [lines]="i+1 === directory.length ? 'none' : 'full'" [class.oddItem]="i % 2" (click)="loadStore(store)">
+    <ion-item *ngFor="let store of items; let i = index" [lines]="i+1 === directory.length ? 'none' : 'full'" [class.oddItem]="i % 2" (click)="loadStore(store)" [class.loadingStore]="storeLoading === store.vendor_id">
       <ion-avatar slot="start" class="avatar">
-        <ion-icon name="ios-business" color="medium"></ion-icon>
+        <ion-spinner *ngIf="storeLoading === store.vendor_id" color="highlight"></ion-spinner>
+        <ion-icon *ngIf="storeLoading !== store.vendor_id" name="ios-business" color="medium"></ion-icon>
       </ion-avatar>
       <ion-label>
         <h2>{{store.dba}}</h2>

@@ -128,3 +128,26 @@ ion-item {
         margin-right: 10px;
     }
 }
+
+.localPopup {
+    transform: translate(-2px, -40px) !important;
+
+    .leaflet-popup-content {
+        min-width: 200px;
+        margin: 0.5em;
+        white-space: normal;
+        font-size: 0.8em;
+        
+        ion-item {
+            --min-height: 40px;
+            ion-label {
+                font-size: 0.8em;
+                margin: 0;
+                white-space: normal;
+            }
+            ion-icon {
+                margin-right: 10px;
+            }
+        }
+    }
+}
