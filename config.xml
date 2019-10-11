@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.tryuniti.triuniti" version="0.94" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.tryuniti.triuniti" version="0.95" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Triuniti</name>
     <description>The trading tool for Uniti merchants</description>
     <author email="info@tryuniti.com" href="http://tryuniti.com">UniDevs</author>
