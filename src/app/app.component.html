@@ -32,10 +32,10 @@
                 <ion-icon name="swap"></ion-icon>
                 <ion-label>Barter</ion-label>
             </ion-tab-button>
-            <ion-tab-button tab="market" [class.tabSelected]="vars.currentRoute === 'market' ? 'secondary' : null">
+            <!-- <ion-tab-button tab="market" [class.tabSelected]="vars.currentRoute === 'market' ? 'secondary' : null">
                 <ion-icon name="md-basket"></ion-icon>
                 <ion-label>Market</ion-label>
-            </ion-tab-button>
+            </ion-tab-button> -->
             <ion-tab-button (click)="navTo('directory')" [class.tabSelected]="vars.currentRoute.includes('directory') ? 'secondary' : null">
                 <ion-icon name="ios-list">
                 </ion-icon>

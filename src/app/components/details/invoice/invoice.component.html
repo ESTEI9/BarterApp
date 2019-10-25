@@ -82,7 +82,7 @@
     <ion-toolbar color="primary">
         <ion-buttons *ngIf="!excuting" class="ion-justify-content-around" style="display:flex">
             <ion-button *ngIf="referrer === 'outbox'" (click)="tradeAction('cancel')">Cancel</ion-button>
-            <ion-button *ngIf="referrer === 'inbox'" (click)="tradeAction('accept')">Make Payment</ion-button>
+            <ion-button *ngIf="referrer === 'inbox'" color="highlight" (click)="tradeAction('accept')">Make Payment</ion-button>
         </ion-buttons>
         <ion-spinner color="highlight" *ngIf="executing"></ion-spinner>
     </ion-toolbar>

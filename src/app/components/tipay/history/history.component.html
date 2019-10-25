@@ -1,7 +1,7 @@
 <ion-toolbar color="clear">
   <ion-buttons class="ion-justify-content-evenly">
-    <ion-button color="secondary" shape="round" [fill]="segment === 'received' ? 'solid' : 'outline'" (click)="switchSegment()">Received</ion-button>
-    <ion-button color="secondary" shape="round" [fill]="segment === 'sent' ? 'solid' : 'outline'" (click)="switchSegment()">Sent</ion-button>
+    <ion-button color="highlight" [fill]="segment === 'received' ? 'solid' : 'outline'" (click)="switchSegment()">Received</ion-button>
+    <ion-button color="highlight"  [fill]="segment === 'sent' ? 'solid' : 'outline'" (click)="switchSegment()">Sent</ion-button>
   </ion-buttons>
 </ion-toolbar>
 <ion-searchbar *ngIf="!loading" [(ngModel)]="historySearch" placeholder="Search DBAs" debounce="300" (ionChange)="filterHistory()"></ion-searchbar>

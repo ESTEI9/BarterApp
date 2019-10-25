@@ -2,8 +2,8 @@ ion-list {
     background:transparent;
 
     ion-item:first-child {
-        background: linear-gradient(to top right, var(--ion-color-primary), var(--ion-color-secondary));
-        border-bottom: 1px solid var(--ion-color-light-shade);
+        background: var(--ion-color-light);
+        border-bottom: 1px solid var(--ion-color-medium-light);
     }
 }
 
@@ -18,8 +18,7 @@ ion-item {
 }
 
 img {
-    max-width: 200px;
-    padding: 16px;
+    max-width: calc(100% - 2em);
     margin: 0 auto;
 }
 
