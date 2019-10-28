@@ -96,7 +96,7 @@
         </ion-item>
         <ion-item lines="none">
           <div text-right style="width:100%">
-            <ion-button (click)="createPublicUnits()" color="secondary" size="default">
+            <ion-button (click)="createPublicUnits()" color="highlight" size="default">
               <ion-icon name="add" slot="start"></ion-icon>Add
             </ion-button>
           </div>
@@ -105,7 +105,7 @@
       <ion-list lines="none">
       <ion-item *ngIf="!createPackage">
         <div text-right style="width: 100%">
-          <ion-button color="secondary" (click)="createPackage = true" class="createButton" size="default">
+          <ion-button color="highlight" (click)="createPackage = true" class="createButton" size="default">
             <ion-icon name="add" slot="start"></ion-icon>Add
           </ion-button>
         </div>

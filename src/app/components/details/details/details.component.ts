@@ -47,8 +47,10 @@ export class DetailsComponent implements OnInit, AfterViewInit {
             if (resp.status === 1) {
                 this.trade = resp.data;
                 this.tradeType = this.trade.tradeData.type;
-                if (+this.trade.initData.user_id === +this.vars.userMeta.user_id) { // this merchant started trade
+                console.log(this.trade.initData, this.vars.userMeta);
+                if (+this.trade.initData.merchant_id === +this.vars.userMeta.user_id) { // this merchant started trade
                     this.referrer = this.trade.tradeData.trade_completed ? 'archive' : 'outbox';
+                    console.log(this.referrer);
                     this.details = this.trade.recData;
                     this.myDetails = this.trade.initData;
                 } else {

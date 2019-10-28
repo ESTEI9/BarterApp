@@ -1,14 +1,14 @@
 <ion-list lines="none">
   <ion-item>
-    <ion-text class="header">TPay by Triuniti</ion-text>
+    <ion-text class="header">Welcome to TPay!</ion-text>
   </ion-item>
   <ion-item *ngIf="vars.userMeta.is_merchant">
-    <ion-button (click)="nextSlide('send')" size="large" expand="block" fill="outline" color="secondary" shape="round">
+    <ion-button (click)="nextSlide('send')" size="large" expand="block" fill="outline" color="primary">
       <ion-icon name="ios-send" slot="start"></ion-icon>Begin
     </ion-button>
   </ion-item>
   <ion-item>
-    <ion-button (click)="nextSlide('complete')" size="large" expand="block" fill="outline" color="secondary" shape="round">
+    <ion-button (click)="nextSlide('complete')" size="large" expand="block" fill="outline" color="primary">
       <ion-icon name="checkmark" slot="start"></ion-icon>Complete
     </ion-button>
   </ion-item>
