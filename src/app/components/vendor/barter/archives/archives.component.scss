@@ -1,0 +1,12 @@
+.segment-button-checked {
+    --ion-color-contrast: var(--ion-color-highlight);
+}
+
+ion-fab {
+    ion-button {
+        height: 80px;
+        width: 80px;
+        --border-radius: 50%;
+        margin: 0.5em;
+    }
+}

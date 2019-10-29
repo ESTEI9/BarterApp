@@ -1,0 +1,30 @@
+<ion-header *ngIf="modal">
+    <ion-toolbar color="primary">
+        <ion-title>Search Locations</ion-title>
+        <ion-buttons slot="start">
+            <ion-button color="light" (click)="modalCtrl.dismiss()">
+                <ion-icon name="close" slot="icon-only"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+<div class="mainBlock" [class.modal]="modal">
+    <ion-searchbar [(ngModel)]="value" [debounce]="debounce"
+        [placeholder]="loading ? loadingString : placeholder" (ionClear)="preventClear($event)" (ionChange)="updateDropdown($event)"
+        [disabled]="disabled">
+        <ion-icon
+            *ngIf="options && options.length && !disabled"
+            class="toggle"
+            [name]="toggle ? 'ios-arrow-up' : 'ios-arrow-down'"
+            (click)="toggle = !toggle"
+            role="button"
+            color="primary">
+        </ion-icon>
+    </ion-searchbar>
+    <ion-list *ngIf="toggle && !disabled && options && options.length">
+        <ion-item *ngFor="let item of options; let i = index" (click)="updateValue(item)"
+            [lines]="i === options.length-1 ? 'none' : 'full'">
+            <ion-label>{{interpretValue(item)}}</ion-label>
+        </ion-item>
+    </ion-list>
+</div>

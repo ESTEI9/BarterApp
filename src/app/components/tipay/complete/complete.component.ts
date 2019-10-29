@@ -151,7 +151,7 @@ export class CompleteComponent implements OnInit {
     const payload = { body: JSON.stringify(body) };
     this.http.postData('tpay', payload).subscribe((resp: any) => {
       if (resp.status === 1) {
-        if (resp.data.amountDue) {
+        if (resp.data && resp.data.amountDue) {
           this.amountDue = +resp.data.amountDue.toFixed(2);
           if (+this.amount === +resp.data.amountDue.toFixed(2)) {
             this.stillDue = true;

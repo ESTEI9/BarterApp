@@ -27,3 +27,10 @@ ion-md-refresher {
     width: 100%;
     right: 0;
 }
+
+ion-searchbar {
+    background: var(--ion-color-light);
+    --background: var(--ion-color-light);
+    border-bottom: 1px solid var(--ion-color-medium-light);
+    min-height: 48px;
+}

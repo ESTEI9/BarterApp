@@ -1,34 +1,49 @@
-<ion-header *ngIf="modal">
-    <ion-toolbar color="primary">
+<ion-header *ngIf="modal" (click)="setFocus()">
+    <ion-toolbar color="dark">
         <ion-title>Select Wallet</ion-title>
+        <ion-buttons slot="end">
+            <ion-button [color]="locationToggle ? 'highlight' : null" (click)="locationToggle = !locationToggle">
+                <ion-icon slot="icon-only" name="pin"></ion-icon>
+            </ion-button>
+        </ion-buttons>
     </ion-toolbar>
 </ion-header>
-<div class="walletBlock" [class.modal]="modal">
-    <div class="flex-row" [class.walletSelected]="wallet">
-        <ion-spinner *ngIf="loading" color="highlight" style="margin: 10px auto;"></ion-spinner>
+<div class="walletBlock" [class.modal]="modal" (click)="setFocus()">
+    <div [class.flex-row]="!modal" [class.walletSelected]="wallet">
         <app-searchable-dropdown
-            *ngIf="wallets && !loading"
-            [disabled]="!wallets"
+            (click)="setFocus('location', $event)"
+            [hidden]="!locationToggle"
+            [options]="searchLocations"
+            [placeholder]="locPlaceholder"
+            [value]="locationSearch"
+            [toggle]="focus || focus === 'location'"
+            (updateOptions)="updateSearchLocations($event)"
+            (selectValue)="setLocation($event)">
+        </app-searchable-dropdown>
+        <app-searchable-dropdown
+            *ngIf="wallets"
+            (click)="setFocus('wallet', $event)"
             [options]="options"
             placeholder="Select Wallet"
             (updateOptions)="setOptions($event.detail.value)"
             (selectValue)="setWallet($event)"
             [loading]="loading"
+            [toggle]="focus || focus === 'wallet'"
             [value]="value"
         ></app-searchable-dropdown>
         <ion-input
             [(ngModel)]="amount"
             *ngIf="wallet && !loading"
-            type="tel" min="0" [max]="wallet.feathers"
-            [placeholder]="wallet.feathers ? 'Max: '+wallet.feathers : 'Amount'"
+            type="tel" min="0" [max]="wallet ? wallet.private_units : 0"
+            [placeholder]="wallet ? 'Max: '+wallet.private_units : 'Amount'"
             (ionChange)="!modal ? updateWallet() : null"
         ></ion-input>
     </div>
 </div>
 <ion-footer *ngIf="modal">
-    <ion-toolbar color="highlight">
+    <ion-toolbar color="primary">
         <ion-buttons style="display: flex; justify-content: center">
-            <ion-button (click)="updateWallet()">Update</ion-button>
+            <ion-button (click)="updateWallet()" [disabled]="!amount || !wallet">Update</ion-button>
         </ion-buttons>
     </ion-toolbar>
 </ion-footer>

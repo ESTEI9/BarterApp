@@ -1,0 +1,22 @@
+ion-list {
+    background:transparent;
+}
+
+app-login {
+    width:100%;
+}
+
+ion-item {
+    --ion-background-color: transparent;
+    --ion-item-background-activated: transparent;
+    --highlight-background:transparent;
+}
+
+img {
+    max-width: calc(100% - 2em);
+    margin: 0 auto;
+}
+
+ion-input {
+    text-align: center;
+}

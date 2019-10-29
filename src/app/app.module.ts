@@ -9,13 +9,14 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ComponentsModule } from './components/components.module';
-import { LoginComponent } from './components/login/login.component';
+import { LoginComponent } from './components/common/login/login.component';
 import { NativeStorage } from '@ionic-native/native-storage/ngx';
 import { HttpClientModule } from '@angular/common/http';
-import { NewTradeComponent } from './components/new-trade/new-trade.component';
+import { NewTradeComponent } from './components/vendor/new-trade/new-trade.component';
 import { IonicStorageModule } from '@ionic/storage';
 import { EditWalletComponent } from './components/edit-wallet/edit-wallet.component';
 import { IntroService } from './services/intro.service';
+import { PipesModule } from './pipes/pipes.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -30,6 +31,7 @@ import { IntroService } from './services/intro.service';
     AppRoutingModule,
     ComponentsModule,
     HttpClientModule,
+    PipesModule,
     IonicStorageModule.forRoot()
   ],
   providers: [
