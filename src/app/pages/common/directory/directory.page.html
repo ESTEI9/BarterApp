@@ -1,0 +1,54 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Directory</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="showLocation = !showLocation">
+        <ion-icon slot="icon-only" name="pin" [color]="showLocation ? 'highlight' : null"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<div padding class="mainLoading" *ngIf="loading">
+  <ion-spinner class="comp-spinner" color="highlight"></ion-spinner>
+</div>
+<ion-content [scrollEvents]="true" *ngIf="!loading">
+  <app-searchable-dropdown
+    *ngIf="vars.locations && showLocation"
+    [options]="searchLocations"
+    color="light-alt"
+    [placeholder]="location.city+', '+location.abbr"
+    (updateOptions)="filterLocations($event.detail.value)"
+    (selectValue)="setLocation($event)"
+  ></app-searchable-dropdown>
+  <ion-searchbar
+    placeholder="Search Merchants"
+    (ionChange)="searchMerchants($event.detail.value)"
+    clearInput
+  ></ion-searchbar>
+  <ion-list no-padding>
+    <ion-item *ngFor="let store of items; let i = index" [lines]="i+1 === directory.length ? 'none' : 'full'" [class.oddItem]="i % 2" (click)="loadStore(store)" [class.loadingStore]="storeLoading === store.vendor_id">
+      <ion-avatar slot="start" class="avatar">
+        <ion-spinner *ngIf="storeLoading === store.vendor_id" color="highlight"></ion-spinner>
+        <ion-icon *ngIf="storeLoading !== store.vendor_id" name="ios-business" color="primary"></ion-icon>
+      </ion-avatar>
+      <ion-label>
+        <h2>{{store.dba}}</h2>
+        <p><i>{{store.industry_name}}</i></p>
+      </ion-label>
+    </ion-item>
+    <ion-item *ngIf="items && directory && items.length === directory.length" text-center lines="none" color="clear">
+      <ion-label color="medium"><i>All Merchants Loaded</i></ion-label>
+    </ion-item>
+    <div padding class="fullWidth" *ngIf="loadingMore">
+      <ion-spinner color="medium"></ion-spinner>
+      <ion-label>Loading Stores...</ion-label>
+    </div>
+    <div padding class="fullWidth" *ngIf="!items">
+      <ion-label>No Matching Stores</ion-label>
+    </div>
+  </ion-list>
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="$event.waitFor(loadMore())">
+    <ion-infinite-scroll-content>
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>

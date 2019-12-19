@@ -1,8 +1,8 @@
 {
   "name": "triuniti",
-  "version": "0.95",
+  "version": "0.96",
   "author": "UniDevs",
-  "homepage": "http://tryuniti.com",
+  "homepage": "https://tryuniti.com",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

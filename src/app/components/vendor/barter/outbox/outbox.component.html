@@ -1,0 +1,20 @@
+<ion-content>
+    <ion-toolbar color="dark">
+        <ion-segment (ionChange)="switchSegment($event)">
+            <ion-segment-button value="trades" checked>Trades</ion-segment-button>
+            <ion-segment-button value="invoices">Invoices</ion-segment-button>
+            <ion-segment-button value="gifts">Gifts</ion-segment-button>
+        </ion-segment>
+    </ion-toolbar>
+    <seg-trades *ngIf="segment === 'trades'" segment="outbox" [data]="trades" (update)="updateType($event)">
+    </seg-trades>
+    <seg-invoices *ngIf="segment === 'invoices'" segment="outbox" [data]="invoices" (update)="updateType($event)">
+    </seg-invoices>
+    <seg-gifts *ngIf="segment === 'gifts'" segment="outbox" [data]="gifts" (update)="updateType($event)"></seg-gifts>
+
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+        <ion-button size="large" color="primary" (click)="startNewTrade()">
+            <ion-icon name="md-create"></ion-icon>
+        </ion-button>
+    </ion-fab>
+</ion-content>

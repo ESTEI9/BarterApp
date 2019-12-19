@@ -4,9 +4,11 @@
 
     ion-input {
         flex-basis: 0;
-        margin:8px 8px 8px 0;
+        margin: 8px 0;
         background: var(--ion-color-light);
         border: 1px solid var(--ion-color-light-shade);
+        border-radius: 5px;
+        min-height: 48px;
     }
     
     .flex-row {
@@ -16,9 +18,11 @@
         &.walletSelected {
             app-searchable-dropdown {
                 flex-basis: 66.67%;
+                margin-right: 0.5em;
             }
             ion-input {
                 flex-basis: 33.33%;
+                margin-left: 0.5em;
             }
         }
     }

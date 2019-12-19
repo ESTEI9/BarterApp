@@ -3,7 +3,7 @@
 </div>
 <ion-toolbar *ngIf="!completed && vars.userMeta.is_merchant">
   <ion-buttons slot="start">
-    <ion-button (click)="cancel()" color="medium">
+    <ion-button (click)="cancel()" color="dark">
         <ion-icon name="ios-arrow-round-back" slot="start"></ion-icon>Back
     </ion-button>
   </ion-buttons>
@@ -19,7 +19,7 @@
         </ion-button>
       </ion-buttons>
     </ion-item>
-    <ion-item class="details" *ngIf="code">
+    <ion-item class="details" *ngIf="code" text-center>
       <ion-label [class.amountDue]="amountDue">
         <div class="amount">{{amount | currency}}</div>
         <ion-text class="dba" color="medium">{{merchant.dba}}</ion-text>

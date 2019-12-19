@@ -35,3 +35,10 @@ ion-toolbar {
         transform: rotate(-90deg);
     }
 }
+
+ion-searchbar {
+    background: var(--ion-color-light);
+    --background: var(--ion-color-light);
+    border: 1px solid var(--ion-color-medium-light);
+    min-height: 48px;
+}

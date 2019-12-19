@@ -1,0 +1,53 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Store Locations</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content padding>
+  <ion-list class="addresses">
+    <ion-item *ngFor="let loc of locations; let i = index;" [lines]="i + 1 === locations.length ? 'none' : 'full'">
+      <ion-label>{{loc.address}} {{loc.city}}, {{loc.abbr}}</ion-label>
+      <ion-icon slot="end" color="danger" name="remove-circle" (click)="deletePrompt(i)" *ngIf="locations.length > 1">
+      </ion-icon>
+    </ion-item>
+  </ion-list>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button color="primary" fill="solid" (click)="toggle = !toggle">
+        <ion-icon *ngIf="!toggle" name="add" slot="start"></ion-icon>
+        {{toggle ? 'Cancel' : 'Add'}}
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-card class="addLocation" margin-top *ngIf="toggle">
+    <ion-card-header color="dark">
+      <ion-card-title>Add Location</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <app-searchable-dropdown [options]="searchLocations" debounce="300" placeholder="Select City" color="light-alt"
+          (updateOptions)="updateSearchLocations($event)" (selectValue)="setLocation($event)">
+        </app-searchable-dropdown>
+        <ion-item>
+          <ion-label position="floating">Address</ion-label>
+          <ion-input [(ngModel)]="newLocation.address"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Zip Code</ion-label>
+          <ion-input [(ngModel)]="newLocation.zipcode" type="tel"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating" class="label">Store Phone</ion-label>
+          <ion-input [(ngModel)]="newLocation.phone" type="tel"></ion-input>
+        </ion-item>
+      </ion-list>
+      <ion-toolbar>
+        <ion-buttons slot="end">
+          <ion-button (click)="createLocation()" color="primary" fill="solid" [disabled]="updating" margin-top>
+            <ion-icon name="add" slot="start"></ion-icon>Create
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
