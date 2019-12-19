@@ -1,0 +1,14 @@
+#main-menu {
+    ion-item {
+        --background: transparent;
+
+        &:first-child {
+            background: var(--ion-color-light);
+            border-bottom: 1px solid var(--ion-color-medium-light);
+            
+            img {
+                margin: 0 auto;
+            }
+        }
+    }
+}

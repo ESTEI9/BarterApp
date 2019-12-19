@@ -1,0 +1,27 @@
+
+    <ion-list margin-top>
+        <ion-item>
+            <ion-input type="email" margin-bottom padding [(ngModel)]="account.username" name="username" placeholder="Username" clearInput>
+            </ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-input type="password" padding [(ngModel)]="account.password" name="password" placeholder="Password" clearInput>
+            </ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-button color="primary" margin-top margin-bottom fill="solid" size="large"
+                type="submit" [attr.disabled]="isLoading" (click)="doLogin()">
+                <span *ngIf="!isLoading">Login</span>
+                <ion-spinner color="highlight" *ngIf="isLoading"></ion-spinner>
+            </ion-button>
+        </ion-item>
+        <ion-item class="ion-text-end">
+            <ion-label position="">Remember Me</ion-label>
+            <ion-checkbox slot="end" [(ngModel)]="rememberMe" name="rememberMe" color="primary"
+                aria-label="Remember Me"></ion-checkbox>
+        </ion-item>
+    </ion-list>
+    <!-- <ion-item>
+            <ion-button size="large" margin-bottom (click)="forgotPassword()" expand="block" shape="round" color="dark" fill="solid" [attr.disabled]="isLoading">Reset Password</ion-button>
+        </ion-item> -->
+    <ion-label *ngIf="message" id="message" color="primary" text-center>{{message}}</ion-label>

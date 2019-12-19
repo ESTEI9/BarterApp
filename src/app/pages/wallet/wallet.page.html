@@ -22,14 +22,12 @@
     <ion-text text-center padding color="medium" *ngIf="!wallets && !loading" class="no-data">No Wallet</ion-text>
 
     <ion-list no-padding lines="none" *ngIf="!loading && wallets">
-        <ion-item color="medium-light">
+        <ion-item color="dark">
             <ion-grid>
                 <ion-row>
                     <ion-col [size]="vars.userMeta.is_merchant ? '5' : '8'"><strong>Store</strong></ion-col>
-                    <ion-col size="4">
-                        <strong *ngIf="vars.userMeta.is_merchant">Private</strong>
-                        <strong *ngIf="!vars.userMeta.is_merchant" [attr.text-right]="vars.userMeta.is_merchant">Units</strong>
-                    </ion-col>
+                    <ion-col size="4" *ngIf="vars.userMeta.is_merchant" text-center><strong>Private</strong></ion-col>
+                    <ion-col size="4" *ngIf="!vars.userMeta.is_merchant" text-right><strong>Units</strong></ion-col>
                     <ion-col size="3" *ngIf="vars.userMeta.is_merchant" text-right><strong>Public</strong></ion-col>
                 </ion-row>
             </ion-grid>
@@ -39,7 +37,8 @@
             <ion-grid no-padding>
                 <ion-row>
                     <ion-col [size]="vars.userMeta.is_merchant ? '5' : '8'">{{wallet.dba}}</ion-col>
-                    <ion-col size="4" [attr.text-right]="vars.userMeta.is_merchant">{{wallet.private_units}}</ion-col>
+                    <ion-col size="4" *ngIf="vars.userMeta.is_merchant" text-center>{{wallet.private_units}}</ion-col>
+                    <ion-col size="4" *ngIf="!vars.userMeta.is_merchant" text-right>{{wallet.private_units}}</ion-col>
                     <ion-col size="3" *ngIf="vars.userMeta.is_merchant" text-right>{{wallet.public_units}}</ion-col>
                 </ion-row>
             </ion-grid>

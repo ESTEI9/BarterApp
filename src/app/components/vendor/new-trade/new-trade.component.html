@@ -1,0 +1,125 @@
+<ion-header (click)="setFocus()">
+    <ion-toolbar color="primary">
+        <ion-title *ngIf="!tradeId">
+            <span *ngIf="tradeType === 'Gift'">Send a Gift</span>
+            <span *ngIf="tradeType === 'Trade'">Start a Trade</span>
+            <span *ngIf="tradeType === 'Invoice'">Send an Invoice</span>
+        </ion-title>
+        <ion-title *ngIf="tradeId">Add Valu</ion-title>
+        <ion-buttons slot="start">
+            <ion-button (click)="modalCtrl.dismiss()">
+                <ion-icon name="md-arrow-back" slot="icon-only"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+<ion-content (click)="setFocus()">
+    <ion-card>
+        <ion-card-header no-padding>
+            <ion-toolbar color="dark">
+                <ion-title>Partner</ion-title>
+                <ion-buttons slot="end">
+                    <ion-button color="light" (click)="showLocationSearch = !showLocationSearch">
+                        <ion-icon name="pin" slot="start"></ion-icon>{{location.city}}, {{location.abbr}}
+                    </ion-button>
+                </ion-buttons>
+            </ion-toolbar>
+        </ion-card-header>
+        <ion-card-content>
+            <app-searchable-dropdown
+                *ngIf="vars.locations && showLocationSearch"
+                (click)="setFocus('location1', $event)"
+                [options]="searchLocations"
+                placeholder="Search Cities"
+                [toggle]="currentFocus === 'location1'"
+                (updateOptions)="updateSearchLocations($event)"
+                (selectValue)="setLocation($event)"
+            ></app-searchable-dropdown>
+            <app-searchable-dropdown
+                *ngIf="location && merchants && merchants.length; else noPartners"
+                (click)="setFocus('merchant', $event)"
+                [disabled]="loading.merchants"
+                [loading]="loading.merchants"
+                [value]="merchant ? merchant.dba : ''"
+                [options]="searchMerchants"
+                placeholder="Choose Partner"
+                [toggle]="currentFocus === 'merchant'"
+                (updateOptions)="updateMerchants($event)"
+                (selectValue)="setMerchant($event)"
+            ></app-searchable-dropdown>
+            <ng-template #noPartners>
+                <div text-center padding>
+                    <ion-spinner *ngIf="loading.merchants" color="highlight"></ion-spinner>
+                    <ion-label *ngIf="!loading.merchants"><i>No Partners At This Location</i></ion-label>
+                </div>
+            </ng-template>
+        </ion-card-content>
+    </ion-card>
+    <ion-card>
+        <ion-card-header no-padding>
+            <ion-toolbar color="dark">
+                <ion-title>
+                    <span *ngIf="tradeType === 'Invoice'">Your Bill</span>
+                    <span *ngIf="tradeType !== 'Invoice'">Your {{tradeType}}</span>
+                </ion-title>
+                <ion-buttons slot="end" *ngIf="tradeType !== 'Invoice'">
+                    <ion-button color="light" size="small" (click)="showMyLocationSearch = !showMyLocationSearch">
+                        <ion-icon name="pin" slot="start"></ion-icon>{{myLocation.city}}, {{myLocation.abbr}}
+                    </ion-button>
+                </ion-buttons>
+            </ion-toolbar>
+        </ion-card-header>
+        <ion-card-content>
+            <app-searchable-dropdown
+                *ngIf="vars.locations && showMyLocationSearch"
+                (click)="setFocus('location2, $event')"
+                [options]="mySearchLocations"
+                debounce="300"
+                color="light-alt"
+                placeholder="Search Cities"
+                [toggle]="currentFocus === 'location2'"
+                (updateOptions)="updateSearchLocations($event, 'my')"
+                (selectValue)="setLocation($event, 'my')"
+            ></app-searchable-dropdown>
+            <ion-list *ngIf="tradeType === 'Invoice'" lines="none">
+                <ion-item no-padding>
+                    <ion-label position="stacked"><strong>Amount</strong></ion-label>
+                    <ion-input [(ngModel)]="amount" type="tel" min="0" size="5"></ion-input>
+                </ion-item>
+            </ion-list>
+            <app-wallet
+                (click)="setFocus('wallets', $event)"
+                *ngIf="tradeType !== 'Invoice' && wallets && !loading.wallets; else noWallets"
+                [attr.value]="wallet ? wallet.dba : ''"
+                [wallets]="wallets"
+                [toggle]="currentFocus === 'wallets'"
+                (update)="updateWallet($event, 'my')"
+            ></app-wallet>
+            <ng-template #noWallets>
+                <div text-center padding *ngIf="tradeType !== 'Invoice'">
+                    <ion-spinner *ngIf="loading.wallets" color="highlight"></ion-spinner>
+                </div>
+            </ng-template>
+            <app-description
+                [title]="title"
+                [description]="description"
+                (update)="updateDescription($event)"
+            ></app-description>
+        </ion-card-content>
+    </ion-card>
+</ion-content>
+<ion-footer (click)="setFocus()">
+    <ion-toolbar color="primary">
+        <ion-buttons>
+            <ion-button *ngIf="!tradeId && tradeType === 'Trade'" (click)="createTrade()" color="highlight">
+                Create Trade
+            </ion-button>
+            <ion-button *ngIf="!tradeId && tradeType === 'Invoice'" (click)="sendInvoice()" color="highlight">
+                Send Invoice
+            </ion-button>
+            <ion-button *ngIf="!tradeId && tradeType === 'Gift'" (click)="sendGift()" color="highlight">
+                Send Gift
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-footer>

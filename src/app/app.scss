@@ -6,11 +6,11 @@
 // and used throughout the application.
 
 body {
-    background: var(--ion-color-light);
+    background: #fff;
 }
 
 ion-content {
-    --background: var(--ion-color-light);
+    --background: #fff;
 }
 
 ion-menu {
@@ -63,7 +63,7 @@ ion-item {
 
  .tabSelected {
      ion-icon { color: var(--ion-color-highlight); }
-     ion-label { color: var(--ion-color-primary); }
+     ion-label { --color: var(--ion-color-primary) !important; }
  }
 
  .mainLoading {

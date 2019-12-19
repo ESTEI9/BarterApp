@@ -21,7 +21,7 @@
     </ion-item>
   </ion-list>
   <ion-card *ngIf="!loading" class="packages">
-    <ion-toolbar color="primary">
+    <ion-toolbar color="dark">
       <ion-title>Packages</ion-title>
       <ion-buttons slot="end">
         <ion-button (click)="toggleEdit()" color="highlight">
@@ -96,7 +96,7 @@
         </ion-item>
         <ion-item lines="none">
           <div text-right style="width:100%">
-            <ion-button (click)="createPublicUnits()" color="secondary" size="default">
+            <ion-button (click)="createPublicUnits()" color="primary" size="default">
               <ion-icon name="add" slot="start"></ion-icon>Add
             </ion-button>
           </div>
@@ -105,7 +105,7 @@
       <ion-list lines="none">
       <ion-item *ngIf="!createPackage">
         <div text-right style="width: 100%">
-          <ion-button color="secondary" (click)="createPackage = true" class="createButton" size="default">
+          <ion-button color="primary" (click)="createPackage = true" class="createButton" size="default">
             <ion-icon name="add" slot="start"></ion-icon>Add
           </ion-button>
         </div>

@@ -5,7 +5,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
     providedIn: 'root'
 })
 export class HttpService {
-    private base = 'https://tryuniti.com/unitimarket';
+    private base = 'https://unyti.org/api';
 
     // private url = 'https://www.cometothex.com/api/barter/demo/'; // sandbox
     private api = `${this.base}/barter/`; // live

@@ -5,3 +5,7 @@ ion-slide {
         width: stretch;
     }
 }
+
+.segment-button-checked {
+    --ion-color-contrast: var(--ion-color-highlight);
+}

@@ -89,7 +89,7 @@ export class HistoryComponent implements OnInit {
             referrer: this.segment
           }
         };
-        this.navCtrl.navigateForward('/tpay/details', extras);
+        this.navCtrl.navigateForward(`/tpay/${Math.random().toFixed(5)}/details`, extras);
       } else {
         const toast = await this.toastCtrl.create({
           message: 'There was an error',
