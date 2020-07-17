@@ -45,7 +45,7 @@
     "karma-coverage-istanbul-reporter": "^2.0.6",
     "leaflet": "^1.5.1",
     "leaflet-geosearch": "^2.7.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "rxjs": "~6.5.1",
     "serialize-javascript": "^2.1.2",
     "ts-node": "^8.3.0",
